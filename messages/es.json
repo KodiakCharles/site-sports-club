@@ -1,37 +1,116 @@
 {
   "nav": {
-    "home": "Inicio",
-    "club": "El Club",
-    "activities": "Actividades",
-    "stages": "Cursos",
-    "competition": "Competición",
-    "prices": "Precios",
-    "news": "Noticias",
-    "contact": "Contacto",
-    "register": "Inscribirse",
-    "member_space": "Área de socios"
+    "home": "Inicio", "club": "El Club", "activities": "Actividades",
+    "stages": "Cursos", "competition": "Competición", "prices": "Precios",
+    "news": "Noticias", "contact": "Contacto", "register": "Inscribirse", "members": "Mi espacio"
   },
   "home": {
-    "cta_stages": "Ver nuestros cursos",
-    "cta_discover": "Descubrir el club",
-    "latest_news": "Últimas noticias",
-    "our_activities": "Nuestras actividades",
-    "upcoming_stages": "Próximos cursos",
-    "follow_us": "Síguenos",
-    "partners": "Nuestros socios",
-    "find_us": "Cómo llegar"
+    "badge": "Club de Vela", "title_1": "Bienvenido al", "title_2": "Club de Vela",
+    "tagline": "Vela ligera, competición, cursos para todos los niveles.\n¡Ven a navegar con nosotros!",
+    "cta_stages": "Ver nuestros cursos", "cta_discover": "Descubrir el club",
+    "stats_clubs": "clubes FFVoile", "stats_years": "años de experiencia", "stats_supports": "disciplinas náuticas", "stats_langs": "idiomas",
+    "activities_title": "Nuestras disciplinas náuticas", "activities_subtitle": "Del Optimist al foil, para todas las edades y niveles",
+    "stages_title": "Próximos cursos", "stages_subtitle": "Inscríbete en línea en pocos clics",
+    "meteo_title": "Meteorología marina", "meteo_subtitle": "Condiciones en tiempo real antes de salir a navegar",
+    "meteo_placeholder": "Widget Windguru — configura tu estación en el panel de administración",
+    "meteo_station": "ID de estación configurable en el back-office del club",
+    "map_title": "Cómo llegar", "map_subtitle": "Visítanos en el puerto",
+    "map_placeholder": "Google Maps — configura tus coordenadas en el panel de administración",
+    "map_cta": "Contactarnos"
   },
+  "club": {
+    "hero_title": "El Club", "hero_subtitle": "Una pasión compartida por la vela desde hace más de 20 años",
+    "history_title": "Nuestra historia",
+    "history_1": "Fundado en 2001, nuestro club de vela acoge cada año a más de 300 licenciados, desde jóvenes optimistas hasta marineros experimentados. Situados en el puerto deportivo, disfrutamos de aguas excepcionales para todas las disciplinas náuticas.",
+    "history_2": "Certificados como École Française de Voile, ofrecemos formación dirigida por instructores titulados, siguiendo los valores federales: seguridad, progresión y convivencia.",
+    "stat_members": "licenciados", "stat_coaches": "instructores titulados", "stat_boats": "embarcaciones", "stat_label": "EFVoile",
+    "labels_title": "Nuestras certificaciones", "label_efv": "Escuela Francesa de Vela", "label_comp": "Escuela de Competición", "label_croisiere": "Escuela de Crucero",
+    "team_title": "Nuestro equipo", "team_subtitle": "Instructores apasionados y titulados",
+    "partners_title": "Nuestros socios"
+  },
+  "activities": {
+    "hero_title": "Nuestras disciplinas náuticas", "hero_subtitle": "8 disciplinas para navegar a cualquier edad y nivel",
+    "see_stages": "Ver los cursos"
+  },
+  "stages": {
+    "hero_title": "Cursos y Clases", "hero_subtitle": "Inscríbete en línea — pago seguro a través de HelloAsso",
+    "filter_label": "Filtrar por:", "filter_all": "Todos", "filter_children": "Niños", "filter_teens": "Adolescentes",
+    "filter_adults": "Adultos", "filter_beginner": "Iniciación", "filter_advanced": "Perfeccionamiento", "filter_competition": "Competición",
+    "full": "Completo", "register": "Inscribirse",
+    "booking_title": "Inscripción y pago en línea",
+    "booking_text": "Las inscripciones se gestionan a través de HelloAsso (sin comisiones para el club). Pago en línea seguro. Se envía un correo de confirmación inmediatamente.",
+    "booking_alt": "También puedes contactar al club para inscribirte por teléfono o en persona."
+  },
+  "competition": {
+    "hero_title": "Competición y Regatas", "hero_subtitle": "Calendario, resultados y avisos de regata",
+    "calendar_title": "Calendario de regatas 2026", "calendar_subtitle": "Calendario completo en",
+    "nor_btn": "Aviso de regata", "done_badge": "Finalizada",
+    "ffvoile_title": "Integración API FFVoile disponible",
+    "ffvoile_text": "El calendario oficial y los resultados de regatas se sincronizarán automáticamente a través de la API FFVoile (requiere acuerdo del Comité Ejecutivo).",
+    "ffvoile_btn": "Ver en FFVoile",
+    "palmares_title": "Palmarés del club"
+  },
+  "prices": {
+    "hero_title": "Precios y Membresía", "hero_subtitle": "Únete al club — inscripción a través de HelloAsso, pago en línea seguro",
+    "memberships_title": "Cuotas 2025–2026", "memberships_subtitle": "Licencia FFVoile incluida en todos los paquetes",
+    "per_year": "€ / año", "register_btn": "Inscribirse",
+    "helloasso_title": "HelloAsso — inscripción sin comisiones",
+    "helloasso_text": "Todas las membresías se gestionan a través de HelloAsso: sin gastos de tramitación, pago en línea seguro. Se envía un correo de confirmación con tu certificado de licencia.",
+    "rental_title": "Alquiler de embarcaciones", "rental_subtitle": "Para miembros con tarjeta de competencia",
+    "rental_boat": "Embarcación", "rental_half": "Medio día", "rental_full": "Día completo",
+    "rental_note": "* Depósito requerido. Reserva obligatoria con 48h de antelación. Solo para miembros con nivel mínimo certificado.",
+    "aids_title": "Ayudas y Pass Sport", "aids_subtitle": "Descuentos y programas de apoyo a la práctica"
+  },
+  "news": {
+    "hero_title": "Noticias", "hero_subtitle": "Toda la vida del club — resultados, cursos, eventos",
+    "filter_all": "Todas", "read_more": "Leer más", "load_more": "Cargar más artículos"
+  },
+  "contact": {
+    "hero_title": "Contáctanos", "hero_subtitle": "¿Una pregunta? El equipo responde en 48h",
+    "form_title": "Enviar un mensaje",
+    "first_name": "Nombre", "last_name": "Apellidos", "email": "Correo electrónico", "subject": "Asunto",
+    "subject_placeholder": "-- Elige un asunto --",
+    "subject_membership": "Membresía / Inscripción", "subject_stage": "Consulta sobre curso",
+    "subject_competition": "Competición", "subject_rental": "Alquiler de embarcaciones", "subject_other": "Otra consulta",
+    "message": "Mensaje", "message_placeholder": "Tu mensaje...",
+    "rgpd": "Acepto que mis datos sean tratados para responder a mi solicitud",
+    "privacy_link": "política de privacidad", "send_btn": "Enviar mensaje",
+    "coordinates": "Datos de contacto", "address_label": "Dirección",
+    "hours_title": "Horario de atención",
+    "hours_weekday": "Lunes – Viernes", "hours_weekday_val": "9h – 12h y 14h – 18h",
+    "hours_saturday": "Sábado", "hours_saturday_val": "9h – 13h (en temporada)",
+    "hours_sunday": "Domingo", "hours_sunday_val": "Cerrado (salvo regata)",
+    "social_title": "Redes sociales"
+  },
+  "find_us": {
+    "hero_title": "Cómo llegar", "hero_subtitle": "Puerto deportivo — acceso en barco, coche y transporte público",
+    "map_placeholder": "Google Maps",
+    "map_config": "La integración de Google Maps se activará con tu clave API en el panel de administración.",
+    "open_maps": "Abrir en Google Maps", "address_title": "Dirección", "access_title": "Cómo llegar",
+    "access_car": "En coche", "access_car_desc": "Aparcamiento gratuito en el puerto deportivo. Seguir la dirección «Puerto deportivo» desde el centro de la ciudad.",
+    "access_bus": "En autobús", "access_bus_desc": "Línea 12 – parada «Puerto deportivo». Cada 20 min en temporada.",
+    "access_bike": "En bicicleta", "access_bike_desc": "Carril bici desde la plaza principal. Aparcabicicletas a la entrada del puerto.",
+    "access_sea": "Por mar", "access_sea_desc": "Amarres para visitantes disponibles bajo petición. Llamar al puerto al 06 00 00 00 00.",
+    "hours_title": "Horario de atención", "gps_title": "Coordenadas GPS", "directions": "Cómo llegar"
+  },
+  "member": {
+    "hero_title": "Área de socios", "hero_subtitle": "Accede a tu espacio personal — licencia, reservas, resultados",
+    "login_title": "Iniciar sesión", "login_subtitle": "Usa tu correo electrónico y la contraseña recibida al inscribirte.",
+    "email": "Correo electrónico", "password": "Contraseña",
+    "remember": "Recuérdame", "forgot": "¿Olvidaste tu contraseña?",
+    "login_btn": "Iniciar sesión", "or": "o",
+    "no_account": "¿No tienes cuenta?", "join_btn": "Unirse al club",
+    "module_title": "Módulo Área de Socios",
+    "module_text": "Tras iniciar sesión: descarga tu licencia, reserva embarcaciones, consulta resultados de competición y paga tu cuota en línea."
+  },
+  "legal": { "hero_title": "Aviso legal" },
+  "privacy": { "hero_title": "Política de privacidad" },
   "footer": {
-    "navigation": "Navegación",
-    "club": "El Club",
-    "stages": "Cursos",
-    "competition": "Competición",
-    "prices": "Precios",
-    "news": "Noticias",
-    "legal": "Legal",
-    "legal_notice": "Aviso legal",
-    "privacy": "Privacidad",
-    "sitemap": "Mapa del sitio",
-    "contact": "Contacto"
+    "club_col": "El club", "about": "Presentación", "activities": "Actividades",
+    "competition": "Competición", "news": "Noticias",
+    "practical_col": "Práctica", "stages": "Cursos", "prices": "Precios y membresía",
+    "find_us": "Cómo llegar", "contact": "Contacto",
+    "contact_col": "Contacto", "member_space": "Área de socios",
+    "legal_notice": "Aviso legal", "privacy": "Privacidad", "powered_by": "Impulsado por"
   }
 }

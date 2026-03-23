@@ -1,85 +1,95 @@
-import { useTranslations } from 'next-intl'
 import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 
-export default function HomePage({ params: { locale } }: { params: { locale: string } }) {
+export default async function HomePage({ params: { locale } }: { params: { locale: string } }) {
+  const t = await getTranslations('home')
+  const tn = await getTranslations('nav')
+  const base = locale === 'fr' ? '' : `/${locale}`
+
+  const activities = [
+    { key: 'Optimist', icon: '⛵', sub: 'Initiation dès 7 ans' },
+    { key: 'Dériveur', icon: '🚤', sub: 'Laser, 420, RS Feva' },
+    { key: 'Catamaran', icon: '🌊', sub: 'Vitesse & sensations' },
+    { key: 'Planche à voile', icon: '🏄', sub: 'Windsurf & Wing foil' },
+    { key: 'Foil', icon: '✈️', sub: 'La glisse ultime' },
+    { key: 'Croisière', icon: '⚓', sub: 'Voile habitable' },
+  ]
+
+  const stageItems = [
+    { title: 'Stage Optimist — Été', level: 'Initiation', date: '7–11 juil. 2026', spots: 8, price: 290 },
+    { title: 'Stage Catamaran Adulte', level: 'Débutant', date: '14–18 juil. 2026', spots: 6, price: 340 },
+    { title: 'Stage Laser Perfectionnement', level: 'Intermédiaire', date: '21–25 juil. 2026', spots: 4, price: 320 },
+  ]
+
   return (
-    <main>
-      {/* HERO */}
+    <div>
       <section className="hero">
         <div className="hero-overlay" />
         <div className="hero-content container">
-          <div className="hero-badge">⚓ Club de Voile</div>
-          <h1 className="hero-title">Bienvenue au<br /><span>Club de Voile</span></h1>
+          <div className="hero-badge">⚓ {t('badge')}</div>
+          <h1 className="hero-title">
+            {t('title_1')}<br />
+            <span>{t('title_2')}</span>
+          </h1>
           <p className="hero-tagline">
-            Voile légère, compétition, stages pour tous niveaux.<br />
-            Venez naviguer avec nous !
+            {t('tagline').split('\n').map((line: string, i: number) => (
+              <span key={i}>{line}{i === 0 && <br />}</span>
+            ))}
           </p>
           <div className="hero-actions">
-            <Link href={`/${locale}/stages`} className="btn btn-primary btn-lg">Voir nos stages</Link>
-            <Link href={`/${locale}/le-club`} className="btn btn-outline btn-lg">Découvrir le club</Link>
+            <Link href={`${base}/stages`} className="btn btn-primary btn-lg">{t('cta_stages')}</Link>
+            <Link href={`${base}/le-club`} className="btn btn-outline btn-lg">{t('cta_discover')}</Link>
           </div>
         </div>
       </section>
 
-      {/* STATS */}
       <section className="stats-bar">
         <div className="container stats-grid">
-          <div className="stat-item"><span className="stat-num">1 080</span><span className="stat-label">clubs FFVoile</span></div>
-          <div className="stat-item"><span className="stat-num">+20 ans</span><span className="stat-label">d&apos;expérience</span></div>
-          <div className="stat-item"><span className="stat-num">8</span><span className="stat-label">supports nautiques</span></div>
-          <div className="stat-item"><span className="stat-num">FR · EN · ES</span><span className="stat-label">langues</span></div>
+          {([['1 080', t('stats_clubs')],['+20 ans', t('stats_years')],['8', t('stats_supports')],['FR · EN · ES', t('stats_langs')]] as [string,string][]).map(([n,l]) => (
+            <div key={l} className="stat-item">
+              <span className="stat-num">{n}</span>
+              <span className="stat-label">{l}</span>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* ACTIVITÉS */}
       <section className="section">
         <div className="container">
           <div className="section-header">
-            <h2 className="section-title">Nos supports nautiques</h2>
-            <p className="section-subtitle">De l&apos;Optimist au foil, pour tous les âges et tous les niveaux</p>
+            <h2 className="section-title">{t('activities_title')}</h2>
+            <p className="section-subtitle">{t('activities_subtitle')}</p>
           </div>
           <div className="activities-grid">
-            {[
-              { icon: '⛵', label: 'Optimist', desc: 'Initiation dès 7 ans' },
-              { icon: '🚤', label: 'Dériveur', desc: 'Laser, 420, RS Feva' },
-              { icon: '🌊', label: 'Catamaran', desc: 'Vitesse & sensations' },
-              { icon: '🏄', label: 'Planche à voile', desc: 'Windsurf & Wing foil' },
-              { icon: '✈️', label: 'Foil', desc: 'La glisse ultime' },
-              { icon: '⚓', label: 'Croisière', desc: 'Voile habitable' },
-            ].map((a) => (
-              <div key={a.label} className="activity-card">
+            {activities.map((a) => (
+              <div key={a.key} className="activity-card">
                 <div className="activity-icon">{a.icon}</div>
-                <h3>{a.label}</h3>
-                <p>{a.desc}</p>
+                <h3>{a.key}</h3>
+                <p>{a.sub}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* STAGES */}
       <section className="section section-alt">
         <div className="container">
           <div className="section-header">
-            <h2 className="section-title">Prochains stages</h2>
-            <p className="section-subtitle">Inscrivez-vous en ligne en quelques clics</p>
+            <h2 className="section-title">{t('stages_title')}</h2>
+            <p className="section-subtitle">{t('stages_subtitle')}</p>
           </div>
           <div className="stages-grid">
-            {[
-              { title: 'Stage Optimist — Été', dates: '7 – 11 juil. 2026', level: 'Initiation', spots: 8, price: '290 €' },
-              { title: 'Stage Catamaran Adulte', dates: '14 – 18 juil. 2026', level: 'Débutant', spots: 6, price: '340 €' },
-              { title: 'Stage Laser Perfectionnement', dates: '21 – 25 juil. 2026', level: 'Intermédiaire', spots: 4, price: '320 €' },
-            ].map((s) => (
+            {stageItems.map((s) => (
               <div key={s.title} className="stage-card">
                 <div className="stage-level">{s.level}</div>
                 <h3>{s.title}</h3>
                 <div className="stage-meta">
-                  <span>📅 {s.dates}</span>
+                  <span>📅 {s.date}</span>
                   <span>👤 {s.spots} places</span>
-                  <span>💶 {s.price}</span>
+                  <span>💶 {s.price} €</span>
                 </div>
-                <Link href={`/${locale}/stages`} className="btn btn-primary" style={{ marginTop: '16px', width: '100%', textAlign: 'center' }}>
-                  S&apos;inscrire
+                <Link href={`${base}/stages`} className="btn btn-primary" style={{ marginTop: '16px', width: '100%', textAlign: 'center' }}>
+                  {tn('register')}
                 </Link>
               </div>
             ))}
@@ -87,35 +97,31 @@ export default function HomePage({ params: { locale } }: { params: { locale: str
         </div>
       </section>
 
-      {/* MÉTÉO */}
       <section className="section">
         <div className="container">
           <div className="section-header">
-            <h2 className="section-title">Météo marine</h2>
-            <p className="section-subtitle">Conditions en temps réel avant de sortir naviguer</p>
+            <h2 className="section-title">{t('meteo_title')}</h2>
+            <p className="section-subtitle">{t('meteo_subtitle')}</p>
           </div>
           <div className="meteo-placeholder">
-            <p>🌬️ Widget Windguru — configurez votre station dans l&apos;admin</p>
-            <p style={{ fontSize: '.85rem', color: '#94a3b8', marginTop: '8px' }}>
-              Station ID configurable dans le back-office du club
-            </p>
+            <p>🌬️ {t('meteo_placeholder')}</p>
+            <p style={{ fontSize: '.85rem', color: '#94a3b8', marginTop: '8px' }}>{t('meteo_station')}</p>
           </div>
         </div>
       </section>
 
-      {/* CONTACT */}
       <section className="section section-alt">
         <div className="container section-header">
-          <h2 className="section-title">Nous trouver</h2>
-          <p className="section-subtitle">Venez nous rendre visite au port</p>
+          <h2 className="section-title">{t('map_title')}</h2>
+          <p className="section-subtitle">{t('map_subtitle')}</p>
           <div className="maps-placeholder">
-            <p>🗺️ Carte Google Maps — configurez vos coordonnées dans l&apos;admin</p>
+            <p>🗺️ {t('map_placeholder')}</p>
           </div>
-          <Link href={`/${locale}/contact`} className="btn btn-primary" style={{ marginTop: '24px' }}>
-            Nous contacter
+          <Link href={`${base}/contact`} className="btn btn-primary" style={{ marginTop: '24px' }}>
+            {t('map_cta')}
           </Link>
         </div>
       </section>
-    </main>
+    </div>
   )
 }

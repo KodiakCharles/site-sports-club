@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 
 const regates = [
   { id: 1, name: 'Championnat départemental Optimist', date: '5 avr. 2026', location: 'Notre port', category: 'Optimist', status: 'upcoming', norUrl: '#' },
@@ -15,25 +16,26 @@ const palmares = [
   { year: 2024, title: 'Vainqueur coupe du club — série A', category: 'Habitable' },
 ]
 
-export default function CompetitionPage({ params: { locale } }: { params: { locale: string } }) {
+export default async function CompetitionPage({ params: { locale } }: { params: { locale: string } }) {
+  const t = await getTranslations('competition')
   const base = locale === 'fr' ? '' : `/${locale}`
+
   return (
     <div>
       <section className="page-hero" style={{ background: 'linear-gradient(135deg,#0d1f3c,#1d6fa4)' }}>
         <div className="container page-hero-content">
-          <div className="breadcrumb"><Link href={base || '/'}>Accueil</Link> › Compétition</div>
-          <h1>Compétition & Régates</h1>
-          <p>Calendrier, résultats et avis de course</p>
+          <div className="breadcrumb"><Link href={base || '/'}>Accueil</Link> › {t('hero_title')}</div>
+          <h1>{t('hero_title')}</h1>
+          <p>{t('hero_subtitle')}</p>
         </div>
       </section>
 
-      {/* CALENDRIER */}
       <section className="section">
         <div className="container">
           <div className="section-header">
-            <h2 className="section-title">Calendrier des régates 2026</h2>
+            <h2 className="section-title">{t('calendar_title')}</h2>
             <p className="section-subtitle">
-              Calendrier complet sur{' '}
+              {t('calendar_subtitle')}{' '}
               <a href="https://regates.ffvoile.fr" target="_blank" rel="noopener" className="link-ffv">regates.ffvoile.fr ↗</a>
             </p>
           </div>
@@ -50,33 +52,31 @@ export default function CompetitionPage({ params: { locale } }: { params: { loca
                 </div>
                 <div className="race-actions">
                   {r.status === 'upcoming' && (
-                    <a href={r.norUrl} className="btn btn-outline btn-sm">Avis de course</a>
+                    <a href={r.norUrl} className="btn btn-outline btn-sm">{t('nor_btn')}</a>
                   )}
                   {r.status === 'past' && (
-                    <span className="race-done-badge">Terminée</span>
+                    <span className="race-done-badge">{t('done_badge')}</span>
                   )}
                 </div>
               </div>
             ))}
           </div>
 
-          {/* INTÉGRATION FFVoile */}
           <div className="ffvoile-banner">
             <span>⚓</span>
             <div>
-              <strong>Intégration API FFVoile disponible</strong>
-              <p>Le calendrier officiel et les résultats de régates seront synchronisés automatiquement via l&apos;API FFVoile (accord Bureau Exécutif requis).</p>
+              <strong>{t('ffvoile_title')}</strong>
+              <p>{t('ffvoile_text')}</p>
             </div>
-            <a href="https://regates.ffvoile.fr" target="_blank" rel="noopener" className="btn btn-primary btn-sm">Voir sur FFVoile</a>
+            <a href="https://regates.ffvoile.fr" target="_blank" rel="noopener" className="btn btn-primary btn-sm">{t('ffvoile_btn')}</a>
           </div>
         </div>
       </section>
 
-      {/* PALMARÈS */}
       <section className="section section-alt">
         <div className="container">
           <div className="section-header">
-            <h2 className="section-title">Palmarès du club</h2>
+            <h2 className="section-title">{t('palmares_title')}</h2>
           </div>
           <div className="palmares-list">
             {palmares.map((p, i) => (

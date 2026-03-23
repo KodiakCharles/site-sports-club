@@ -1,37 +1,116 @@
 {
   "nav": {
-    "home": "Accueil",
-    "club": "Le Club",
-    "activities": "Nos activités",
-    "stages": "Stages",
-    "competition": "Compétition",
-    "prices": "Tarifs",
-    "news": "Actualités",
-    "contact": "Contact",
-    "register": "S'inscrire",
-    "member_space": "Espace adhérent"
+    "home": "Accueil", "club": "Le Club", "activities": "Activités",
+    "stages": "Stages", "competition": "Compétition", "prices": "Tarifs",
+    "news": "Actualités", "contact": "Contact", "register": "S'inscrire", "members": "Mon espace"
   },
   "home": {
-    "cta_stages": "Voir nos stages",
-    "cta_discover": "Découvrir le club",
-    "latest_news": "Dernières actualités",
-    "our_activities": "Nos activités",
-    "upcoming_stages": "Prochains stages",
-    "follow_us": "Suivez-nous",
-    "partners": "Nos partenaires",
-    "find_us": "Nous trouver"
+    "badge": "Club de Voile", "title_1": "Bienvenue au", "title_2": "Club de Voile",
+    "tagline": "Voile légère, compétition, stages pour tous niveaux.\nVenez naviguer avec nous !",
+    "cta_stages": "Voir nos stages", "cta_discover": "Découvrir le club",
+    "stats_clubs": "clubs FFVoile", "stats_years": "d'expérience", "stats_supports": "supports nautiques", "stats_langs": "langues",
+    "activities_title": "Nos supports nautiques", "activities_subtitle": "De l'Optimist au foil, pour tous les âges et tous les niveaux",
+    "stages_title": "Prochains stages", "stages_subtitle": "Inscrivez-vous en ligne en quelques clics",
+    "meteo_title": "Météo marine", "meteo_subtitle": "Conditions en temps réel avant de sortir naviguer",
+    "meteo_placeholder": "Widget Windguru — configurez votre station dans l'admin",
+    "meteo_station": "Station ID configurable dans le back-office du club",
+    "map_title": "Nous trouver", "map_subtitle": "Venez nous rendre visite au port",
+    "map_placeholder": "Carte Google Maps — configurez vos coordonnées dans l'admin",
+    "map_cta": "Nous contacter"
   },
+  "club": {
+    "hero_title": "Le Club", "hero_subtitle": "Une passion partagée pour la voile depuis plus de 20 ans",
+    "history_title": "Notre histoire",
+    "history_1": "Fondé en 2001, notre club de voile accueille chaque année plus de 300 licenciés, du jeune optimiste au marin confirmé. Installés sur le port de plaisance, nous bénéficions d'un plan d'eau exceptionnel.",
+    "history_2": "Labelisé École Française de Voile, nous proposons des formations encadrées par des moniteurs diplômés d'État, dans le respect des valeurs fédérales : sécurité, progression et convivialité.",
+    "stat_members": "licenciés", "stat_coaches": "moniteurs diplômés", "stat_boats": "bateaux", "stat_label": "EFVoile",
+    "labels_title": "Nos labels", "label_efv": "École Française de Voile", "label_comp": "École de Compétition", "label_croisiere": "École de Croisière",
+    "team_title": "Notre équipe", "team_subtitle": "Des moniteurs diplômés et passionnés",
+    "partners_title": "Nos partenaires"
+  },
+  "activities": {
+    "hero_title": "Nos supports nautiques", "hero_subtitle": "8 disciplines pour naviguer à tout âge et tout niveau",
+    "see_stages": "Voir les stages"
+  },
+  "stages": {
+    "hero_title": "Stages & Cours", "hero_subtitle": "Inscrivez-vous en ligne — paiement sécurisé via HelloAsso",
+    "filter_label": "Filtrer par :", "filter_all": "Tous", "filter_children": "Enfants", "filter_teens": "Ados",
+    "filter_adults": "Adultes", "filter_beginner": "Initiation", "filter_advanced": "Perfectionnement", "filter_competition": "Compétition",
+    "full": "Complet", "register": "S'inscrire",
+    "booking_title": "Inscription & paiement en ligne",
+    "booking_text": "Les inscriptions sont gérées via HelloAsso (zéro frais pour le club). Le paiement en ligne est sécurisé. Un email de confirmation vous est envoyé immédiatement.",
+    "booking_alt": "Vous pouvez également contacter le club pour une inscription par téléphone ou en direct."
+  },
+  "competition": {
+    "hero_title": "Compétition & Régates", "hero_subtitle": "Calendrier, résultats et avis de course",
+    "calendar_title": "Calendrier des régates 2026", "calendar_subtitle": "Calendrier complet sur",
+    "nor_btn": "Avis de course", "done_badge": "Terminée",
+    "ffvoile_title": "Intégration API FFVoile disponible",
+    "ffvoile_text": "Le calendrier officiel et les résultats de régates seront synchronisés automatiquement via l'API FFVoile (accord Bureau Exécutif requis).",
+    "ffvoile_btn": "Voir sur FFVoile",
+    "palmares_title": "Palmarès du club"
+  },
+  "prices": {
+    "hero_title": "Tarifs & Adhésion", "hero_subtitle": "Rejoignez le club — inscription via HelloAsso, paiement en ligne sécurisé",
+    "memberships_title": "Cotisations 2025–2026", "memberships_subtitle": "Licence FFVoile incluse dans toutes les formules",
+    "per_year": "€ / an", "register_btn": "S'inscrire",
+    "helloasso_title": "HelloAsso — inscription sans frais",
+    "helloasso_text": "Toutes les adhésions sont gérées via HelloAsso : aucun frais de dossier, paiement en ligne sécurisé. Un email de confirmation vous est envoyé immédiatement avec votre attestation de licence.",
+    "rental_title": "Location de bateaux", "rental_subtitle": "Pour les adhérents titulaires d'une carte compétence",
+    "rental_boat": "Support", "rental_half": "Demi-journée", "rental_full": "Journée",
+    "rental_note": "* Caution requise. Réservation obligatoire 48h à l'avance. Réservé aux membres avec niveau minimum attesté.",
+    "aids_title": "Aides & Pass Sport", "aids_subtitle": "Réductions et dispositifs d'aide à la pratique"
+  },
+  "news": {
+    "hero_title": "Actualités", "hero_subtitle": "Toute la vie du club — résultats, stages, événements",
+    "filter_all": "Toutes", "read_more": "Lire la suite", "load_more": "Charger plus d'articles"
+  },
+  "contact": {
+    "hero_title": "Nous contacter", "hero_subtitle": "Une question ? L'équipe vous répond sous 48h",
+    "form_title": "Envoyer un message",
+    "first_name": "Prénom", "last_name": "Nom", "email": "Adresse email", "subject": "Objet",
+    "subject_placeholder": "-- Choisir un objet --",
+    "subject_membership": "Adhésion / Inscription", "subject_stage": "Renseignements stage",
+    "subject_competition": "Compétition", "subject_rental": "Location de bateaux", "subject_other": "Autre demande",
+    "message": "Message", "message_placeholder": "Votre message...",
+    "rgpd": "J'accepte que mes données soient traitées pour répondre à ma demande",
+    "privacy_link": "politique de confidentialité", "send_btn": "Envoyer le message",
+    "coordinates": "Coordonnées", "address_label": "Adresse",
+    "hours_title": "Horaires d'accueil",
+    "hours_weekday": "Lundi – Vendredi", "hours_weekday_val": "9h – 12h & 14h – 18h",
+    "hours_saturday": "Samedi", "hours_saturday_val": "9h – 13h (en saison)",
+    "hours_sunday": "Dimanche", "hours_sunday_val": "Fermé (hors régate)",
+    "social_title": "Réseaux sociaux"
+  },
+  "find_us": {
+    "hero_title": "Nous trouver", "hero_subtitle": "Port de plaisance — accès bateau, voiture et transports en commun",
+    "map_placeholder": "Carte Google Maps",
+    "map_config": "L'intégration Google Maps sera activée avec votre clé API dans le panneau d'administration.",
+    "open_maps": "Ouvrir dans Google Maps", "address_title": "Adresse", "access_title": "Accès",
+    "access_car": "En voiture", "access_car_desc": "Parking gratuit au port de plaisance. Suivre la direction « Port de plaisance » depuis le centre-ville.",
+    "access_bus": "En bus", "access_bus_desc": "Ligne 12 – arrêt « Port de plaisance ». Fréquence 20 min en saison.",
+    "access_bike": "À vélo", "access_bike_desc": "Piste cyclable depuis la place centrale. Arceaux vélos disponibles à l'entrée du port.",
+    "access_sea": "Par la mer", "access_sea_desc": "Coffres visiteurs disponibles sur demande. Appeler le port au 06 00 00 00 00.",
+    "hours_title": "Horaires d'accueil", "gps_title": "Coordonnées GPS", "directions": "Itinéraire"
+  },
+  "member": {
+    "hero_title": "Espace adhérent", "hero_subtitle": "Accédez à votre espace personnel — licence, réservations, résultats",
+    "login_title": "Connexion", "login_subtitle": "Utilisez votre email et le mot de passe reçu lors de votre inscription.",
+    "email": "Adresse email", "password": "Mot de passe",
+    "remember": "Se souvenir de moi", "forgot": "Mot de passe oublié ?",
+    "login_btn": "Se connecter", "or": "ou",
+    "no_account": "Pas encore de compte ?", "join_btn": "Adhérer au club",
+    "module_title": "Module Espace Adhérent",
+    "module_text": "Après connexion : téléchargement de licence, réservation de bateaux, résultats de compétition et paiement en ligne des cotisations."
+  },
+  "legal": { "hero_title": "Mentions légales" },
+  "privacy": { "hero_title": "Politique de confidentialité" },
   "footer": {
-    "navigation": "Navigation",
-    "club": "Le Club",
-    "stages": "Stages",
-    "competition": "Compétition",
-    "prices": "Tarifs",
-    "news": "Actualités",
-    "legal": "Légal",
-    "legal_notice": "Mentions légales",
-    "privacy": "Confidentialité",
-    "sitemap": "Plan du site",
-    "contact": "Contact"
+    "club_col": "Le club", "about": "Présentation", "activities": "Nos activités",
+    "competition": "Compétition", "news": "Actualités",
+    "practical_col": "Pratique", "stages": "Stages & cours", "prices": "Tarifs & adhésion",
+    "find_us": "Nous trouver", "contact": "Contact",
+    "contact_col": "Contact", "member_space": "Mon espace adhérent",
+    "legal_notice": "Mentions légales", "privacy": "Confidentialité", "powered_by": "Propulsé par"
   }
 }

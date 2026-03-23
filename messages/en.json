@@ -1,37 +1,116 @@
 {
   "nav": {
-    "home": "Home",
-    "club": "The Club",
-    "activities": "Activities",
-    "stages": "Courses",
-    "competition": "Racing",
-    "prices": "Prices",
-    "news": "News",
-    "contact": "Contact",
-    "register": "Register",
-    "member_space": "Members"
+    "home": "Home", "club": "The Club", "activities": "Activities",
+    "stages": "Courses", "competition": "Racing", "prices": "Prices",
+    "news": "News", "contact": "Contact", "register": "Register", "members": "My space"
   },
   "home": {
-    "cta_stages": "View our courses",
-    "cta_discover": "Discover the club",
-    "latest_news": "Latest news",
-    "our_activities": "Our activities",
-    "upcoming_stages": "Upcoming courses",
-    "follow_us": "Follow us",
-    "partners": "Our partners",
-    "find_us": "Find us"
+    "badge": "Sailing Club", "title_1": "Welcome to", "title_2": "Sailing Club",
+    "tagline": "Dinghy sailing, racing, courses for all levels.\nCome sail with us!",
+    "cta_stages": "View our courses", "cta_discover": "Discover the club",
+    "stats_clubs": "FFVoile clubs", "stats_years": "years of experience", "stats_supports": "sailing disciplines", "stats_langs": "languages",
+    "activities_title": "Our sailing disciplines", "activities_subtitle": "From Optimist to foil, for all ages and all levels",
+    "stages_title": "Upcoming courses", "stages_subtitle": "Book online in a few clicks",
+    "meteo_title": "Marine weather", "meteo_subtitle": "Real-time conditions before heading out",
+    "meteo_placeholder": "Windguru widget — configure your station in the admin panel",
+    "meteo_station": "Station ID configurable in the club back-office",
+    "map_title": "Find us", "map_subtitle": "Come visit us at the harbour",
+    "map_placeholder": "Google Maps — configure your coordinates in the admin panel",
+    "map_cta": "Contact us"
   },
+  "club": {
+    "hero_title": "The Club", "hero_subtitle": "A shared passion for sailing for over 20 years",
+    "history_title": "Our history",
+    "history_1": "Founded in 2001, our sailing club welcomes over 300 licence holders every year, from young Optimist sailors to experienced mariners. Located at the marina, we enjoy exceptional waters for all sailing disciplines.",
+    "history_2": "Certified as an École Française de Voile, we offer training led by state-qualified instructors, following the federation values: safety, progression and conviviality.",
+    "stat_members": "members", "stat_coaches": "qualified instructors", "stat_boats": "boats", "stat_label": "EFVoile",
+    "labels_title": "Our certifications", "label_efv": "French Sailing School", "label_comp": "Racing School", "label_croisiere": "Cruising School",
+    "team_title": "Our team", "team_subtitle": "Passionate, qualified instructors",
+    "partners_title": "Our partners"
+  },
+  "activities": {
+    "hero_title": "Our sailing disciplines", "hero_subtitle": "8 disciplines to sail at any age and level",
+    "see_stages": "View courses"
+  },
+  "stages": {
+    "hero_title": "Courses & Classes", "hero_subtitle": "Book online — secure payment via HelloAsso",
+    "filter_label": "Filter by:", "filter_all": "All", "filter_children": "Children", "filter_teens": "Teens",
+    "filter_adults": "Adults", "filter_beginner": "Beginner", "filter_advanced": "Intermediate", "filter_competition": "Racing",
+    "full": "Full", "register": "Book now",
+    "booking_title": "Online booking & payment",
+    "booking_text": "Bookings are managed via HelloAsso (no fees for the club). Secure online payment. A confirmation email is sent immediately.",
+    "booking_alt": "You can also contact the club to book by phone or in person."
+  },
+  "competition": {
+    "hero_title": "Racing & Regattas", "hero_subtitle": "Calendar, results and notices of race",
+    "calendar_title": "2026 Racing calendar", "calendar_subtitle": "Full calendar on",
+    "nor_btn": "Notice of Race", "done_badge": "Finished",
+    "ffvoile_title": "FFVoile API integration available",
+    "ffvoile_text": "The official calendar and race results will be automatically synchronised via the FFVoile API (Executive Board agreement required).",
+    "ffvoile_btn": "View on FFVoile",
+    "palmares_title": "Club honours"
+  },
+  "prices": {
+    "hero_title": "Prices & Membership", "hero_subtitle": "Join the club — sign up via HelloAsso, secure online payment",
+    "memberships_title": "2025–2026 Memberships", "memberships_subtitle": "FFVoile licence included in all packages",
+    "per_year": "€ / year", "register_btn": "Join",
+    "helloasso_title": "HelloAsso — fee-free registration",
+    "helloasso_text": "All memberships are managed via HelloAsso: no admin fees, secure online payment. A confirmation email with your licence certificate is sent immediately.",
+    "rental_title": "Boat rental", "rental_subtitle": "For members holding a competency card",
+    "rental_boat": "Boat", "rental_half": "Half day", "rental_full": "Full day",
+    "rental_note": "* Deposit required. Reservation mandatory 48h in advance. Members with minimum certified level only.",
+    "aids_title": "Subsidies & Sport Pass", "aids_subtitle": "Discounts and funding schemes"
+  },
+  "news": {
+    "hero_title": "News", "hero_subtitle": "All club life — results, courses, events",
+    "filter_all": "All", "read_more": "Read more", "load_more": "Load more articles"
+  },
+  "contact": {
+    "hero_title": "Contact us", "hero_subtitle": "A question? The team replies within 48h",
+    "form_title": "Send a message",
+    "first_name": "First name", "last_name": "Last name", "email": "Email address", "subject": "Subject",
+    "subject_placeholder": "-- Choose a subject --",
+    "subject_membership": "Membership / Registration", "subject_stage": "Course enquiry",
+    "subject_competition": "Racing", "subject_rental": "Boat rental", "subject_other": "Other enquiry",
+    "message": "Message", "message_placeholder": "Your message...",
+    "rgpd": "I agree to my data being processed to respond to my request",
+    "privacy_link": "privacy policy", "send_btn": "Send message",
+    "coordinates": "Contact details", "address_label": "Address",
+    "hours_title": "Opening hours",
+    "hours_weekday": "Monday – Friday", "hours_weekday_val": "9am – 12pm & 2pm – 6pm",
+    "hours_saturday": "Saturday", "hours_saturday_val": "9am – 1pm (in season)",
+    "hours_sunday": "Sunday", "hours_sunday_val": "Closed (except race days)",
+    "social_title": "Social media"
+  },
+  "find_us": {
+    "hero_title": "Find us", "hero_subtitle": "Marina — access by boat, car and public transport",
+    "map_placeholder": "Google Maps",
+    "map_config": "Google Maps integration will be enabled with your API key in the admin panel.",
+    "open_maps": "Open in Google Maps", "address_title": "Address", "access_title": "Getting here",
+    "access_car": "By car", "access_car_desc": "Free parking at the marina. Follow signs for \"Marina\" from the town centre.",
+    "access_bus": "By bus", "access_bus_desc": "Line 12 – stop \"Marina\". Every 20 min in season.",
+    "access_bike": "By bike", "access_bike_desc": "Cycle path from the town square. Bike racks at the marina entrance.",
+    "access_sea": "By sea", "access_sea_desc": "Visitor moorings available on request. Call the harbour on 06 00 00 00 00.",
+    "hours_title": "Opening hours", "gps_title": "GPS coordinates", "directions": "Get directions"
+  },
+  "member": {
+    "hero_title": "Members area", "hero_subtitle": "Access your personal space — licence, bookings, results",
+    "login_title": "Sign in", "login_subtitle": "Use your email and the password received when you registered.",
+    "email": "Email address", "password": "Password",
+    "remember": "Remember me", "forgot": "Forgot password?",
+    "login_btn": "Sign in", "or": "or",
+    "no_account": "Don't have an account?", "join_btn": "Join the club",
+    "module_title": "Members Area module",
+    "module_text": "After signing in: download your licence, book boats, view racing results and pay your membership online."
+  },
+  "legal": { "hero_title": "Legal notice" },
+  "privacy": { "hero_title": "Privacy policy" },
   "footer": {
-    "navigation": "Navigation",
-    "club": "The Club",
-    "stages": "Courses",
-    "competition": "Racing",
-    "prices": "Prices",
-    "news": "News",
-    "legal": "Legal",
-    "legal_notice": "Legal notice",
-    "privacy": "Privacy policy",
-    "sitemap": "Sitemap",
-    "contact": "Contact"
+    "club_col": "The club", "about": "About", "activities": "Activities",
+    "competition": "Racing", "news": "News",
+    "practical_col": "Practical", "stages": "Courses", "prices": "Prices & membership",
+    "find_us": "Find us", "contact": "Contact",
+    "contact_col": "Contact", "member_space": "Members area",
+    "legal_notice": "Legal notice", "privacy": "Privacy policy", "powered_by": "Powered by"
   }
 }

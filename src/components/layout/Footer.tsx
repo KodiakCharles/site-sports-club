@@ -1,14 +1,14 @@
 import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 
-export default function Footer({ locale }: { locale: string }) {
+export default async function Footer({ locale }: { locale: string }) {
+  const t = await getTranslations('footer')
   const base = locale === 'fr' ? '' : `/${locale}`
   const year = new Date().getFullYear()
 
   return (
     <footer className="site-footer">
       <div className="footer-top container">
-
-        {/* BRAND */}
         <div className="footer-brand">
           <div className="footer-logo">
             <span className="footer-logo-icon">⚓</span>
@@ -31,36 +31,35 @@ export default function Footer({ locale }: { locale: string }) {
           </div>
         </div>
 
-        {/* NAV */}
         <div className="footer-col">
-          <h4>Le club</h4>
+          <h4>{t('club_col')}</h4>
           <ul>
-            <li><Link href={`${base}/le-club`}>Présentation</Link></li>
-            <li><Link href={`${base}/activites`}>Nos activités</Link></li>
-            <li><Link href={`${base}/competition`}>Compétition</Link></li>
-            <li><Link href={`${base}/actualites`}>Actualités</Link></li>
+            <li><Link href={`${base}/le-club`}>{t('about')}</Link></li>
+            <li><Link href={`${base}/activites`}>{t('activities')}</Link></li>
+            <li><Link href={`${base}/competition`}>{t('competition')}</Link></li>
+            <li><Link href={`${base}/actualites`}>{t('news')}</Link></li>
           </ul>
         </div>
 
         <div className="footer-col">
-          <h4>Pratique</h4>
+          <h4>{t('practical_col')}</h4>
           <ul>
-            <li><Link href={`${base}/stages`}>Stages & cours</Link></li>
-            <li><Link href={`${base}/tarifs`}>Tarifs & adhésion</Link></li>
-            <li><Link href={`${base}/nous-trouver`}>Nous trouver</Link></li>
-            <li><Link href={`${base}/contact`}>Contact</Link></li>
+            <li><Link href={`${base}/stages`}>{t('stages')}</Link></li>
+            <li><Link href={`${base}/tarifs`}>{t('prices')}</Link></li>
+            <li><Link href={`${base}/nous-trouver`}>{t('find_us')}</Link></li>
+            <li><Link href={`${base}/contact`}>{t('contact')}</Link></li>
           </ul>
         </div>
 
         <div className="footer-col">
-          <h4>Contact</h4>
+          <h4>{t('contact_col')}</h4>
           <address>
             <p>📍 Port de plaisance<br />00000 Votre Ville</p>
             <p><a href="tel:+33000000000">📞 00 00 00 00 00</a></p>
             <p><a href="mailto:contact@club-voile.fr">✉️ contact@club-voile.fr</a></p>
           </address>
           <Link href={`${base}/espace-adherent`} className="btn btn-outline btn-sm" style={{ marginTop: '16px' }}>
-            Mon espace adhérent
+            {t('member_space')}
           </Link>
         </div>
       </div>
@@ -69,10 +68,10 @@ export default function Footer({ locale }: { locale: string }) {
         <div className="container footer-bottom-inner">
           <span>© {year} Club de Voile</span>
           <div className="footer-legal">
-            <Link href={`${base}/mentions-legales`}>Mentions légales</Link>
-            <Link href={`${base}/confidentialite`}>Confidentialité</Link>
+            <Link href={`${base}/mentions-legales`}>{t('legal_notice')}</Link>
+            <Link href={`${base}/confidentialite`}>{t('privacy')}</Link>
           </div>
-          <span className="footer-powered">Propulsé par <strong>VoileWeb</strong></span>
+          <span className="footer-powered">{t('powered_by')} <strong>VoileWeb</strong></span>
         </div>
       </div>
     </footer>

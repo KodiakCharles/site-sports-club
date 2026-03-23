@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 
 const stages = [
   { id: 1, title: 'Stage Optimist — Printemps', support: 'Optimist', level: 'Initiation', audience: 'Enfants 7–12 ans', dates: '14–18 avr. 2026', spots: 10, spotsLeft: 4, price: 270, bookingUrl: '#' },
@@ -11,24 +12,30 @@ const stages = [
   { id: 8, title: 'Stage Optimist Compétition', support: 'Optimist', level: 'Perfectionnement', audience: 'Enfants 9–14 ans', dates: '18–22 août 2026', spots: 8, spotsLeft: 1, price: 310, bookingUrl: '#' },
 ]
 
-export default function StagesPage({ params: { locale } }: { params: { locale: string } }) {
+export default async function StagesPage({ params: { locale } }: { params: { locale: string } }) {
+  const t = await getTranslations('stages')
   const base = locale === 'fr' ? '' : `/${locale}`
+
+  const filters = [
+    t('filter_all'), t('filter_children'), t('filter_teens'), t('filter_adults'),
+    t('filter_beginner'), t('filter_advanced'), t('filter_competition'),
+  ]
+
   return (
     <div>
       <section className="page-hero" style={{ background: 'linear-gradient(135deg,#0a1628,#1a3a5c)' }}>
         <div className="container page-hero-content">
-          <div className="breadcrumb"><Link href={base || '/'}>Accueil</Link> › Stages</div>
-          <h1>Stages & Cours</h1>
-          <p>Inscrivez-vous en ligne — paiement sécurisé via HelloAsso</p>
+          <div className="breadcrumb"><Link href={base || '/'}>Accueil</Link> › {t('hero_title')}</div>
+          <h1>{t('hero_title')}</h1>
+          <p>{t('hero_subtitle')}</p>
         </div>
       </section>
 
-      {/* FILTRES */}
       <section className="section-filters">
         <div className="container filters-bar">
-          <span className="filter-label">Filtrer par :</span>
-          {['Tous', 'Enfants', 'Ados', 'Adultes', 'Initiation', 'Perfectionnement', 'Compétition'].map((f) => (
-            <button key={f} className={`filter-btn${f === 'Tous' ? ' active' : ''}`}>{f}</button>
+          <span className="filter-label">{t('filter_label')}</span>
+          {filters.map((f, i) => (
+            <button key={f} className={`filter-btn${i === 0 ? ' active' : ''}`}>{f}</button>
           ))}
         </div>
       </section>
@@ -50,23 +57,22 @@ export default function StagesPage({ params: { locale } }: { params: { locale: s
                 <div className="stage-row-right">
                   <div className="stage-spots">
                     <span className={`spots-badge${s.spotsLeft <= 2 ? ' urgent' : ''}`}>
-                      {s.spotsLeft === 0 ? 'Complet' : `${s.spotsLeft} place${s.spotsLeft > 1 ? 's' : ''}`}
+                      {s.spotsLeft === 0 ? t('full') : `${s.spotsLeft} place${s.spotsLeft > 1 ? 's' : ''}`}
                     </span>
                   </div>
                   <div className="stage-price">{s.price} €</div>
                   <a href={s.bookingUrl} className={`btn btn-primary${s.spotsLeft === 0 ? ' btn-disabled' : ''}`}>
-                    {s.spotsLeft === 0 ? 'Complet' : "S'inscrire"}
+                    {s.spotsLeft === 0 ? t('full') : t('register')}
                   </a>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* HELLOASSO WIDGET PLACEHOLDER */}
           <div className="booking-info">
-            <h3>💳 Inscription & paiement en ligne</h3>
-            <p>Les inscriptions sont gérées via <strong>HelloAsso</strong> (zéro frais pour le club). Le paiement en ligne est sécurisé. Un email de confirmation vous est envoyé immédiatement.</p>
-            <p style={{ marginTop: '8px', fontSize: '.9rem', color: '#64748b' }}>Vous pouvez également contacter le club pour une inscription par téléphone ou en direct.</p>
+            <h3>💳 {t('booking_title')}</h3>
+            <p>{t('booking_text')}</p>
+            <p style={{ marginTop: '8px', fontSize: '.9rem', color: '#64748b' }}>{t('booking_alt')}</p>
           </div>
         </div>
       </section>
