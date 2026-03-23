@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
-export default function ArticlePage({ params: { locale, slug } }: { params: { locale: string; slug: string } }) {
+export default async function ArticlePage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+  const { locale, slug } = await params
   const base = locale === 'fr' ? '' : `/${locale}`
   const title = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
   return (

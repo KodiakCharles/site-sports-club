@@ -16,7 +16,8 @@ const palmares = [
   { year: 2024, title: 'Vainqueur coupe du club — série A', category: 'Habitable' },
 ]
 
-export default async function CompetitionPage({ params: { locale } }: { params: { locale: string } }) {
+export default async function CompetitionPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
   const t = await getTranslations('competition')
   const base = locale === 'fr' ? '' : `/${locale}`
 

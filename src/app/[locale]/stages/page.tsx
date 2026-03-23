@@ -12,7 +12,8 @@ const stages = [
   { id: 8, title: 'Stage Optimist Compétition', support: 'Optimist', level: 'Perfectionnement', audience: 'Enfants 9–14 ans', dates: '18–22 août 2026', spots: 8, spotsLeft: 1, price: 310, bookingUrl: '#' },
 ]
 
-export default async function StagesPage({ params: { locale } }: { params: { locale: string } }) {
+export default async function StagesPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
   const t = await getTranslations('stages')
   const base = locale === 'fr' ? '' : `/${locale}`
 

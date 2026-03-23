@@ -10,7 +10,8 @@ const posts = [
   { id: 6, slug: 'bilan-saison-2025', title: 'Bilan de la saison 2025 — Une année record', date: '12 jan. 2026', category: 'Bilan', excerpt: '320 licenciés, 45 compétitions, 8 podiums régionaux. La saison 2025 restera comme l\'une des plus belles de l\'histoire du club.' },
 ]
 
-export default async function ActualitesPage({ params: { locale } }: { params: { locale: string } }) {
+export default async function ActualitesPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
   const t = await getTranslations('news')
   const base = locale === 'fr' ? '' : `/${locale}`
 

@@ -12,7 +12,8 @@ const supports = [
   { slug: 'yole', icon: '🚣', name: 'Yole', age: 'Dès 10 ans', level: 'Initiation', desc: 'Navigation en équipage sur embarcation traditionnelle.', color: '#60a5fa' },
 ]
 
-export default async function ActivitesPage({ params: { locale } }: { params: { locale: string } }) {
+export default async function ActivitesPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
   const t = await getTranslations('activities')
   const base = locale === 'fr' ? '' : `/${locale}`
 

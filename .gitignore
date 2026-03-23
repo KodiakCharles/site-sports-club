@@ -40,3 +40,5 @@ public/media/
 *.tsbuildinfo
 *.pdf
 pitch site voile club.html
+payload.db
+payload-types.ts

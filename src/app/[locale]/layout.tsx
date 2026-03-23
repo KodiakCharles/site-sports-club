@@ -7,9 +7,10 @@ import '../../styles/globals.css'
 
 const locales = ['fr', 'en', 'es']
 
-type Props = { children: React.ReactNode; params: { locale: string } }
+type Props = { children: React.ReactNode; params: Promise<{ locale: string }> }
 
-export default async function LocaleLayout({ children, params: { locale } }: Props) {
+export default async function LocaleLayout({ children, params }: Props) {
+  const { locale } = await params
   if (!locales.includes(locale)) notFound()
   const messages = await getMessages()
 

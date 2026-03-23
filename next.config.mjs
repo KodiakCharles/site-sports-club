@@ -1,3 +1,4 @@
+import { withPayload } from '@payloadcms/next/withPayload'
 import createNextIntlPlugin from 'next-intl/plugin'
 
 const withNextIntl = createNextIntlPlugin('./src/i18n.ts')
@@ -15,7 +16,7 @@ const config = {
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: '/((?!admin).*)',
         headers: [
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -27,4 +28,4 @@ const config = {
   },
 }
 
-export default withNextIntl(config)
+export default withPayload(withNextIntl(config))

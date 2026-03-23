@@ -16,10 +16,42 @@ const schema = z.object({
 })
 
 export async function POST(req: NextRequest) {
-  const body = await req.json()
+  // Vérification CSRF : l'Origin doit correspondre au Host
+  const origin = req.headers.get('origin')
+  const host = req.headers.get('host')
+  if (origin && host) {
+    try {
+      const originHost = new URL(origin).host
+      if (originHost !== host) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
+    } catch {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+  }
+
+  let body: Record<string, unknown>
+  const contentType = req.headers.get('content-type') ?? ''
+
+  if (contentType.includes('application/json')) {
+    body = await req.json() as Record<string, unknown>
+  } else if (contentType.includes('application/x-www-form-urlencoded')) {
+    const formData = await req.formData()
+    const firstName = formData.get('firstName') as string ?? ''
+    const lastName = formData.get('lastName') as string ?? ''
+    body = {
+      name: `${firstName} ${lastName}`.trim(),
+      email: formData.get('email'),
+      subject: formData.get('subject'),
+      message: formData.get('message'),
+      website: formData.get('_gotcha'),
+    }
+  } else {
+    return NextResponse.json({ error: 'Unsupported content type' }, { status: 415 })
+  }
 
   // Anti-spam honeypot
-  if (body.website) return NextResponse.json({ success: true }) // silently ignore
+  if (body.website) return NextResponse.json({ success: true })
 
   const parsed = schema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: 'Invalid data' }, { status: 400 })
@@ -28,9 +60,11 @@ export async function POST(req: NextRequest) {
   if (!clubId) return NextResponse.json({ error: 'Club not found' }, { status: 404 })
 
   const { getPayload } = await import('payload')
-  const payload = await getPayload({ config: (await import('@/payload.config')).default })
+  const config = await import('@payload-config')
+  const payload = await getPayload({ config: config.default })
   const club = await payload.findByID({ collection: 'clubs', id: clubId })
-  const clubEmail = club?.contact?.email
+  const clubData = club as Record<string, unknown> & { contact?: { email?: string }; name?: string }
+  const clubEmail = clubData?.contact?.email
 
   if (!clubEmail) return NextResponse.json({ error: 'Club email not configured' }, { status: 500 })
 
@@ -39,7 +73,7 @@ export async function POST(req: NextRequest) {
   await resend.emails.send({
     from: process.env.EMAIL_FROM ?? 'noreply@voileweb.fr',
     to: clubEmail,
-    replyTo: email,
+    reply_to: email,
     subject: `[Contact] ${subject}`,
     html: `
       <h2>Nouveau message de contact</h2>
@@ -52,12 +86,11 @@ export async function POST(req: NextRequest) {
     `,
   })
 
-  // Confirmation à l'expéditeur
   await resend.emails.send({
     from: process.env.EMAIL_FROM ?? 'noreply@voileweb.fr',
     to: email,
-    subject: `Votre message a bien été reçu — ${club.name}`,
-    html: `<p>Bonjour ${name},</p><p>Nous avons bien reçu votre message et vous répondrons dans les meilleurs délais.</p><p>L'équipe ${club.name}</p>`,
+    subject: `Votre message a bien été reçu`,
+    html: `<p>Bonjour ${name},</p><p>Nous avons bien reçu votre message et vous répondrons dans les meilleurs délais.</p>`,
   })
 
   return NextResponse.json({ success: true })

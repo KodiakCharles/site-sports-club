@@ -6,8 +6,8 @@
 import { headers } from 'next/headers'
 
 /** Retourne le hostname de la requête courante */
-export function getCurrentHostname(): string {
-  const headersList = headers()
+export async function getCurrentHostname(): Promise<string> {
+  const headersList = await headers()
   return headersList.get('host') ?? 'localhost:3000'
 }
 
@@ -22,7 +22,7 @@ export function normalizeHostname(hostname: string): string {
  * La correspondance domain → clubId est mise en cache Redis.
  */
 export async function resolveClub(hostname?: string): Promise<string | null> {
-  const host = hostname ?? normalizeHostname(getCurrentHostname())
+  const host = hostname ?? normalizeHostname(await getCurrentHostname())
 
   // En développement local, on peut forcer un club via env
   if (host === 'localhost' && process.env.DEV_CLUB_DOMAIN) {
@@ -38,11 +38,12 @@ async function resolveClubByDomain(domain: string): Promise<string | null> {
   const cacheKey = `tenant:domain:${domain}`
 
   const cached = await redis.get(cacheKey)
-  if (cached) return cached
+  if (cached) return cached as string
 
   // Requête Payload / base de données
   const { getPayload } = await import('payload')
-  const payload = await getPayload({ config: (await import('@/payload.config')).default })
+  const config = await import('@payload-config')
+  const payload = await getPayload({ config: config.default })
 
   const result = await payload.find({
     collection: 'clubs',

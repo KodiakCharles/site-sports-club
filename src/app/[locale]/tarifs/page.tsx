@@ -24,7 +24,8 @@ const aides = [
   { label: 'Tarif solidaire', desc: 'Contactez-nous pour les situations particulières' },
 ]
 
-export default async function TarifsPage({ params: { locale } }: { params: { locale: string } }) {
+export default async function TarifsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
   const t = await getTranslations('prices')
   const base = locale === 'fr' ? '' : `/${locale}`
 

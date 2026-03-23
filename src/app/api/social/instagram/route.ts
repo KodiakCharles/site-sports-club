@@ -11,11 +11,12 @@ export async function GET(req: NextRequest) {
   const clubId = await resolveClub()
   if (!clubId) return NextResponse.json({ error: 'Club not found' }, { status: 404 })
 
-  // Récupérer le token Instagram depuis le CMS (stocké en base)
   const { getPayload } = await import('payload')
-  const payload = await getPayload({ config: (await import('@/payload.config')).default })
+  const config = await import('@payload-config')
+  const payload = await getPayload({ config: config.default })
   const club = await payload.findByID({ collection: 'clubs', id: clubId })
-  const token = club?.social?.instagramToken
+  const clubData = club as Record<string, unknown> & { social?: { instagramToken?: string } }
+  const token = clubData?.social?.instagramToken
 
   if (!token) {
     return NextResponse.json({ posts: [], message: 'Instagram not configured' })
@@ -25,10 +26,10 @@ export async function GET(req: NextRequest) {
     const fields = 'id,media_url,thumbnail_url,media_type,caption,timestamp,permalink'
     const res = await fetch(
       `https://graph.instagram.com/me/media?fields=${fields}&limit=12&access_token=${token}`,
-      { next: { revalidate: 900 } } // cache 15 min
+      { next: { revalidate: 900 } }
     )
     if (!res.ok) throw new Error(`Instagram API: ${res.status}`)
-    const data = await res.json()
+    const data = await res.json() as { data?: InstagramPost[] }
     const posts: InstagramPost[] = data.data ?? []
     return NextResponse.json({ posts })
   } catch (err) {

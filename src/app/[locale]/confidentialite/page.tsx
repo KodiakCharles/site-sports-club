@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 
-export default async function ConfidentialitePage({ params: { locale } }: { params: { locale: string } }) {
+export default async function ConfidentialitePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
   const t = await getTranslations('privacy')
   const base = locale === 'fr' ? '' : `/${locale}`
 

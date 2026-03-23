@@ -9,6 +9,19 @@ const schema = z.object({
 })
 
 export async function POST(req: NextRequest) {
+  // Vérification CSRF
+  const origin = req.headers.get('origin')
+  const host = req.headers.get('host')
+  if (origin && host) {
+    try {
+      if (new URL(origin).host !== host) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
+    } catch {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+  }
+
   const body = await req.json()
   const parsed = schema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: 'Invalid data' }, { status: 400 })
@@ -18,19 +31,21 @@ export async function POST(req: NextRequest) {
 
   const { email, firstName, locale } = parsed.data
 
-  // Récupérer config newsletter du club
   const { getPayload } = await import('payload')
-  const payload = await getPayload({ config: (await import('@/payload.config')).default })
+  const config = await import('@payload-config')
+  const payload = await getPayload({ config: config.default })
   const club = await payload.findByID({ collection: 'clubs', id: clubId })
 
-  const apiKey = club?.integrations?.newsletterApiKey
-  const listId = club?.integrations?.newsletterListId
+  const clubData = club as Record<string, unknown> & {
+    integrations?: { newsletterApiKey?: string; newsletterListId?: string }
+  }
+  const apiKey = clubData?.integrations?.newsletterApiKey
+  const listId = clubData?.integrations?.newsletterListId
 
   if (!apiKey || !listId) {
     return NextResponse.json({ message: 'Newsletter not configured for this club' })
   }
 
-  // Intégration Brevo (ex-Sendinblue)
   try {
     const res = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
@@ -40,14 +55,14 @@ export async function POST(req: NextRequest) {
       },
       body: JSON.stringify({
         email,
-        attributes: { FIRSTNAME: firstName ?? '' },
+        attributes: { FIRSTNAME: firstName ?? '', LOCALE: locale },
         listIds: [parseInt(listId)],
         updateEnabled: true,
       }),
     })
 
     if (!res.ok && res.status !== 204) {
-      const err = await res.json()
+      const err = await res.json() as { message?: string }
       throw new Error(err.message ?? 'Brevo error')
     }
 
