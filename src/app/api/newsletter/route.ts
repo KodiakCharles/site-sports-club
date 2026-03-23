@@ -1,28 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { resolveClub } from '@/lib/utils/tenant'
+import { isValidOrigin } from '@/lib/utils/csrf'
+import { rateLimit, getClientIp } from '@/lib/utils/rateLimit'
 
 const schema = z.object({
   email: z.string().email(),
-  firstName: z.string().optional(),
+  firstName: z.string().max(100).optional(),
   locale: z.enum(['fr', 'en', 'es']).default('fr'),
 })
 
 export async function POST(req: NextRequest) {
-  // Vérification CSRF
-  const origin = req.headers.get('origin')
-  const host = req.headers.get('host')
-  if (origin && host) {
-    try {
-      if (new URL(origin).host !== host) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-      }
-    } catch {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
+  // CSRF
+  if (!isValidOrigin(req)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const body = await req.json()
+  // Rate limiting : 3 inscriptions / 1 heure par IP
+  const ip = getClientIp(req)
+  const rl = rateLimit(`newsletter:${ip}`, { limit: 3, windowMs: 60 * 60_000 })
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } }
+    )
+  }
+
+  const body = await req.json() as unknown
   const parsed = schema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: 'Invalid data' }, { status: 400 })
 
@@ -49,10 +53,7 @@ export async function POST(req: NextRequest) {
   try {
     const res = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
-      headers: {
-        'api-key': apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'api-key': apiKey, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email,
         attributes: { FIRSTNAME: firstName ?? '', LOCALE: locale },

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { resolveClub } from '@/lib/utils/tenant'
+import { rateLimit, getClientIp } from '@/lib/utils/rateLimit'
 import type { InstagramPost } from '@/types'
 
 /**
@@ -8,6 +9,16 @@ import type { InstagramPost } from '@/types'
  * Nécessite : instagramToken configuré dans le back-office du club
  */
 export async function GET(req: NextRequest) {
+  // Rate limiting : 30 req / minute par IP
+  const ip = getClientIp(req)
+  const rl = rateLimit(`instagram:${ip}`, { limit: 30, windowMs: 60_000 })
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } }
+    )
+  }
+
   const clubId = await resolveClub()
   if (!clubId) return NextResponse.json({ error: 'Club not found' }, { status: 404 })
 
@@ -34,6 +45,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ posts })
   } catch (err) {
     console.error('[Instagram API]', err)
-    return NextResponse.json({ posts: [], error: 'Instagram fetch failed' }, { status: 200 })
+    return NextResponse.json({ posts: [], error: 'Instagram fetch failed' })
   }
 }

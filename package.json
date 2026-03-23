@@ -21,6 +21,7 @@
     "@payloadcms/richtext-lexical": "^3.80.0",
     "@payloadcms/translations": "^3.80.0",
     "@payloadcms/ui": "^3.80.0",
+    "@t3-oss/env-nextjs": "^0.13.11",
     "clsx": "^2.1.0",
     "date-fns": "^3.6.0",
     "graphql": "^16.13.1",

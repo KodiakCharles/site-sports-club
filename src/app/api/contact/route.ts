@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { resolveClub } from '@/lib/utils/tenant'
+import { isValidOrigin } from '@/lib/utils/csrf'
+import { rateLimit, getClientIp } from '@/lib/utils/rateLimit'
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -8,26 +10,26 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 const schema = z.object({
   name: z.string().min(2).max(100),
   email: z.string().email(),
-  phone: z.string().optional(),
+  phone: z.string().max(20).optional(),
   subject: z.string().min(2).max(200),
   message: z.string().min(10).max(2000),
-  // Honeypot anti-spam (doit rester vide)
-  website: z.string().max(0).optional(),
+  website: z.string().max(0).optional(), // honeypot
 })
 
 export async function POST(req: NextRequest) {
-  // Vérification CSRF : l'Origin doit correspondre au Host
-  const origin = req.headers.get('origin')
-  const host = req.headers.get('host')
-  if (origin && host) {
-    try {
-      const originHost = new URL(origin).host
-      if (originHost !== host) {
-        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-      }
-    } catch {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
+  // CSRF
+  if (!isValidOrigin(req)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  // Rate limiting : 5 requêtes / 10 minutes par IP
+  const ip = getClientIp(req)
+  const rl = rateLimit(`contact:${ip}`, { limit: 5, windowMs: 10 * 60_000 })
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: 'Too many requests' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } }
+    )
   }
 
   let body: Record<string, unknown>
@@ -37,8 +39,8 @@ export async function POST(req: NextRequest) {
     body = await req.json() as Record<string, unknown>
   } else if (contentType.includes('application/x-www-form-urlencoded')) {
     const formData = await req.formData()
-    const firstName = formData.get('firstName') as string ?? ''
-    const lastName = formData.get('lastName') as string ?? ''
+    const firstName = (formData.get('firstName') as string) ?? ''
+    const lastName = (formData.get('lastName') as string) ?? ''
     body = {
       name: `${firstName} ${lastName}`.trim(),
       email: formData.get('email'),
@@ -50,7 +52,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unsupported content type' }, { status: 415 })
   }
 
-  // Anti-spam honeypot
+  // Honeypot anti-spam
   if (body.website) return NextResponse.json({ success: true })
 
   const parsed = schema.safeParse(body)
@@ -63,7 +65,10 @@ export async function POST(req: NextRequest) {
   const config = await import('@payload-config')
   const payload = await getPayload({ config: config.default })
   const club = await payload.findByID({ collection: 'clubs', id: clubId })
-  const clubData = club as Record<string, unknown> & { contact?: { email?: string }; name?: string }
+  const clubData = club as Record<string, unknown> & {
+    contact?: { email?: string }
+    name?: string
+  }
   const clubEmail = clubData?.contact?.email
 
   if (!clubEmail) return NextResponse.json({ error: 'Club email not configured' }, { status: 500 })
