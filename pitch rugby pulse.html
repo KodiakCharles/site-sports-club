@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RugbyPulse — La plateforme digitale des clubs de rugby FFR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0b4d2c;
+    --primary-dark: #073820;
+    --secondary: #d4a017;
+    --accent: #c8102e;
+    --navy: #0b1410;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-400: #94a3b8;
+    --gray-600: #475569;
+    --gray-800: #1e293b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', -apple-system, system-ui, sans-serif; color: var(--gray-800); line-height: 1.65; background: #fff; -webkit-font-smoothing: antialiased; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  .pitch-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(11,20,16,.9); backdrop-filter: blur(16px); height: 60px; display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .pitch-header .container { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+  .pitch-logo { color: #fff; font-weight: 800; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+  .pitch-logo span { color: var(--secondary); }
+  .pitch-cta-top { padding: 8px 24px; border-radius: 24px; background: var(--secondary); color: var(--navy); font-weight: 700; font-size: .85rem; text-decoration: none; transition: all .2s; }
+  .pitch-cta-top:hover { background: #fff; transform: translateY(-1px); }
+
+  .pitch-hero { background: linear-gradient(135deg, #030a06 0%, #0b4d2c 50%, #156a3e 100%); min-height: 100vh; display: flex; align-items: center; padding: 120px 0 80px; position: relative; overflow: hidden; color: #fff; }
+  .pitch-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 40%, rgba(212,160,23,.15) 0%, transparent 70%); }
+  .pitch-hero-content { position: relative; z-index: 1; max-width: 680px; }
+  .pitch-hero-badge { display: inline-block; background: rgba(212,160,23,.18); border: 1px solid rgba(212,160,23,.4); padding: 5px 16px; border-radius: 24px; font-size: .75rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 24px; }
+  .pitch-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 6vw, 4.2rem); font-weight: 900; line-height: 1.08; margin-bottom: 20px; }
+  .pitch-hero h1 em { font-style: normal; color: var(--secondary); }
+  .pitch-hero .tagline { font-size: 1.2rem; opacity: .9; line-height: 1.6; margin-bottom: 12px; max-width: 580px; font-weight: 500; }
+  .pitch-hero .sub-tagline { font-size: .95rem; opacity: .65; line-height: 1.6; margin-bottom: 36px; max-width: 520px; }
+  .pitch-hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-hero { padding: 14px 36px; border-radius: 28px; font-weight: 700; font-size: 1rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all .25s; }
+  .btn-hero-primary { background: var(--secondary); color: var(--navy); box-shadow: 0 4px 20px rgba(212,160,23,.4); }
+  .btn-hero-primary:hover { background: #fff; transform: translateY(-2px); }
+  .btn-hero-outline { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.3); }
+  .btn-hero-outline:hover { border-color: var(--secondary); background: rgba(212,160,23,.1); }
+
+  section { padding: 96px 0; }
+  .section-alt { background: var(--gray-50); }
+  .section-header { text-align: center; max-width: 720px; margin: 0 auto 56px; }
+  .section-eyebrow { font-size: .75rem; font-weight: 800; color: var(--primary); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; color: var(--navy); margin-bottom: 16px; line-height: 1.15; }
+  .section-subtitle { font-size: 1.05rem; color: var(--gray-600); line-height: 1.7; }
+
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 900px) { .features-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .features-grid { grid-template-columns: 1fr; } }
+  .feature-card { background: #fff; border: 1px solid var(--gray-200); padding: 28px 24px; border-radius: 16px; transition: all .25s; }
+  .feature-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 8px 30px rgba(11,77,44,.12); }
+  .feature-icon { font-size: 1.8rem; margin-bottom: 14px; display: inline-block; }
+  .feature-card h3 { font-size: 1.05rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .feature-card p { font-size: .88rem; color: var(--gray-600); line-height: 1.6; }
+
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 980px; margin: 0 auto; }
+  @media (max-width: 900px) { .pricing-grid { grid-template-columns: 1fr; } }
+  .pricing-card { background: #fff; border: 2px solid var(--gray-200); padding: 32px 28px; border-radius: 18px; display: flex; flex-direction: column; position: relative; }
+  .pricing-card.popular { border-color: var(--primary); transform: scale(1.03); box-shadow: 0 12px 40px rgba(11,77,44,.15); }
+  .pricing-popular-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--secondary); color: var(--navy); font-size: .7rem; font-weight: 800; padding: 4px 14px; border-radius: 14px; letter-spacing: 1px; }
+  .pricing-name { font-size: 1rem; font-weight: 700; color: var(--gray-600); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+  .pricing-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+  .pricing-price { font-size: 2.2rem; font-weight: 900; color: var(--primary); margin: 20px 0 4px; }
+  .pricing-price small { font-size: .95rem; font-weight: 500; color: var(--gray-400); }
+  .pricing-target { font-size: .82rem; color: var(--gray-400); margin-bottom: 24px; }
+  .pricing-feature { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; font-size: .88rem; color: var(--gray-800); }
+  .pricing-feature-icon { color: var(--primary); font-weight: 900; flex-shrink: 0; margin-top: 2px; }
+  .pricing-cta { display: block; text-align: center; margin-top: auto; padding: 12px 20px; border-radius: 24px; font-weight: 700; font-size: .9rem; text-decoration: none; transition: all .2s; }
+  .pricing-cta-primary { background: var(--primary); color: #fff; }
+  .pricing-cta-primary:hover { background: var(--primary-dark); }
+  .pricing-cta-outline { border: 2px solid var(--primary); color: var(--primary); }
+  .pricing-cta-outline:hover { background: var(--primary); color: #fff; }
+  .pricing-cta-accent { background: var(--secondary); color: var(--navy); }
+  .pricing-cta-accent:hover { background: var(--accent); color: #fff; }
+
+  .cta-final { background: linear-gradient(135deg, var(--navy) 0%, var(--primary) 100%); color: #fff; text-align: center; padding: 96px 24px; }
+  .cta-final h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; margin-bottom: 16px; }
+  .cta-final p { font-size: 1.05rem; opacity: .85; margin-bottom: 32px; max-width: 580px; margin-left: auto; margin-right: auto; }
+  .pitch-cta-btn { display: inline-block; padding: 16px 40px; border-radius: 32px; background: var(--secondary); color: var(--navy); font-weight: 800; font-size: 1rem; text-decoration: none; box-shadow: 0 4px 24px rgba(212,160,23,.4); transition: all .2s; }
+  .pitch-cta-btn:hover { background: #fff; transform: translateY(-2px); }
+
+  footer { background: var(--navy); color: #fff; padding: 48px 24px; text-align: center; font-size: .85rem; }
+  footer a { color: var(--secondary); }
+</style>
+</head>
+<body>
+
+<header class="pitch-header">
+  <div class="container">
+    <a href="#" class="pitch-logo">🏉 Rugby<span>Pulse</span></a>
+    <a href="#contact" class="pitch-cta-top">Demander une démo</a>
+  </div>
+</header>
+
+<section class="pitch-hero">
+  <div class="container">
+    <div class="pitch-hero-content">
+      <span class="pitch-hero-badge">Pour les clubs affiliés FFR</span>
+      <h1>Le digital <em>qui respecte</em><br>l'âme de votre club.</h1>
+      <p class="tagline">Site pro, actualités du club, espace joueur, assistant IA — le socle digital pour un club de rugby amateur.</p>
+      <p class="sub-tagline">Moins de 10 minutes pour mettre en ligne. Un webmaster, pas une agence. Un forfait simple, pas un devis surprise.</p>
+      <div class="pitch-hero-actions">
+        <a href="#tarifs" class="btn-hero btn-hero-primary">Voir les forfaits →</a>
+        <a href="#features" class="btn-hero btn-hero-outline">Les fonctionnalités</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Fonctionnalités</div>
+      <h2 class="section-title">Tout ce dont un club de rugby a besoin</h2>
+      <p class="section-subtitle">De l'école de rugby U8 à l'équipe première, en passant par le rugby loisir et la section féminine.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card"><span class="feature-icon">📰</span><h3>Actualités du club</h3><p>Comptes-rendus de match, distinctions, partenariats, vie associative — publication en 1 minute depuis l'admin CMS.</p></div>
+      <div class="feature-card"><span class="feature-icon">👤</span><h3>Espace joueur</h3><p>Profil, licence FFR, certificat médical, cotisation visible. Conforme RGPD.</p></div>
+      <div class="feature-card"><span class="feature-icon">🤖</span><h3>Assistant IA</h3><p>Répond aux parents et joueurs (inscription, certificat médical, équipement, horaires) 24/7, basé sur Claude. S'enrichit avec les questions que l'admin valide.</p></div>
+      <div class="feature-card"><span class="feature-icon">💳</span><h3>HelloAsso en lien</h3><p>Lien direct vers votre HelloAsso pour licences, cotisations, événements — paiement sécurisé hébergé chez eux.</p></div>
+      <div class="feature-card"><span class="feature-icon">📸</span><h3>Galerie photos</h3><p>Upload depuis l'admin, affichage optimisé web, jusqu'à 10&nbsp;MB par image.</p></div>
+      <div class="feature-card"><span class="feature-icon">📊</span><h3>Page partenaires</h3><p>Vitrine sponsors avec logos, texte, lien. Base d'un dossier partenariat concret.</p></div>
+      <div class="feature-card"><span class="feature-icon">🌐</span><h3>SEO optimisé</h3><p>Sitemap, robots.txt, metadonnées Open Graph, URLs propres. Le club remonte sur Google.</p></div>
+      <div class="feature-card"><span class="feature-icon">📱</span><h3>Mobile first</h3><p>Design responsive, PWA installable. La majorité des parents consultent depuis leur téléphone.</p></div>
+      <div class="feature-card"><span class="feature-icon">🎨</span><h3>Aux couleurs du club</h3><p>Couleurs primaires / secondaires configurables en CMS. Logo upload. Rendu cohérent sur tout le site.</p></div>
+    </div>
+
+    <div style="margin-top: 48px; padding: 32px; background: var(--gray-50); border-radius: 16px; border: 1px solid var(--gray-200);">
+      <div class="section-eyebrow" style="color: var(--secondary); margin-bottom: 12px;">Roadmap</div>
+      <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 800; color: var(--navy); margin-bottom: 12px;">Prochaines fonctionnalités</h3>
+      <p style="color: var(--gray-600); margin-bottom: 16px;">Features en cours de développement, disponibles au fil des prochaines releases :</p>
+      <ul style="color: var(--gray-800); font-size: .9rem; line-height: 1.8; padding-left: 20px;">
+        <li>Calendrier des matchs + feuilles de match + convocations</li>
+        <li>Classement de poule avec mise à jour automatique</li>
+        <li>Statistiques joueurs (essais, cartons, temps de jeu)</li>
+        <li>Inscriptions école de rugby en ligne (flux dédié)</li>
+        <li>Reporting sponsors (vues, clics, valorisation)</li>
+      </ul>
+      <p style="color: var(--gray-400); font-size: .8rem; margin-top: 16px;">Les clubs pilotes bénéficient d'un accès prioritaire et d'une influence sur la priorisation.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Pour qui</div>
+      <h2 class="section-title">Pensé pour les clubs amateurs</h2>
+      <p class="section-subtitle">De 50 à 800 licenciés. École de rugby, seniors, féminines, rugby à 7, rugby à XIII — toutes les sections dans un seul site.</p>
+    </div>
+  </div>
+</section>
+
+<section id="tarifs">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Tarifs</div>
+      <h2 class="section-title">Trois forfaits, pas de devis</h2>
+      <p class="section-subtitle">Sans engagement, facture mensuelle ou annuelle (–20 %). Hébergement, domaine et support inclus.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-name">Essentiel</div>
+        <div class="pricing-title">Site complet, sans IA</div>
+        <div class="pricing-price">49€ <small>HT/mois</small></div>
+        <div class="pricing-target">Site rugby pro pour le club</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Pages illimitées + page builder</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Design aux couleurs du club</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Espace joueur + galerie photos</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Newsletter Brevo</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Lien HelloAsso (licences, cotisations)</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Hébergement + SSL inclus</div>
+        <a href="mailto:cgaudiard@kodiak-consulting.fr?subject=RugbyPulse%20-%20Forfait%20Essentiel" class="pricing-cta pricing-cta-outline">Choisir ce forfait</a>
+      </div>
+      <div class="pricing-card popular">
+        <div class="pricing-popular-badge">POPULAIRE</div>
+        <div class="pricing-name">Pulse</div>
+        <div class="pricing-title">Toutes les fonctionnalités IA</div>
+        <div class="pricing-price">99€ <small>HT/mois</small></div>
+        <div class="pricing-target">Le club connecté à l'IA</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Tout Essentiel +</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Chatbot IA Claude (FAQ parents 24/7)</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Base de connaissances auto-enrichie</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> SEO automatique via IA</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Assistant IA du webmaster</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Multilingue FR/EN/ES</div>
+        <a href="mailto:cgaudiard@kodiak-consulting.fr?subject=RugbyPulse%20-%20Forfait%20Pulse" class="pricing-cta pricing-cta-accent">Choisir ce forfait</a>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-name">Sur mesure</div>
+        <div class="pricing-title">Intégrations spécifiques</div>
+        <div class="pricing-price">Sur devis</div>
+        <div class="pricing-target">Pour les besoins avancés</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Tout Pulse +</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Calendrier matchs + feuilles de match</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Classement de poule auto FFR</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Billetterie événements</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Multi-sections (M/F, école, loisir)</div>
+        <div class="pricing-feature"><span class="pricing-feature-icon">✓</span> Support prioritaire (24h)</div>
+        <a href="mailto:cgaudiard@kodiak-consulting.fr?subject=RugbyPulse%20-%20Forfait%20Sur%20mesure" class="pricing-cta pricing-cta-primary">Demander un devis</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="cta-final">
+  <h2>Prêt à mettre votre club en mêlée numérique ?</h2>
+  <p>30 minutes de démo, sans engagement. Nous auditons votre site actuel et vous montrons RugbyPulse configuré aux couleurs de votre club.</p>
+  <a href="mailto:cgaudiard@kodiak-consulting.fr?subject=RugbyPulse%20-%20Demande%20de%20d%C3%A9mo&body=Bonjour%2C%0A%0AJe%20souhaite%20une%20d%C3%A9mo%20RugbyPulse%20pour%20notre%20club.%0A%0ANom%20du%20club%20%3A%20%0ANombre%20de%20licenci%C3%A9s%20%3A%20%0A%0AMerci%20!" class="pitch-cta-btn">Demander une démo →</a>
+</section>
+
+<footer>
+  <p>🏉 RugbyPulse — Plateforme digitale pour les clubs de rugby affiliés FFR</p>
+  <p style="margin-top:8px">Kodiak Consulting — <a href="mailto:cgaudiard@kodiak-consulting.fr">cgaudiard@kodiak-consulting.fr</a></p>
+</footer>
+
+</body>
+</html>

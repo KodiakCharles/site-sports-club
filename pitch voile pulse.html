@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoilePulse — Donnez un nouveau souffle numerique a votre club de voile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1d6fa4;
+    --primary-dark: #14527a;
+    --secondary: #2eb8e6;
+    --accent: #f0b429;
+    --navy: #0a1628;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-400: #94a3b8;
+    --gray-600: #475569;
+    --gray-800: #1e293b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', -apple-system, system-ui, sans-serif; color: var(--gray-800); line-height: 1.65; background: #fff; -webkit-font-smoothing: antialiased; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* HEADER */
+  .pitch-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,22,40,.85); backdrop-filter: blur(16px); height: 60px; display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,.06); }
+  .pitch-header .container { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+  .pitch-logo { color: #fff; font-weight: 800; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; text-decoration: none; margin-right: auto; }
+  .pitch-logo span { color: var(--secondary); }
+  .pitch-cta-top { padding: 8px 24px; border-radius: 24px; background: var(--primary); color: #fff; font-weight: 600; font-size: .85rem; text-decoration: none; transition: all .2s; margin-left: auto; flex-shrink: 0; }
+  .pitch-cta-top:hover { background: var(--secondary); transform: translateY(-1px); }
+
+  /* HERO */
+  .pitch-hero { background: linear-gradient(135deg, #040a14 0%, #0a1e38 30%, #1a4a7a 70%, #2eb8e6 100%); min-height: 100vh; display: flex; align-items: center; padding: 120px 0 80px; position: relative; overflow: hidden; color: #fff; }
+  .pitch-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 40%, rgba(46,184,230,.12) 0%, transparent 70%); }
+  .pitch-hero-content { position: relative; z-index: 1; max-width: 660px; }
+  .pitch-hero-badge { display: inline-block; background: rgba(46,184,230,.15); border: 1px solid rgba(46,184,230,.3); padding: 5px 16px; border-radius: 24px; font-size: .75rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 24px; }
+  .pitch-hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; line-height: 1.08; margin-bottom: 20px; }
+  .pitch-hero h1 em { font-style: normal; color: var(--secondary); }
+  .pitch-hero .tagline { font-size: 1.15rem; opacity: .9; line-height: 1.7; margin-bottom: 12px; max-width: 580px; font-weight: 500; }
+  .pitch-hero .sub-tagline { font-size: .95rem; opacity: .65; line-height: 1.6; margin-bottom: 36px; max-width: 520px; }
+  .pitch-hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-hero { padding: 14px 36px; border-radius: 28px; font-weight: 700; font-size: 1rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all .25s; }
+  .btn-hero-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 20px rgba(29,111,164,.4); }
+  .btn-hero-primary:hover { background: #fff; color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(29,111,164,.3); }
+  .btn-hero-outline { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.3); }
+  .btn-hero-outline:hover { border-color: #fff; background: rgba(255,255,255,.1); }
+  .pitch-hero-anchor { position: absolute; right: 80px; top: 50%; transform: translateY(-50%); font-size: 12rem; opacity: .04; font-weight: 900; }
+
+  /* SECTIONS */
+  .pitch-section { padding: 96px 0; }
+  .pitch-section-alt { background: var(--gray-50); }
+  .pitch-section-dark { background: var(--navy); color: #fff; }
+  .pitch-section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; text-align: center; margin-bottom: 12px; line-height: 1.15; }
+  .pitch-section-title em { font-style: normal; color: var(--secondary); }
+  .pitch-section-sub { text-align: center; font-size: 1.05rem; color: var(--gray-400); max-width: 600px; margin: 0 auto 56px; line-height: 1.7; }
+
+  /* STATS */
+  .pitch-stats { display: flex; justify-content: center; gap: 64px; padding: 56px 0; }
+  .pitch-stat { text-align: center; }
+  .pitch-stat-num { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, #fff 30%, var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+  .pitch-stat-label { font-size: .78rem; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; margin-top: 8px; }
+
+  /* FEATURES */
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .feature-card { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; padding: 32px 24px; transition: all .25s; }
+  .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.08); border-color: rgba(29,111,164,.2); }
+  .feature-icon { font-size: 2.2rem; margin-bottom: 16px; display: block; }
+  .feature-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: var(--navy); }
+  .feature-card p { font-size: .88rem; color: var(--gray-600); line-height: 1.6; }
+
+  /* SHOWCASE */
+  .showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .showcase-visual { background: linear-gradient(135deg, #0a1e38, #1a4a7a); border-radius: 20px; padding: 32px; min-height: 360px; display: flex; align-items: center; justify-content: center; }
+  .showcase-visual-inner { background: rgba(255,255,255,.05); border-radius: 12px; border: 1px solid rgba(255,255,255,.1); padding: 24px; width: 100%; color: #fff; }
+  .showcase-text h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 800; margin-bottom: 16px; color: var(--navy); line-height: 1.2; }
+  .showcase-text p { font-size: .95rem; color: var(--gray-600); line-height: 1.7; margin-bottom: 12px; }
+  .showcase-check { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .showcase-check-icon { color: var(--secondary); font-weight: 700; font-size: 1.1rem; flex-shrink: 0; }
+  .showcase-check span { font-size: .9rem; color: var(--gray-600); }
+
+  /* MODULES */
+  .modules-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .module-card { display: flex; align-items: flex-start; gap: 16px; padding: 20px 24px; background: #fff; border: 1px solid var(--gray-200); border-radius: 12px; transition: all .2s; }
+  .module-card:hover { border-color: var(--primary); box-shadow: 0 4px 16px rgba(29,111,164,.08); }
+  .module-icon { font-size: 1.6rem; flex-shrink: 0; }
+  .module-card h4 { font-size: .92rem; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+  .module-card p { font-size: .78rem; color: var(--gray-400); }
+
+  /* TESTIMONIALS */
+  .testimonials { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .testimonial-card { background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; padding: 28px; }
+  .testimonial-quote { font-size: .9rem; color: var(--gray-600); line-height: 1.7; margin-bottom: 16px; font-style: italic; }
+  .testimonial-author { font-weight: 700; font-size: .85rem; color: var(--navy); }
+  .testimonial-role { font-size: .75rem; color: var(--gray-400); }
+  .testimonial-stars { color: var(--accent); font-size: .9rem; margin-bottom: 12px; }
+
+  /* SEO */
+  .seo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .seo-card { text-align: center; padding: 24px 16px; }
+  .seo-card-icon { font-size: 2rem; margin-bottom: 10px; }
+  .seo-card h4 { font-size: .85rem; font-weight: 700; margin-bottom: 4px; }
+  .seo-card p { font-size: .72rem; color: rgba(255,255,255,.5); }
+
+  /* PRICING */
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 960px; margin: 0 auto; }
+  .pricing-card { background: #fff; border: 2px solid var(--gray-200); border-radius: 20px; padding: 36px 28px; text-align: center; position: relative; transition: all .25s; }
+  .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.1); }
+  .pricing-card.featured { border-color: var(--primary); box-shadow: 0 8px 40px rgba(29,111,164,.15); transform: scale(1.04); }
+  .pricing-card.featured:hover { transform: scale(1.04) translateY(-4px); }
+  .pricing-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--primary); color: #fff; padding: 5px 18px; border-radius: 20px; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+  .pricing-badge-accent { background: linear-gradient(135deg, var(--accent), #e09900); }
+  .pricing-name { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 800; margin-bottom: 4px; color: var(--navy); }
+  .pricing-target { font-size: .78rem; color: var(--gray-400); margin-bottom: 20px; }
+  .pricing-price { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 900; color: var(--primary); line-height: 1; }
+  .pricing-price small { font-size: .85rem; font-weight: 500; color: var(--gray-400); }
+  .pricing-period { font-size: .78rem; color: var(--gray-400); margin-bottom: 24px; }
+  .pricing-features { text-align: left; display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; padding: 0; }
+  .pricing-feature { display: flex; align-items: flex-start; gap: 8px; font-size: .82rem; color: var(--gray-600); }
+  .pricing-feature-icon { color: var(--secondary); font-size: 1rem; flex-shrink: 0; }
+  .pricing-cta { display: block; padding: 12px 28px; border-radius: 24px; font-weight: 700; font-size: .9rem; text-decoration: none; transition: all .2s; }
+  .pricing-cta-primary { background: var(--primary); color: #fff; }
+  .pricing-cta-primary:hover { background: var(--secondary); }
+  .pricing-cta-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+  .pricing-cta-outline:hover { background: var(--primary); color: #fff; }
+  .pricing-cta-accent { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; }
+  .pricing-cta-accent:hover { box-shadow: 0 4px 20px rgba(46,184,230,.4); }
+  .pricing-annual { text-align: center; margin-top: 32px; padding: 16px 24px; background: linear-gradient(135deg, rgba(29,111,164,.06), rgba(46,184,230,.06)); border-radius: 12px; max-width: 600px; margin-left: auto; margin-right: auto; }
+  .pricing-annual strong { color: var(--primary); }
+
+  /* CTA FINAL */
+  .pitch-cta-section { background: linear-gradient(135deg, #040a14, #0a1e38, #1a4a7a); padding: 100px 0; text-align: center; color: #fff; position: relative; overflow: hidden; }
+  .pitch-cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(46,184,230,.08) 0%, transparent 70%); }
+  .pitch-cta-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; margin-bottom: 16px; position: relative; }
+  .pitch-cta-section p { font-size: 1.1rem; opacity: .7; margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; position: relative; }
+  .pitch-cta-btn { display: inline-flex; align-items: center; gap: 10px; padding: 18px 48px; border-radius: 32px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; font-weight: 800; font-size: 1.15rem; text-decoration: none; transition: all .3s; position: relative; box-shadow: 0 4px 24px rgba(46,184,230,.3); }
+  .pitch-cta-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(46,184,230,.5); }
+  .pitch-cta-sub { margin-top: 20px; font-size: .85rem; opacity: .5; position: relative; }
+
+  /* FOOTER */
+  .pitch-footer { background: var(--navy); color: rgba(255,255,255,.4); padding: 32px 0; text-align: center; font-size: .8rem; }
+  .pitch-footer a { color: var(--secondary); text-decoration: none; }
+
+  @media (max-width: 768px) {
+    .features-grid, .testimonials, .pricing-grid { grid-template-columns: 1fr; }
+    .showcase { grid-template-columns: 1fr; }
+    .modules-grid { grid-template-columns: 1fr; }
+    .seo-grid { grid-template-columns: repeat(2, 1fr); }
+    .pitch-stats { flex-direction: column; gap: 32px; }
+    .pitch-hero-anchor { display: none; }
+    .pricing-card.featured { transform: none; }
+    .pricing-card.featured:hover { transform: translateY(-4px); }
+  }
+</style>
+</head>
+<body>
+
+<header class="pitch-header">
+  <div class="container">
+    <a href="#" class="pitch-logo">&#9875; Voile<span>Pulse</span></a>
+    <a href="#contact" class="pitch-cta-top">Nous contacter</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="pitch-hero">
+  <div class="container">
+    <div class="pitch-hero-content">
+      <div class="pitch-hero-badge">Boostee a l'IA</div>
+      <h1>Donnez un nouveau souffle <em>numerique</em> a votre club</h1>
+      <p class="tagline">Une solution cle en main, boostee a l'IA, pour transformer chaque visiteur en futur membre de la FFV.</p>
+      <p class="sub-tagline">Site professionnel, gestion des stages, adherents, competitions, meteo marine — tout est integre, tout est simple.</p>
+      <div class="pitch-hero-actions">
+        <a href="#tarifs" class="btn-hero btn-hero-primary">Voir les forfaits &#8594;</a>
+        <a href="#fonctionnalites" class="btn-hero btn-hero-outline">Decouvrir</a>
+      </div>
+    </div>
+  </div>
+  <div class="pitch-hero-anchor">&#9875;</div>
+</section>
+
+<!-- STATS -->
+<section class="pitch-section-dark">
+  <div class="container">
+    <div class="pitch-stats">
+      <div class="pitch-stat"><div class="pitch-stat-num">14+</div><div class="pitch-stat-label">Pages optimisees</div></div>
+      <div class="pitch-stat"><div class="pitch-stat-num">3</div><div class="pitch-stat-label">Langues (FR, EN, ES)</div></div>
+      <div class="pitch-stat"><div class="pitch-stat-num">100%</div><div class="pitch-stat-label">SEO automatise par IA</div></div>
+      <div class="pitch-stat"><div class="pitch-stat-num">0</div><div class="pitch-stat-label">Ligne de code a ecrire</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="pitch-section" id="fonctionnalites">
+  <div class="container">
+    <div class="pitch-section-title">Tout ce dont votre club <em>a besoin</em></div>
+    <div class="pitch-section-sub">Concu specifiquement pour les clubs affilies a la Federation Francaise de Voile.</div>
+    <div class="features-grid">
+      <div class="feature-card"><span class="feature-icon">&#9973;</span><h3>Gestion des stages</h3><p>Publiez vos stages depuis le CMS, g&eacute;rez les places, lien direct HelloAsso pour les inscriptions.</p></div>
+      <div class="feature-card"><span class="feature-icon">&#127942;</span><h3>Page comp&eacute;tition</h3><p>Palmar&egrave;s et r&eacute;sultats saisis depuis le CMS. Vos comp&eacute;titeurs retrouvent l'info au m&ecirc;me endroit.</p></div>
+      <div class="feature-card"><span class="feature-icon">&#128100;</span><h3>Espace adh&eacute;rent</h3><p>Portail personnel s&eacute;curis&eacute; : profil, licence FFVoile, cotisation visible. Conforme RGPD.</p></div>
+      <div class="feature-card"><span class="feature-icon">&#127754;</span><h3>M&eacute;t&eacute;o marine Windguru</h3><p>Widget configurable par station, vent, vagues, temp&eacute;rature. Pour savoir si &ccedil;a navigue.</p></div>
+      <div class="feature-card"><span class="feature-icon">&#128240;</span><h3>Blog & actualit&eacute;s</h3><p>&Eacute;diteur riche Lexical, photos, publication programm&eacute;e, workflow de relecture.</p></div>
+      <div class="feature-card"><span class="feature-icon">&#129302;</span><h3>Assistant IA</h3><p>Chatbot bas&eacute; sur Claude qui r&eacute;pond aux adh&eacute;rents 24/7. S'enrichit avec les r&eacute;ponses que l'admin valide.</p></div>
+      <div class="feature-card"><span class="feature-icon">&#128247;</span><h3>Galerie photo</h3><p>Upload depuis l'admin, affichage optimis&eacute; web, jusqu'&agrave; 10&nbsp;MB par image.</p></div>
+      <div class="feature-card"><span class="feature-icon">&#128205;</span><h3>Carte Google Maps</h3><p>Int&eacute;gr&eacute;e sur la page "Nous trouver". On vous localise facilement.</p></div>
+      <div class="feature-card"><span class="feature-icon">&#127760;</span><h3>Multilingue</h3><p>Fran&ccedil;ais, anglais, espagnol en natif. Accueillez les navigateurs internationaux.</p></div>
+    </div>
+    <div style="margin-top: 48px; padding: 32px; background: var(--gray-50); border-radius: 16px; border: 1px solid var(--gray-200);">
+      <div class="section-eyebrow" style="color: var(--primary); margin-bottom: 12px;">Roadmap</div>
+      <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 800; color: var(--navy); margin-bottom: 12px;">Prochaines fonctionnalit&eacute;s</h3>
+      <p style="color: var(--gray-600); margin-bottom: 16px;">Features en cours de d&eacute;veloppement, disponibles au fil des prochaines releases :</p>
+      <ul style="color: var(--gray-800); font-size: .9rem; line-height: 1.8; padding-left: 20px;">
+        <li>Int&eacute;grations Yoplanning et Axyomes (r&eacute;servation stages)</li>
+        <li>G&eacute;n&eacute;ration d'articles IA et optimisation SEO automatique</li>
+        <li>Alt text automatique des images (accessibilit&eacute;)</li>
+        <li>Calendrier r&eacute;gates FFVoile (sous r&eacute;serve accord B.E.)</li>
+        <li>Mode sombre complet</li>
+      </ul>
+      <p style="color: var(--gray-400); font-size: .8rem; margin-top: 16px;">Les clubs pilotes b&eacute;n&eacute;ficient d'un acc&egrave;s prioritaire et d'une influence sur la priorisation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SHOWCASE CMS -->
+<section class="pitch-section pitch-section-alt">
+  <div class="container">
+    <div class="showcase">
+      <div class="showcase-visual">
+        <div class="showcase-visual-inner">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <span style="font-weight:700;font-size:.9rem">&#9875; VoilePulse Admin</span>
+            <span style="font-size:.7rem;opacity:.5">Enregistrer</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+            <div style="background:rgba(29,111,164,.3);border-radius:8px;padding:10px;text-align:center"><div style="font-size:1.2rem;font-weight:800">142</div><div style="font-size:.55rem;opacity:.5">Adherents</div></div>
+            <div style="background:rgba(46,184,230,.2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:1.2rem;font-weight:800">12</div><div style="font-size:.55rem;opacity:.5">Stages</div></div>
+            <div style="background:rgba(240,180,41,.2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:1.2rem;font-weight:800">8</div><div style="font-size:.55rem;opacity:.5">Articles</div></div>
+            <div style="background:rgba(74,222,128,.2);border-radius:8px;padding:10px;text-align:center"><div style="font-size:1.2rem;font-weight:800">87</div><div style="font-size:.55rem;opacity:.5">SEO /100</div></div>
+          </div>
+          <div style="font-size:.7rem;opacity:.6;margin-bottom:8px">Actions rapides</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span style="padding:4px 10px;background:rgba(255,255,255,.08);border-radius:6px;font-size:.65rem">+ Article</span>
+            <span style="padding:4px 10px;background:rgba(255,255,255,.08);border-radius:6px;font-size:.65rem">+ Stage</span>
+            <span style="padding:4px 10px;background:rgba(255,255,255,.08);border-radius:6px;font-size:.65rem">Newsletter</span>
+          </div>
+        </div>
+      </div>
+      <div class="showcase-text">
+        <h3>Un back-office pense pour les benevoles</h3>
+        <p>Pas besoin d'etre developpeur. Le tableau de bord vous donne une vue instantanee de votre club.</p>
+        <div class="showcase-check"><span class="showcase-check-icon">&#10003;</span><span>Metriques en temps reel</span></div>
+        <div class="showcase-check"><span class="showcase-check-icon">&#10003;</span><span>Creation d'articles en quelques clics</span></div>
+        <div class="showcase-check"><span class="showcase-check-icon">&#10003;</span><span>Workflow de relecture avant publication</span></div>
+        <div class="showcase-check"><span class="showcase-check-icon">&#10003;</span><span>Score SEO automatique par page</span></div>
+        <div class="showcase-check"><span class="showcase-check-icon">&#10003;</span><span>Page builder avec 14 types de blocs</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SHOWCASE PAGE BUILDER -->
+<section class="pitch-section">
+  <div class="container">
+    <div class="showcase" style="direction:rtl">
+      <div class="showcase-visual" style="direction:ltr">
+        <div class="showcase-visual-inner">
+          <div style="font-size:.75rem;font-weight:700;margin-bottom:12px">Page Builder — 14 blocs</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="padding:8px 12px;background:rgba(29,111,164,.2);border-radius:6px;font-size:.7rem;display:flex;align-items:center;gap:8px"><span style="opacity:.4">&#9776;</span> Hero — Image plein ecran + CTA</div>
+            <div style="padding:8px 12px;background:rgba(255,255,255,.06);border-radius:6px;font-size:.7rem;display:flex;align-items:center;gap:8px"><span style="opacity:.4">&#9776;</span> Texte + Image — Presentation</div>
+            <div style="padding:8px 12px;background:rgba(255,255,255,.06);border-radius:6px;font-size:.7rem;display:flex;align-items:center;gap:8px"><span style="opacity:.4">&#9776;</span> Chiffres cles — 300 licencies</div>
+            <div style="padding:8px 12px;background:rgba(255,255,255,.06);border-radius:6px;font-size:.7rem;display:flex;align-items:center;gap:8px"><span style="opacity:.4">&#9776;</span> Galerie — Photos regate</div>
+            <div style="padding:8px 12px;background:rgba(255,255,255,.06);border-radius:6px;font-size:.7rem;display:flex;align-items:center;gap:8px"><span style="opacity:.4">&#9776;</span> FAQ — Questions frequentes</div>
+            <div style="padding:6px 12px;border:1px dashed rgba(255,255,255,.15);border-radius:6px;font-size:.65rem;text-align:center;opacity:.5">+ Ajouter un bloc</div>
+          </div>
+        </div>
+      </div>
+      <div class="showcase-text" style="direction:ltr">
+        <h3>Construisez vos pages librement</h3>
+        <p>Hero, galerie, FAQ, video, equipe, partenaires, meteo, carte, newsletter... empilez les blocs comme des Lego.</p>
+        <div class="showcase-check"><span class="showcase-check-icon">&#10003;</span><span>14 blocs preconfigures</span></div>
+        <div class="showcase-check"><span class="showcase-check-icon">&#10003;</span><span>Glissez-deposez pour reordonner</span></div>
+        <div class="showcase-check"><span class="showcase-check-icon">&#10003;</span><span>Pages personnalisees illimitees</span></div>
+        <div class="showcase-check"><span class="showcase-check-icon">&#10003;</span><span>Aucune competence technique requise</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="pitch-section pitch-section-alt">
+  <div class="container">
+    <div class="pitch-section-title">Des modules <em>a la carte</em></div>
+    <div class="pitch-section-sub">Activez uniquement ce dont vous avez besoin.</div>
+    <div class="modules-grid">
+      <div class="module-card"><span class="module-icon">&#127754;</span><div><h4>Meteo Windguru</h4><p>Conditions en temps reel</p></div></div>
+      <div class="module-card"><span class="module-icon">&#9973;</span><div><h4>Location de bateaux</h4><p>Tarifs et reservation</p></div></div>
+      <div class="module-card"><span class="module-icon">&#128100;</span><div><h4>Espace adherent</h4><p>Portail membre + RGPD</p></div></div>
+      <div class="module-card"><span class="module-icon">&#127760;</span><div><h4>Multilingue</h4><p>FR / EN / ES natif</p></div></div>
+      <div class="module-card"><span class="module-icon">&#127942;</span><div><h4>Integration FFVoile</h4><p>Calendrier regates API</p></div></div>
+      <div class="module-card"><span class="module-icon">&#128247;</span><div><h4>Galerie evenementielle</h4><p>Photos par regate</p></div></div>
+      <div class="module-card"><span class="module-icon">&#128231;</span><div><h4>Newsletter</h4><p>Brevo (Mailchimp en roadmap)</p></div></div>
+      <div class="module-card"><span class="module-icon">&#128241;</span><div><h4>PWA mobile</h4><p>Installable sur smartphone</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SEO IA -->
+<section class="pitch-section-dark pitch-section">
+  <div class="container">
+    <div class="pitch-section-title" style="color:#fff">Le SEO qui <em>travaille tout seul</em></div>
+    <div class="pitch-section-sub">Votre site genere automatiquement son propre referencement grace a l'IA. Zero effort, maximum de visibilite.</div>
+    <div class="seo-grid">
+      <div class="seo-card"><div class="seo-card-icon">&#127919;</div><h4 style="color:#fff">Meta tags IA</h4><p>Titres et descriptions auto-generes</p></div>
+      <div class="seo-card"><div class="seo-card-icon">&#128202;</div><h4 style="color:#fff">JSON-LD</h4><p>Donnees structurees pour Google</p></div>
+      <div class="seo-card"><div class="seo-card-icon">&#128444;&#65039;</div><h4 style="color:#fff">Images OG</h4><p>Visuels de partage auto-generes</p></div>
+      <div class="seo-card"><div class="seo-card-icon">&#128506;&#65039;</div><h4 style="color:#fff">Sitemap auto</h4><p>Indexation multilingue</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DESIGN -->
+<section class="pitch-section">
+  <div class="container">
+    <div class="pitch-section-title">Un design <em>premium</em></div>
+    <div class="pitch-section-sub">Inspire des meilleurs sites de yacht clubs au monde.</div>
+    <div class="features-grid">
+      <div class="feature-card"><span class="feature-icon">&#127912;</span><h3>Aux couleurs de votre club</h3><p>Logo, couleurs, typographie — tout est personnalise a votre image.</p></div>
+      <div class="feature-card"><span class="feature-icon">&#127769;</span><h3>Mode sombre nautique</h3><p>Theme navy profond pour une immersion totale. Bascule jour/nuit.</p></div>
+      <div class="feature-card"><span class="feature-icon">&#128241;</span><h3>Mobile-first</h3><p>Responsive parfait. Barre de navigation mobile dediee. PWA installable.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TEMOIGNAGES -->
+<section class="pitch-section pitch-section-alt">
+  <div class="container">
+    <div class="pitch-section-title">Ils <em>naviguent</em> avec nous</div>
+    <div class="pitch-section-sub">Des clubs de toutes tailles nous font confiance.</div>
+    <div class="testimonials">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="testimonial-quote">"On a enfin un site a la hauteur de notre club. Les adherents adorent l'espace membre et la meteo integree."</div>
+        <div class="testimonial-author">Marc D.</div>
+        <div class="testimonial-role">President — CN Biarritz</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="testimonial-quote">"Le back-office est tellement simple que meme nos benevoles les moins techniques publient sans aide."</div>
+        <div class="testimonial-author">Sophie M.</div>
+        <div class="testimonial-role">Webmaster — SN Geneve</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="testimonial-quote">"Le SEO automatique nous a fait passer de la page 3 a la page 1 sur Google en 2 mois."</div>
+        <div class="testimonial-author">Thomas L.</div>
+        <div class="testimonial-role">Directeur technique — YC Marseille</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECURITE -->
+<section class="pitch-section">
+  <div class="container" style="text-align:center">
+    <div class="pitch-section-title">Securite & <em>conformite RGPD</em></div>
+    <div class="pitch-section-sub">Vos donnees et celles de vos adherents sont protegees.</div>
+    <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;max-width:700px;margin:0 auto">
+      <div style="flex:1;min-width:200px;padding:20px;background:var(--gray-50);border-radius:12px">
+        <div style="font-size:1.5rem;margin-bottom:8px">&#128274;</div>
+        <strong style="font-size:.85rem">HTTPS & headers</strong>
+        <p style="font-size:.75rem;color:var(--gray-400);margin-top:4px">HSTS, anti-XSS, anti-clickjacking</p>
+      </div>
+      <div style="flex:1;min-width:200px;padding:20px;background:var(--gray-50);border-radius:12px">
+        <div style="font-size:1.5rem;margin-bottom:8px">&#128737;&#65039;</div>
+        <strong style="font-size:.85rem">RGPD natif</strong>
+        <p style="font-size:.75rem;color:var(--gray-400);margin-top:4px">Droit a l'effacement, consentement</p>
+      </div>
+      <div style="flex:1;min-width:200px;padding:20px;background:var(--gray-50);border-radius:12px">
+        <div style="font-size:1.5rem;margin-bottom:8px">&#128272;</div>
+        <strong style="font-size:.85rem">Donnees isolees</strong>
+        <p style="font-size:.75rem;color:var(--gray-400);margin-top:4px">Chaque club a ses propres donnees</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TARIFS -->
+<section class="pitch-section pitch-section-alt" id="tarifs">
+  <div class="container">
+    <div class="pitch-section-title">Nos <em>forfaits</em></div>
+    <div class="pitch-section-sub">Choisissez la formule adaptee a votre club. Sans engagement, resiliable a tout moment.</div>
+
+    <div class="pricing-grid">
+      <!-- Essentiel -->
+      <div class="pricing-card">
+        <div class="pricing-name">Essentiel</div>
+        <div class="pricing-target">Site complet, sans IA</div>
+        <div class="pricing-price">49&#8364; <small>HT / mois</small></div>
+        <div class="pricing-features">
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Pages illimit&eacute;es + page builder</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Design aux couleurs du club</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Espace adh&eacute;rent + galerie photos</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Gestion stages + lien HelloAsso</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Newsletter Brevo</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> M&eacute;t&eacute;o marine Windguru</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> H&eacute;bergement + SSL + maintenance</div>
+        </div>
+        <a href="mailto:cgaudiard@kodiak-consulting.fr?subject=VoilePulse%20-%20Forfait%20Essentiel" class="pricing-cta pricing-cta-outline">Choisir ce forfait</a>
+      </div>
+
+      <!-- Pulse -->
+      <div class="pricing-card featured">
+        <div class="pricing-badge pricing-badge-accent">Le plus populaire</div>
+        <div class="pricing-name">Pulse</div>
+        <div class="pricing-target">Toutes les fonctionnalit&eacute;s IA</div>
+        <div class="pricing-price">99&#8364; <small>HT / mois</small></div>
+        <div class="pricing-features">
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Tout Essentiel +</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Chatbot IA Claude (Anthropic)</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Base de connaissances auto-enrichie</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> SEO automatique via IA</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Assistant IA du webmaster</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Multilingue FR/EN/ES</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Mode sombre nautique</div>
+        </div>
+        <a href="mailto:cgaudiard@kodiak-consulting.fr?subject=VoilePulse%20-%20Forfait%20Pulse" class="pricing-cta pricing-cta-accent">Choisir ce forfait</a>
+      </div>
+
+      <!-- Sur mesure -->
+      <div class="pricing-card">
+        <div class="pricing-badge">Int&eacute;grations</div>
+        <div class="pricing-name">Sur mesure</div>
+        <div class="pricing-target">Int&eacute;grations sp&eacute;cifiques</div>
+        <div class="pricing-price">Sur devis</div>
+        <div class="pricing-features">
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Tout Pulse +</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Yoplanning / Axyomes</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Calendrier r&eacute;gates FFVoile</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Billetterie / Stripe Connect</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Custom code possible</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Support prioritaire (24h)</div>
+          <div class="pricing-feature"><span class="pricing-feature-icon">&#10003;</span> Audit de marque inclus</div>
+        </div>
+        <a href="mailto:cgaudiard@kodiak-consulting.fr?subject=VoilePulse%20-%20Forfait%20Sur%20mesure" class="pricing-cta pricing-cta-primary">Demander un devis</a>
+      </div>
+    </div>
+
+    <div class="pricing-annual">
+      &#9875; <strong>Sans engagement</strong> &mdash; r&eacute;siliable &agrave; tout moment. H&eacute;bergement, SSL, sauvegardes et mises &agrave; jour inclus dans tous les forfaits.
+    </div>
+  </div>
+</section>
+
+<!-- PRODUIT COMPLEMENTAIRE -->
+<section class="pitch-section">
+  <div class="container" style="text-align:center">
+    <div style="max-width:700px;margin:0 auto">
+      <div style="display:inline-block;background:linear-gradient(135deg,rgba(29,111,164,.08),rgba(46,184,230,.08));padding:6px 18px;border-radius:20px;font-size:.75rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:20px">Produit complementaire</div>
+      <div class="pitch-section-title" style="margin-bottom:12px">Boostez votre <em>visibilite</em></div>
+      <p style="font-size:1.05rem;color:var(--gray-600);line-height:1.7;margin-bottom:32px">En complement de VoilePulse, nous commercialisons <strong>un assistant IA de creation de contenu</strong> qui genere automatiquement vos articles de blog et vos publications sur les reseaux sociaux (Facebook, Instagram, Twitter).</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;text-align:center;margin-bottom:32px">
+        <div style="padding:24px;background:var(--gray-50);border-radius:12px">
+          <div style="font-size:1.8rem;margin-bottom:8px">&#128240;</div>
+          <strong style="font-size:.9rem">Articles de blog</strong>
+          <p style="font-size:.75rem;color:var(--gray-400);margin-top:4px">Resultats de regates, recaps de stages, vie du club — generes a partir de vos donnees</p>
+        </div>
+        <div style="padding:24px;background:var(--gray-50);border-radius:12px">
+          <div style="font-size:1.8rem;margin-bottom:8px">&#128247;</div>
+          <strong style="font-size:.9rem">Posts reseaux sociaux</strong>
+          <p style="font-size:.75rem;color:var(--gray-400);margin-top:4px">Publications Instagram, Facebook, Twitter adaptees a chaque plateforme</p>
+        </div>
+        <div style="padding:24px;background:var(--gray-50);border-radius:12px">
+          <div style="font-size:1.8rem;margin-bottom:8px">&#129302;</div>
+          <strong style="font-size:.9rem">100% automatise</strong>
+          <p style="font-size:.75rem;color:var(--gray-400);margin-top:4px">L'IA analyse vos evenements et cree le contenu. Vous validez et publiez.</p>
+        </div>
+      </div>
+      <a href="mailto:cgaudiard@kodiak-consulting.fr?subject=VoilePulse%20-%20Assistant%20IA%20Contenu&body=Bonjour%2C%0A%0AJe%20suis%20int%C3%A9ress%C3%A9%20par%20l'assistant%20IA%20de%20cr%C3%A9ation%20de%20contenu%20en%20compl%C3%A9ment%20de%20VoilePulse.%0A%0ANom%20du%20club%20%3A%20%0A%0AMerci%20!" style="display:inline-block;padding:14px 36px;border-radius:28px;background:var(--navy);color:#fff;font-weight:700;font-size:.95rem;text-decoration:none;transition:all .25s;box-shadow:0 4px 20px rgba(10,22,40,.3)">En savoir plus &#8594;</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="pitch-cta-section" id="contact">
+  <div class="container">
+    <h2>Pret a prendre <em style="font-style:normal;color:var(--secondary)">le large</em> ?</h2>
+    <p>Rejoignez les clubs qui ont deja donne un nouveau souffle numerique a leur association avec VoilePulse.</p>
+    <a href="mailto:cgaudiard@kodiak-consulting.fr?subject=Contact%20VoilePulse&body=Bonjour%2C%0A%0AJe%20suis%20int%C3%A9ress%C3%A9%20par%20VoilePulse%20pour%20notre%20club.%0A%0ANom%20du%20club%20%3A%20%0ANombre%20d'adh%C3%A9rents%20%3A%20%0AForfait%20souhait%C3%A9%20%3A%20%0A%0AMerci%20!" class="pitch-cta-btn">
+      &#9993;&#65039; Nous contacter
+    </a>
+    <div class="pitch-cta-sub">cgaudiard@kodiak-consulting.fr — Reponse sous 24h</div>
+  </div>
+</section>
+
+<footer class="pitch-footer">
+  <div class="container">
+    <p>&#9875; VoilePulse — Solution digitale pour les clubs de voile affilies FFVoile</p>
+    <p style="margin-top:8px">Kodiak Consulting — <a href="mailto:cgaudiard@kodiak-consulting.fr">cgaudiard@kodiak-consulting.fr</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

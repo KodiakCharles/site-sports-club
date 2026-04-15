@@ -5,7 +5,7 @@ import { isValidOrigin } from '@/lib/utils/csrf'
 import { rateLimit, getClientIp } from '@/lib/utils/rateLimit'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const getResend = () => new Resend(process.env.RESEND_API_KEY)
 
 const schema = z.object({
   name: z.string().min(2).max(100),
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
 
   const { name, email, phone, subject, message } = parsed.data
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: process.env.EMAIL_FROM ?? 'noreply@voileweb.fr',
     to: clubEmail,
     reply_to: email,
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
     `,
   })
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: process.env.EMAIL_FROM ?? 'noreply@voileweb.fr',
     to: email,
     subject: `Votre message a bien été reçu`,

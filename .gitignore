@@ -42,3 +42,7 @@ public/media/
 pitch site voile club.html
 payload.db
 payload-types.ts
+
+# Local notes — pas pour le repo
+AMELIORATIONS.txt
+*.xlsx

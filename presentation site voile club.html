@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VoilePulse — Sites pour clubs de voile FFVoile</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0a1020;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .deck { width: 100vw; height: 100vh; position: relative; }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 72px 60px 60px;
+      opacity: 0;
+      transform: translateX(60px);
+      transition: all .45s cubic-bezier(.4,0,.2,1);
+      pointer-events: none;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: all;
+    }
+    .slide.exit {
+      opacity: 0;
+      transform: translateX(-60px);
+    }
+
+    /* ── SLIDE 1 — COVER ── */
+    #s1 { background: linear-gradient(135deg, #0a1020 0%, #0a2040 60%, #0d1f3c 100%); text-align: center; }
+    #s1 .logo { font-size: 3rem; margin-bottom: 10px; }
+    #s1 h1 { font-size: 3.2rem; font-weight: 800; line-height: 1.1;
+      background: linear-gradient(90deg, #0ea5e9, #06b6d4, #2dd4bf);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    #s1 .sub { font-size: 1.35rem; color: #94a3b8; margin-top: 18px; max-width: 600px; line-height: 1.5; }
+    #s1 .tag { margin-top: 40px; display: inline-flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    #s1 .tag span { background: rgba(14,165,233,.15); border: 1px solid rgba(14,165,233,.4);
+      padding: 6px 18px; border-radius: 999px; font-size: .85rem; color: #7dd3fc; }
+
+    /* ── SLIDE 2 — PROBLÈME ── */
+    #s2 { background: linear-gradient(135deg, #1a0a0a 0%, #1f0d0d 100%); }
+    #s2 .pain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 860px; }
+    .pain-card { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.25);
+      border-radius: 16px; padding: 28px; }
+    .pain-card .icon { font-size: 2rem; margin-bottom: 12px; }
+    .pain-card h3 { font-size: 1.1rem; font-weight: 700; color: #fca5a5; margin-bottom: 8px; }
+    .pain-card p { font-size: .9rem; color: #94a3b8; line-height: 1.5; }
+
+    /* ── SLIDE 3 — SOLUTION ── */
+    #s3 { background: linear-gradient(135deg, #0a1820 0%, #0d2030 100%); text-align: center; }
+    #s3 .big { font-size: 5rem; margin-bottom: 20px; }
+    #s3 h2 { font-size: 2.4rem; font-weight: 800; color: #2dd4bf; margin-bottom: 16px; }
+    #s3 p { font-size: 1.15rem; color: #94a3b8; max-width: 640px; line-height: 1.6; margin: 0 auto 32px; }
+    #s3 .flow { display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .flow-step { background: rgba(45,212,191,.12); border: 1px solid rgba(45,212,191,.3);
+      padding: 14px 22px; border-radius: 12px; font-size: .95rem; font-weight: 600; color: #2dd4bf; }
+    .flow-arrow { font-size: 1.4rem; color: #374151; }
+
+    /* ── SLIDE 4 — FONCTIONNALITÉS ── */
+    #s4 { background: linear-gradient(135deg, #0a1020 0%, #0d1f3c 100%); }
+    .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; max-width: 960px; width: 100%; }
+    .feat-card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px; padding: 24px; transition: transform .2s; }
+    .feat-card:hover { transform: translateY(-4px); background: rgba(255,255,255,.07); }
+    .feat-card .icon { font-size: 1.8rem; margin-bottom: 12px; }
+    .feat-card h3 { font-size: 1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 8px; }
+    .feat-card p { font-size: .82rem; color: #64748b; line-height: 1.5; }
+
+    /* ── SLIDE 5 — ONBOARDING ── */
+    #s5 { background: linear-gradient(135deg, #0a1020 0%, #0d2030 100%); text-align: center; }
+    #s5 h2 { font-size: 2.6rem; font-weight: 800;
+      background: linear-gradient(90deg, #0ea5e9, #2dd4bf);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; }
+    #s5 .ai-list { display: flex; flex-direction: column; gap: 16px; max-width: 640px; margin: 24px auto 0; }
+    .ai-item { display: flex; align-items: flex-start; gap: 16px; text-align: left;
+      background: rgba(14,165,233,.08); border: 1px solid rgba(14,165,233,.2);
+      padding: 18px 22px; border-radius: 14px; }
+    .ai-item .dot { width: 10px; height: 10px; border-radius: 50%; background: #0ea5e9; flex-shrink: 0; margin-top: 6px; }
+    .ai-item div h4 { font-size: 1rem; font-weight: 700; color: #7dd3fc; margin-bottom: 4px; }
+    .ai-item div p { font-size: .87rem; color: #6b7280; line-height: 1.4; }
+
+    /* ── SLIDE 6 — INTÉGRATIONS ── */
+    #s6 { background: linear-gradient(135deg, #0a0f1a 0%, #0d1535 100%); text-align: center; }
+    #s6 h2 { font-size: 2.4rem; font-weight: 800; color: #38bdf8; margin-bottom: 14px; }
+    #s6 .networks { display: flex; gap: 16px; justify-content: center; margin: 28px 0; flex-wrap: wrap; }
+    .net-card { background: rgba(56,189,248,.08); border: 1px solid rgba(56,189,248,.2);
+      border-radius: 20px; padding: 22px 26px; text-align: center; min-width: 130px; }
+    .net-card .icon { font-size: 2.2rem; display: block; margin-bottom: 10px; }
+    .net-card span { font-size: .85rem; color: #7dd3fc; font-weight: 600; }
+    #s6 .note { font-size: .9rem; color: #475569; max-width: 620px; margin: 0 auto; line-height: 1.6; }
+
+    /* ── SLIDE 7 — POUR QUI ── */
+    #s7 { background: linear-gradient(135deg, #0a1820 0%, #0d2030 100%); }
+    .who-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 860px; }
+    .who-card { background: rgba(45,212,191,.06); border: 1px solid rgba(45,212,191,.18);
+      border-radius: 16px; padding: 28px; }
+    .who-card .icon { font-size: 2.2rem; margin-bottom: 12px; }
+    .who-card h3 { font-size: 1.1rem; font-weight: 700; color: #5eead4; margin-bottom: 10px; }
+    .who-card ul { list-style: none; }
+    .who-card ul li { font-size: .88rem; color: #6b7280; line-height: 1.8; }
+    .who-card ul li::before { content: '✓ '; color: #2dd4bf; font-weight: 700; }
+
+    /* ── SLIDE 8 — HÉBERGEMENT ── */
+    #s8 { background: linear-gradient(135deg, #0a0f1a 0%, #0d1525 100%); }
+    .sec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 860px; }
+    .sec-item { display: flex; gap: 16px; align-items: flex-start;
+      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
+      border-radius: 14px; padding: 22px; }
+    .sec-item .icon { font-size: 1.8rem; flex-shrink: 0; }
+    .sec-item h4 { font-size: 1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 6px; }
+    .sec-item p { font-size: .83rem; color: #475569; line-height: 1.5; }
+
+    /* ── SLIDE 9 — TARIF ── */
+    #s9 { background: linear-gradient(135deg, #0a1020 0%, #0a2040 60%, #0d1f3c 100%); text-align: center; }
+    #s9 h2 { font-size: 2.6rem; font-weight: 800;
+      background: linear-gradient(90deg, #0ea5e9, #06b6d4);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 14px; }
+    .price-card { background: rgba(14,165,233,.08); border: 2px solid rgba(14,165,233,.35);
+      border-radius: 24px; padding: 48px 64px; display: inline-block; margin: 24px 0; }
+    .price-card .amount { font-size: 1.8rem; font-weight: 900; color: #fff; line-height: 1; }
+    .price-card .cycle { font-size: 1rem; color: #6b7280; margin-top: 6px; }
+    .price-card .includes { margin-top: 28px; text-align: left; }
+    .price-card .includes li { list-style: none; font-size: .95rem; color: #7dd3fc; line-height: 2; }
+    .price-card .includes li::before { content: '✦ '; color: #0ea5e9; }
+    #s9 .cta { font-size: 1rem; color: #475569; margin-top: 10px; }
+
+    /* ── SLIDE 10 — CTA ── */
+    #s10 { background: linear-gradient(135deg, #0a1020 0%, #0d1f3c 100%); text-align: center; }
+    #s10 .big { font-size: 4.5rem; margin-bottom: 20px; }
+    #s10 h2 { font-size: 2.8rem; font-weight: 800; line-height: 1.2;
+      background: linear-gradient(90deg, #0ea5e9, #06b6d4, #2dd4bf);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 18px; }
+    #s10 p { font-size: 1.15rem; color: #64748b; max-width: 540px; line-height: 1.6; margin: 0 auto 36px; }
+    #s10 .contact { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn { padding: 16px 36px; border-radius: 12px; font-size: 1rem; font-weight: 700;
+      cursor: pointer; border: none; transition: transform .2s, opacity .2s; text-decoration: none; display: inline-block; }
+    .btn:hover { transform: translateY(-2px); opacity: .9; }
+    .btn-primary { background: linear-gradient(90deg, #0ea5e9, #06b6d4); color: #fff; }
+    .btn-secondary { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); color: #e2e8f0; }
+
+    /* ── BRANDING BAR ── */
+    .brand-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 28px;
+      background: rgba(10,16,32,.7); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .brand-bar .brand-name {
+      font-size: 1rem; font-weight: 800; letter-spacing: .04em;
+      background: linear-gradient(90deg, #0ea5e9, #2dd4bf);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .brand-bar .brand-label {
+      font-size: .8rem; color: #475569; letter-spacing: .04em;
+    }
+    .brand-bar .brand-label strong { color: #94a3b8; }
+
+    /* ── SHARED ── */
+    .slide-title { text-align: center; margin-bottom: 40px; }
+    .slide-title h2 { font-size: 2.2rem; font-weight: 800; color: #e2e8f0; margin-bottom: 8px; }
+    .slide-title p { font-size: 1rem; color: #475569; }
+    .badge { display: inline-block; background: rgba(14,165,233,.15); border: 1px solid rgba(14,165,233,.3);
+      color: #7dd3fc; font-size: .75rem; font-weight: 700; padding: 4px 12px; border-radius: 999px;
+      text-transform: uppercase; letter-spacing: .08em; margin-bottom: 14px; }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; bottom: 36px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 16px; z-index: 100;
+      background: rgba(10,16,32,.8); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.08); border-radius: 999px;
+      padding: 10px 20px;
+    }
+    .nav-btn { background: none; border: none; color: #94a3b8; font-size: 1.2rem;
+      cursor: pointer; padding: 6px 12px; border-radius: 8px; transition: all .2s; }
+    .nav-btn:hover { color: #fff; background: rgba(255,255,255,.08); }
+    .dots { display: flex; gap: 7px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.2);
+      cursor: pointer; transition: all .2s; }
+    .dot.active { background: #0ea5e9; transform: scale(1.3); }
+    .slide-count { font-size: .8rem; color: #475569; min-width: 38px; text-align: center; }
+  </style>
+</head>
+<body>
+
+
+<div class="deck">
+
+  <!-- SLIDE 1 — COVER -->
+  <div class="slide active" id="s1">
+    <img src="https://www.kodiak-consulting.fr/wp-content/uploads/2025/07/thumbnail_logo-KODIAK@blanc.png" alt="Kodiak Consulting" style="height:90px;margin-bottom:28px;opacity:.95;" onerror="this.style.display='none'">
+    <h1>VoilePulse<br>Sites internet pour clubs FFVoile</h1>
+    <p class="sub">La solution tout-en-un pour lancer un site professionnel, attirer des stagiaires et connecter votre club à son écosystème — avec un assistant IA intégré qui répond à vos adhérents 24/7.</p>
+    <div class="tag">
+      <span>⚡ Onboarding en 7 étapes</span>
+      <span>🌐 Multilingue FR/EN/ES</span>
+      <span>📱 100% mobile + PWA</span>
+      <span>🤖 Assistant IA Claude</span>
+      <span>⚓ Clubs FFVoile</span>
+    </div>
+    <p style="margin-top:28px;font-size:.8rem;color:#334155;">Une solution <strong style="color:#0ea5e9;">clé en main</strong> — abonnement mensuel tout inclus</p>
+  </div>
+
+  <!-- SLIDE 2 — PROBLÈME -->
+  <div class="slide" id="s2">
+    <div class="slide-title">
+      <div class="badge">Le problème</div>
+      <h2>Les clubs de voile sont invisibles en ligne</h2>
+      <p>Des stagiaires cherchent, mais ne trouvent pas.</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="icon">📵</div>
+        <h3>Sites vieillissants ou inexistants</h3>
+        <p>La majorité des clubs n'ont pas de site mobile, ni de présence Google. Les concurrents captent les inscriptions à leur place.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🔍</div>
+        <h3>Introuvables sur Google</h3>
+        <p>Aucun SEO local, pas de fiche Google Business, pas de carte Maps. Le club n'apparaît pas quand on cherche "stage voile [ville]".</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">📝</div>
+        <h3>Inscriptions par email ou papier</h3>
+        <p>Pas de réservation ni de paiement en ligne. Les places partent au compte-gouttes, les bénévoles gèrent tout manuellement.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🔧</div>
+        <h3>Impossible à maintenir</h3>
+        <p>Des bénévoles non techniques, des CMS compliqués, des mises à jour oubliées. Le site vieillit sans que personne ne l'entretienne.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3 — SOLUTION -->
+  <div class="slide" id="s3">
+    <div class="badge">La solution</div>
+    <div class="big">🚀</div>
+    <h2>Un site professionnel en 2 heures, sans coder</h2>
+    <p>De la configuration au référencement Google, tout est guidé. Les bénévoles se concentrent sur la voile — pas sur la technique.</p>
+    <div class="flow">
+      <div class="flow-step">⚙️ Wizard de config</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">🎨 Choisissez vos couleurs</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">🌊 Activez vos modules</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">🔗 Connectez vos réseaux</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">✅ En ligne !</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4 — FONCTIONNALITÉS -->
+  <div class="slide" id="s4">
+    <div class="slide-title">
+      <div class="badge">Fonctionnalités</div>
+      <h2>Tout ce dont un club a besoin</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="icon">⛵</div>
+        <h3>Supports nautiques</h3>
+        <p>Optimist, Laser, Catamaran, Foil, Wing Foil, Croisière — une page dédiée et illustrée par support.</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon">📅</div>
+        <h3>Stages & inscriptions</h3>
+        <p>Liste des stages depuis le CMS avec places, prix et niveau. Lien direct HelloAsso pour la réservation et le paiement.</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon">🏆</div>
+        <h3>Compétition & palmarès</h3>
+        <p>Page régates, résultats et palmarès saisis depuis le CMS. Structure FFVoile respectée (supports, séries, catégories).</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon">🤖</div>
+        <h3>Assistant IA Claude</h3>
+        <p>Chatbot basé sur Claude Haiku qui répond à vos adhérents 24/7. S'appuie sur une base de connaissances que l'admin enrichit au fil des questions reçues.</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon">📸</div>
+        <h3>Blog & galerie</h3>
+        <p>Actualités avec éditeur riche Lexical, publication programmée, workflow de relecture. Galerie photos par événement.</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon">🌡️</div>
+        <h3>Météo marine Windguru</h3>
+        <p>Widget Windguru configurable par station météo du club. Vent, vagues, température en temps réel.</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon">👤</div>
+        <h3>Espace adhérent</h3>
+        <p>Connexion privée, profil, licence FFVoile, cotisation visible. Conforme RGPD.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5 — ONBOARDING / BÉNÉVOLES -->
+  <div class="slide" id="s5">
+    <div class="badge">Pensé pour les bénévoles</div>
+    <h2>Aussi simple qu'un réseau social</h2>
+    <div class="ai-list">
+      <div class="ai-item">
+        <div class="dot"></div>
+        <div>
+          <h4>Wizard de démarrage en 7 étapes</h4>
+          <p>Sport, forfait, domaine, identité, couleurs, modules, admin. Configuration guidée en moins de 30 minutes.</p>
+        </div>
+      </div>
+      <div class="ai-item">
+        <div class="dot"></div>
+        <div>
+          <h4>Éditeur riche Lexical</h4>
+          <p>Interface WYSIWYG utilisable sur smartphone. Publiez une actualité depuis le bord de l'eau en 2 minutes.</p>
+        </div>
+      </div>
+      <div class="ai-item">
+        <div class="dot"></div>
+        <div>
+          <h4>Base de connaissances alimentée par l'IA</h4>
+          <p>Quand le chatbot ne sait pas répondre, il crée une alerte. L'admin répond depuis le CMS, la réponse enrichit automatiquement la base de connaissances. Le chatbot s'améliore seul.</p>
+        </div>
+      </div>
+      <div class="ai-item">
+        <div class="dot"></div>
+        <div>
+          <h4>Support Kodiak Consulting</h4>
+          <p>Email sous 24h sur forfait Pulse, 48h sur Essentiel. Le webmaster est joignable pour toute question d'éditorial ou de configuration.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6 — INTÉGRATIONS -->
+  <div class="slide" id="s6">
+    <div class="badge">Intégrations</div>
+    <h2>Connecté à votre écosystème</h2>
+    <div class="networks">
+      <div class="net-card">
+        <span class="icon">🤖</span>
+        <span>Claude (Anthropic)</span>
+      </div>
+      <div class="net-card">
+        <span class="icon">💚</span>
+        <span>HelloAsso</span>
+      </div>
+      <div class="net-card">
+        <span class="icon">🌬️</span>
+        <span>Windguru</span>
+      </div>
+      <div class="net-card">
+        <span class="icon">🗺️</span>
+        <span>Google Maps</span>
+      </div>
+      <div class="net-card">
+        <span class="icon">📧</span>
+        <span>Brevo (newsletter)</span>
+      </div>
+      <div class="net-card">
+        <span class="icon">📸</span>
+        <span>Instagram</span>
+      </div>
+      <div class="net-card">
+        <span class="icon">📘</span>
+        <span>Facebook</span>
+      </div>
+      <div class="net-card">
+        <span class="icon">𝕏</span>
+        <span>X / Twitter</span>
+      </div>
+    </div>
+    <p class="note">Chatbot propulsé par Claude Haiku 4.5 (Anthropic). Licences et cotisations via HelloAsso. Météo marine via Windguru. Carte et itinéraire via Google Maps. Newsletter via Brevo. Flux Instagram, Facebook et X intégrés sur la page d'accueil. Yoplanning, Axyomes et calendrier FFVoile en roadmap.</p>
+  </div>
+
+  <!-- SLIDE 7 — POUR QUI -->
+  <div class="slide" id="s7">
+    <div class="slide-title">
+      <div class="badge">Pour qui ?</div>
+      <h2>Pour tous les clubs affiliés FFVoile</h2>
+    </div>
+    <div class="who-grid">
+      <div class="who-card">
+        <div class="icon">🏫</div>
+        <h3>Écoles Françaises de Voile</h3>
+        <ul>
+          <li>Label EFVoile mis en avant automatiquement</li>
+          <li>Inscriptions stages en ligne dès le lancement</li>
+          <li>Page supports nautiques complète par défaut</li>
+          <li>SEO local pour capter les familles de la région</li>
+        </ul>
+      </div>
+      <div class="who-card">
+        <div class="icon">🏆</div>
+        <h3>Clubs de compétition</h3>
+        <ul>
+          <li>Page régates avec calendrier et résultats saisis en CMS</li>
+          <li>Publication d'avis de course via articles et pièces jointes</li>
+          <li>Palmarès et historique des titres</li>
+          <li>Page équipe et encadrement valorisée</li>
+        </ul>
+      </div>
+      <div class="who-card">
+        <div class="icon">🌅</div>
+        <h3>Clubs de loisir & croisière</h3>
+        <ul>
+          <li>Module location de bateaux en option</li>
+          <li>Page croisière et voile habitable dédiée</li>
+          <li>Site multilingue pour les zones touristiques</li>
+          <li>Météo marine intégrée pour les sorties</li>
+        </ul>
+      </div>
+      <div class="who-card">
+        <div class="icon">⛵</div>
+        <h3>Ligues & structures multi-clubs</h3>
+        <ul>
+          <li>Console super-admin multi-tenant centralisée</li>
+          <li>Données cloisonnées par club</li>
+          <li>Déploiement en masse sur une infrastructure commune</li>
+          <li>Identité visuelle propre à chaque club</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8 — HÉBERGEMENT & SÉCURITÉ -->
+  <div class="slide" id="s8">
+    <div class="slide-title">
+      <div class="badge">Hébergement & sécurité</div>
+      <h2>Vous voilez. On gère la technique.</h2>
+    </div>
+    <div class="sec-grid">
+      <div class="sec-item">
+        <div class="icon">🔒</div>
+        <div>
+          <h4>SSL & HTTPS inclus</h4>
+          <p>Certificat Let's Encrypt automatique, redirection HTTP → HTTPS, headers de sécurité (CSP, HSTS, X-Frame-Options).</p>
+        </div>
+      </div>
+      <div class="sec-item">
+        <div class="icon">💾</div>
+        <div>
+          <h4>Sauvegardes quotidiennes</h4>
+          <p>Backup chiffré de la base de données et des médias, rétention 30 jours. Restauration sur demande.</p>
+        </div>
+      </div>
+      <div class="sec-item">
+        <div class="icon">⚡</div>
+        <div>
+          <h4>Performance Lighthouse &gt; 90</h4>
+          <p>CDN Cloudflare, images WebP, cache Redis, rendu SSR/SSG. Score &gt; 90 mobile et desktop garanti.</p>
+        </div>
+      </div>
+      <div class="sec-item">
+        <div class="icon">🛡️</div>
+        <div>
+          <h4>Conformité RGPD</h4>
+          <p>Bandeau de consentement cookies, politique de confidentialité, droit à l'effacement, isolation des données par club.</p>
+        </div>
+      </div>
+      <div class="sec-item">
+        <div class="icon">🌐</div>
+        <div>
+          <h4>Votre nom de domaine</h4>
+          <p>Domaine propre au club ou rattachement d'un domaine existant. Disponibilité vérifiée lors de l'onboarding.</p>
+        </div>
+      </div>
+      <div class="sec-item">
+        <div class="icon">📈</div>
+        <div>
+          <h4>Disponibilité 99,9 %</h4>
+          <p>Infrastructure redondante, monitoring 24/7, mises à jour de sécurité automatiques. Critique en haute saison.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9 — TARIF -->
+  <div class="slide" id="s9">
+    <div class="badge">Tarification</div>
+    <h2>Deux forfaits clairs, un sur-mesure pour les intégrations</h2>
+    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin: 24px 0;">
+      <div class="price-card" style="padding: 36px 44px;">
+        <div style="font-size: .8rem; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">Essentiel</div>
+        <div class="amount" style="background: linear-gradient(90deg, #94a3b8, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">49€</div>
+        <div class="cycle">HT/mois — sans IA</div>
+        <ul class="includes" style="font-size: .82rem;">
+          <li>Site complet + page builder</li>
+          <li>Espace adhérent, galerie, newsletter</li>
+          <li>Météo Windguru, lien HelloAsso</li>
+        </ul>
+      </div>
+      <div class="price-card" style="padding: 36px 44px; border-color: rgba(14,165,233,.55); box-shadow: 0 8px 32px rgba(14,165,233,.18);">
+        <div style="font-size: .8rem; color: #7dd3fc; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">★ Pulse</div>
+        <div class="amount">99€</div>
+        <div class="cycle">HT/mois — toutes les fonctionnalités IA</div>
+        <ul class="includes" style="font-size: .82rem;">
+          <li>Tout Essentiel +</li>
+          <li>Chatbot IA Claude + base de connaissances</li>
+          <li>SEO automatique + assistant IA webmaster</li>
+          <li>Multilingue FR/EN/ES</li>
+        </ul>
+      </div>
+      <div class="price-card" style="padding: 36px 44px;">
+        <div style="font-size: .8rem; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">Sur mesure</div>
+        <div class="amount" style="background: linear-gradient(90deg, #94a3b8, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Sur devis</div>
+        <div class="cycle">Intégrations spécifiques</div>
+        <ul class="includes" style="font-size: .82rem;">
+          <li>Tout Pulse +</li>
+          <li>Yoplanning, Axyomes, calendrier FFVoile</li>
+          <li>Billetterie, custom code</li>
+        </ul>
+      </div>
+    </div>
+    <p class="cta">Sans engagement. Hébergement, SSL, sauvegardes, support et mises à jour inclus dans tous les forfaits.</p>
+  </div>
+
+  <!-- SLIDE 10 — CTA -->
+  <div class="slide" id="s10">
+    <img src="https://www.kodiak-consulting.fr/wp-content/uploads/2025/07/thumbnail_logo-KODIAK@blanc.png" alt="Kodiak Consulting" style="height:80px;margin-bottom:24px;opacity:.95;" onerror="this.style.display='none'">
+    <h2>Prêt à mettre votre club<br>en lumière ?</h2>
+    <p>Rejoignez les clubs qui attirent plus de stagiaires, gagnent en visibilité et laissent leur site travailler pour eux.</p>
+    <div class="contact">
+      <a class="btn btn-primary" href="mailto:contact@votre-societe.fr">Demander une démo</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nav-btn" id="prevBtn">←</button>
+  <div class="dots" id="dots"></div>
+  <span class="slide-count" id="count">1 / 10</span>
+  <button class="nav-btn" id="nextBtn">→</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsEl = document.getElementById('dots');
+  const countEl = document.getElementById('count');
+  let current = 0;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    setTimeout(() => slides[current].classList.remove('exit'), 450);
+    current = (n + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    countEl.textContent = `${current + 1} / ${slides.length}`;
+  }
+
+  document.getElementById('nextBtn').onclick = () => goTo(current + 1);
+  document.getElementById('prevBtn').onclick = () => goTo(current - 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goTo(current - 1);
+  });
+
+  let startX = 0;
+  document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 50) goTo(current + (dx < 0 ? 1 : -1));
+  });
+</script>
+</body>
+</html>

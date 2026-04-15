@@ -55,8 +55,9 @@ const ClubSettings: GlobalConfig = {
               label: 'Couleur principale',
               defaultValue: '#1d6fa4',
               admin: {
-                description: 'Code hexadécimal ex: #1d6fa4',
-                components: {},
+                components: {
+                  Field: '@/components/admin/ColorPickerField#ColorPickerField',
+                },
               },
             },
             {
@@ -64,14 +65,22 @@ const ClubSettings: GlobalConfig = {
               type: 'text',
               label: 'Couleur secondaire',
               defaultValue: '#2eb8e6',
-              admin: { description: 'Code hexadécimal ex: #2eb8e6' },
+              admin: {
+                components: {
+                  Field: '@/components/admin/ColorPickerField#ColorPickerField',
+                },
+              },
             },
             {
               name: 'accentColor',
               type: 'text',
-              label: 'Couleur d\'accentuation',
+              label: "Couleur d'accentuation",
               defaultValue: '#f0b429',
-              admin: { description: 'Code hexadécimal ex: #f0b429' },
+              admin: {
+                components: {
+                  Field: '@/components/admin/ColorPickerField#ColorPickerField',
+                },
+              },
             },
           ],
         },
@@ -119,10 +128,15 @@ const ClubSettings: GlobalConfig = {
         {
           label: 'Réseaux sociaux',
           fields: [
-            { name: 'instagramUrl', type: 'text', label: 'Instagram (URL)' },
-            { name: 'facebookUrl', type: 'text', label: 'Facebook (URL)' },
+            { name: 'instagramUrl', type: 'text', label: 'Instagram (URL profil)' },
+            { name: 'facebookUrl', type: 'text', label: 'Facebook (URL page)' },
+            { name: 'twitterUrl', type: 'text', label: 'X / Twitter (URL profil)' },
             { name: 'youtubeUrl', type: 'text', label: 'YouTube (URL)' },
             { name: 'tiktokUrl', type: 'text', label: 'TikTok (URL)' },
+            { name: 'twitterHandle', type: 'text', label: 'Identifiant X/Twitter', admin: { description: 'Ex: ClubVoilePau (sans @)' } },
+            { name: 'facebookPageId', type: 'text', label: 'Facebook Page ID' },
+            { name: 'facebookAccessToken', type: 'text', label: 'Facebook Access Token' },
+            { name: 'twitterBearerToken', type: 'text', label: 'Twitter Bearer Token' },
           ],
         },
         {
@@ -132,11 +146,59 @@ const ClubSettings: GlobalConfig = {
             { name: 'boatRental', type: 'checkbox', label: 'Location de bateaux', defaultValue: false },
             { name: 'memberSpace', type: 'checkbox', label: 'Espace adhérent', defaultValue: true },
             { name: 'multilingual', type: 'checkbox', label: 'Multilingue EN + ES', defaultValue: true },
-            { name: 'ffvoileIntegration', type: 'checkbox', label: 'Intégration API FFVoile', defaultValue: false },
             { name: 'windguruStationId', type: 'text', label: 'ID station Windguru' },
             { name: 'googleMapsApiKey', type: 'text', label: 'Clé API Google Maps' },
             { name: 'ga4MeasurementId', type: 'text', label: 'ID Google Analytics 4' },
             { name: 'helloassoUrl', type: 'text', label: 'URL HelloAsso du club' },
+            { name: 'chatbotEnabled', type: 'checkbox', label: 'Chatbot FAQ', defaultValue: true },
+            {
+              name: 'chatbotMode',
+              type: 'select',
+              label: 'Mode du chatbot',
+              options: [
+                { label: 'Standard (FAQ)', value: 'standard' },
+                { label: 'Expert (FFV + Météo)', value: 'expert' },
+              ],
+              defaultValue: 'standard',
+            },
+            {
+              name: 'chatbotCustomFaq',
+              type: 'array',
+              label: 'FAQ personnalisée',
+              fields: [
+                { name: 'question', type: 'text', required: true },
+                { name: 'answer', type: 'textarea', required: true },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'API',
+          fields: [
+            {
+              name: 'apiEnabled',
+              type: 'checkbox',
+              label: 'Activer l\'API externe pour les articles',
+              defaultValue: false,
+            },
+            {
+              name: 'apiKey',
+              type: 'text',
+              label: 'Cle API',
+              admin: {
+                description:
+                  'Cle secrete pour l\'authentification API. Generez-en une longue et aleatoire.',
+              },
+            },
+            {
+              name: 'apiAllowedOrigins',
+              type: 'text',
+              label: 'Origines autorisees (CORS)',
+              admin: {
+                description:
+                  'Domaines separes par des virgules. Ex: https://app.example.com,https://other.com',
+              },
+            },
           ],
         },
         {

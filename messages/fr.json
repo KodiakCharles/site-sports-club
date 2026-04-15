@@ -45,9 +45,6 @@
     "hero_title": "Compétition & Régates", "hero_subtitle": "Calendrier, résultats et avis de course",
     "calendar_title": "Calendrier des régates 2026", "calendar_subtitle": "Calendrier complet sur",
     "nor_btn": "Avis de course", "done_badge": "Terminée",
-    "ffvoile_title": "Intégration API FFVoile disponible",
-    "ffvoile_text": "Le calendrier officiel et les résultats de régates seront synchronisés automatiquement via l'API FFVoile (accord Bureau Exécutif requis).",
-    "ffvoile_btn": "Voir sur FFVoile",
     "palmares_title": "Palmarès du club"
   },
   "prices": {

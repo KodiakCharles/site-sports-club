@@ -1,4 +1,4 @@
-# Architecture — Site Club Voile (VoileWeb)
+# Architecture — Site Club Voile (VoilePulse)
 
 ## Vue d'ensemble
 

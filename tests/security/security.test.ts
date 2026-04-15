@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 
 /**
- * Tests de sécurité — VoileWeb
+ * Tests de sécurité — VoilePulse
  *
  * Ces tests vérifient :
  * - Les headers de sécurité HTTP

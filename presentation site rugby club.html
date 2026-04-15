@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RugbyPulse — Sites pour clubs de rugby FFR</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0b1410;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .deck { width: 100vw; height: 100vh; position: relative; }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 72px 60px 60px;
+      opacity: 0;
+      transform: translateX(60px);
+      transition: all .45s cubic-bezier(.4,0,.2,1);
+      pointer-events: none;
+    }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+    .slide.exit { opacity: 0; transform: translateX(-60px); }
+
+    /* ── SLIDE 1 — COVER ── */
+    #s1 { background: linear-gradient(135deg, #030a06 0%, #0b4d2c 60%, #156a3e 100%); text-align: center; }
+    #s1 .logo { font-size: 3rem; margin-bottom: 10px; }
+    #s1 h1 { font-size: 3.2rem; font-weight: 800; line-height: 1.1;
+      background: linear-gradient(90deg, #d4a017, #f1c75b, #fde68a);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    #s1 .sub { font-size: 1.35rem; color: #9ca3af; margin-top: 18px; max-width: 600px; line-height: 1.5; }
+    #s1 .tag { margin-top: 40px; display: inline-flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    #s1 .tag span { background: rgba(212,160,23,.15); border: 1px solid rgba(212,160,23,.4);
+      padding: 6px 18px; border-radius: 999px; font-size: .85rem; color: #fde68a; }
+
+    /* ── SLIDE 2 — PROBLÈME ── */
+    #s2 { background: linear-gradient(135deg, #1a0a0a 0%, #1f0d0d 100%); }
+    #s2 .pain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 860px; }
+    .pain-card { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.25);
+      border-radius: 16px; padding: 28px; }
+    .pain-card .icon { font-size: 2rem; margin-bottom: 12px; }
+    .pain-card h3 { font-size: 1.1rem; font-weight: 700; color: #fca5a5; margin-bottom: 8px; }
+    .pain-card p { font-size: .9rem; color: #9ca3af; line-height: 1.5; }
+
+    /* ── SLIDE 3 — SOLUTION ── */
+    #s3 { background: linear-gradient(135deg, #0a1810 0%, #0d2018 100%); text-align: center; }
+    #s3 .big { font-size: 5rem; margin-bottom: 20px; }
+    #s3 h2 { font-size: 2.4rem; font-weight: 800; color: #d4a017; margin-bottom: 16px; }
+    #s3 p { font-size: 1.15rem; color: #9ca3af; max-width: 640px; line-height: 1.6; margin: 0 auto 32px; }
+    #s3 .flow { display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .flow-step { background: rgba(212,160,23,.12); border: 1px solid rgba(212,160,23,.3);
+      padding: 14px 22px; border-radius: 12px; font-size: .95rem; font-weight: 600; color: #fde68a; }
+    .flow-arrow { font-size: 1.4rem; color: #374151; }
+
+    /* ── SLIDE 4 — FONCTIONNALITÉS ── */
+    #s4 { background: linear-gradient(135deg, #0b1410 0%, #0b4d2c 100%); }
+    .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; max-width: 960px; width: 100%; }
+    .feat-card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px; padding: 24px; transition: transform .2s; }
+    .feat-card:hover { transform: translateY(-4px); background: rgba(255,255,255,.07); }
+    .feat-card .icon { font-size: 1.8rem; margin-bottom: 12px; }
+    .feat-card h3 { font-size: 1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 8px; }
+    .feat-card p { font-size: .82rem; color: #9ca3af; line-height: 1.5; }
+
+    /* ── SLIDE 5 — ONBOARDING ── */
+    #s5 { background: linear-gradient(135deg, #0b1410 0%, #0d2018 100%); text-align: center; }
+    #s5 h2 { font-size: 2.6rem; font-weight: 800;
+      background: linear-gradient(90deg, #d4a017, #f1c75b);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; }
+    #s5 .ai-list { display: flex; flex-direction: column; gap: 16px; max-width: 640px; margin: 24px auto 0; }
+    .ai-item { display: flex; align-items: flex-start; gap: 16px; text-align: left;
+      background: rgba(212,160,23,.08); border: 1px solid rgba(212,160,23,.2);
+      padding: 18px 22px; border-radius: 14px; }
+    .ai-item .dot { width: 10px; height: 10px; border-radius: 50%; background: #d4a017; flex-shrink: 0; margin-top: 6px; }
+    .ai-item div h4 { font-size: 1rem; font-weight: 700; color: #fde68a; margin-bottom: 4px; }
+    .ai-item div p { font-size: .87rem; color: #9ca3af; line-height: 1.4; }
+
+    /* ── SLIDE 6 — INTÉGRATIONS ── */
+    #s6 { background: linear-gradient(135deg, #0a0f0c 0%, #0d1f17 100%); text-align: center; }
+    #s6 h2 { font-size: 2.4rem; font-weight: 800; color: #d4a017; margin-bottom: 14px; }
+    #s6 .networks { display: flex; gap: 16px; justify-content: center; margin: 28px 0; flex-wrap: wrap; }
+    .net-card { background: rgba(212,160,23,.08); border: 1px solid rgba(212,160,23,.2);
+      border-radius: 20px; padding: 22px 26px; text-align: center; min-width: 130px; }
+    .net-card .icon { font-size: 2.2rem; display: block; margin-bottom: 10px; }
+    .net-card span { font-size: .85rem; color: #fde68a; font-weight: 600; }
+    #s6 .note { font-size: .9rem; color: #6b7280; max-width: 620px; margin: 0 auto; line-height: 1.6; }
+
+    /* ── SLIDE 7 — POUR QUI ── */
+    #s7 { background: linear-gradient(135deg, #0a1812 0%, #0d2018 100%); }
+    .who-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 860px; }
+    .who-card { background: rgba(11,77,44,.2); border: 1px solid rgba(16,122,67,.35);
+      border-radius: 16px; padding: 28px; }
+    .who-card .icon { font-size: 2.2rem; margin-bottom: 12px; }
+    .who-card h3 { font-size: 1.1rem; font-weight: 700; color: #6ee7b7; margin-bottom: 10px; }
+    .who-card ul { list-style: none; }
+    .who-card ul li { font-size: .88rem; color: #9ca3af; line-height: 1.8; }
+    .who-card ul li::before { content: '✓ '; color: #d4a017; font-weight: 700; }
+
+    /* ── SLIDE 8 — HÉBERGEMENT ── */
+    #s8 { background: linear-gradient(135deg, #0a0f0c 0%, #0d1519 100%); }
+    .sec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 860px; }
+    .sec-item { display: flex; gap: 16px; align-items: flex-start;
+      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
+      border-radius: 14px; padding: 22px; }
+    .sec-item .icon { font-size: 1.8rem; flex-shrink: 0; }
+    .sec-item h4 { font-size: 1rem; font-weight: 700; color: #e2e8f0; margin-bottom: 6px; }
+    .sec-item p { font-size: .83rem; color: #6b7280; line-height: 1.5; }
+
+    /* ── SLIDE 9 — TARIF ── */
+    #s9 { background: linear-gradient(135deg, #0b1410 0%, #0b4d2c 60%, #073820 100%); text-align: center; }
+    #s9 h2 { font-size: 2.6rem; font-weight: 800;
+      background: linear-gradient(90deg, #d4a017, #f1c75b);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 14px; }
+    .price-card { background: rgba(212,160,23,.08); border: 2px solid rgba(212,160,23,.35);
+      border-radius: 24px; padding: 48px 64px; display: inline-block; margin: 24px 0; }
+    .price-card .amount { font-size: 1.8rem; font-weight: 900; color: #fff; line-height: 1; }
+    .price-card .cycle { font-size: 1rem; color: #9ca3af; margin-top: 6px; }
+    .price-card .includes { margin-top: 28px; text-align: left; }
+    .price-card .includes li { list-style: none; font-size: .95rem; color: #fde68a; line-height: 2; }
+    .price-card .includes li::before { content: '✦ '; color: #d4a017; }
+    #s9 .cta { font-size: 1rem; color: #6b7280; margin-top: 10px; }
+
+    /* ── SLIDE 10 — CTA ── */
+    #s10 { background: linear-gradient(135deg, #0b1410 0%, #156a3e 100%); text-align: center; }
+    #s10 .big { font-size: 4.5rem; margin-bottom: 20px; }
+    #s10 h2 { font-size: 2.8rem; font-weight: 800; line-height: 1.2;
+      background: linear-gradient(90deg, #d4a017, #f1c75b, #fde68a);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 18px; }
+    #s10 p { font-size: 1.15rem; color: #9ca3af; max-width: 540px; line-height: 1.6; margin: 0 auto 36px; }
+    #s10 .contact { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn { padding: 16px 36px; border-radius: 12px; font-size: 1rem; font-weight: 700;
+      cursor: pointer; border: none; transition: transform .2s, opacity .2s; text-decoration: none; display: inline-block; }
+    .btn:hover { transform: translateY(-2px); opacity: .9; }
+    .btn-primary { background: linear-gradient(90deg, #d4a017, #f1c75b); color: #0b1410; }
+    .btn-secondary { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); color: #e2e8f0; }
+
+    /* ── SHARED ── */
+    .slide-title { text-align: center; margin-bottom: 40px; }
+    .slide-title h2 { font-size: 2.2rem; font-weight: 800; color: #e2e8f0; margin-bottom: 8px; }
+    .slide-title p { font-size: 1rem; color: #6b7280; }
+    .badge { display: inline-block; background: rgba(212,160,23,.15); border: 1px solid rgba(212,160,23,.3);
+      color: #fde68a; font-size: .75rem; font-weight: 700; padding: 4px 12px; border-radius: 999px;
+      text-transform: uppercase; letter-spacing: .08em; margin-bottom: 14px; }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; bottom: 36px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 16px; z-index: 100;
+      background: rgba(11,20,16,.8); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.08); border-radius: 999px;
+      padding: 10px 20px;
+    }
+    .nav-btn { background: none; border: none; color: #9ca3af; font-size: 1.2rem;
+      cursor: pointer; padding: 6px 12px; border-radius: 8px; transition: all .2s; }
+    .nav-btn:hover { color: #fff; background: rgba(255,255,255,.08); }
+    .dots { display: flex; gap: 7px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.2);
+      cursor: pointer; transition: all .2s; }
+    .dot.active { background: #d4a017; transform: scale(1.3); }
+    .slide-count { font-size: .8rem; color: #6b7280; min-width: 38px; text-align: center; }
+  </style>
+</head>
+<body>
+
+
+<div class="deck">
+
+  <!-- SLIDE 1 — COVER -->
+  <div class="slide active" id="s1">
+    <img src="https://www.kodiak-consulting.fr/wp-content/uploads/2025/07/thumbnail_logo-KODIAK@blanc.png" alt="Kodiak Consulting" style="height:90px;margin-bottom:28px;opacity:.95;" onerror="this.style.display='none'">
+    <h1>RugbyPulse<br>Sites internet pour clubs FFR</h1>
+    <p class="sub">La solution tout-en-un pour le club amateur : actualités, école de rugby, espace joueur, et un assistant IA qui répond aux parents et licenciés 24/7.</p>
+    <div class="tag">
+      <span>🏉 École de rugby → seniors</span>
+      <span>⚡ Onboarding en 7 étapes</span>
+      <span>📱 100% mobile + PWA</span>
+      <span>🤖 Assistant IA Claude</span>
+      <span>⚓ Clubs FFR</span>
+    </div>
+    <p style="margin-top:28px;font-size:.8rem;color:#334155;">Une solution <strong style="color:#d4a017;">clé en main</strong> — abonnement mensuel tout inclus</p>
+  </div>
+
+  <!-- SLIDE 2 — PROBLÈME -->
+  <div class="slide" id="s2">
+    <div class="slide-title">
+      <div class="badge">Le problème</div>
+      <h2>Les clubs amateurs communiquent à l'ancienne</h2>
+      <p>WhatsApp, Facebook, affiches au clubhouse... et un site qui dort.</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="icon">📵</div>
+        <h3>Site vitrine figé ou absent</h3>
+        <p>Site WordPress des années 2010 jamais mis à jour, ou rien du tout. Les parents cherchant une école de rugby ne vous trouvent pas.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🔍</div>
+        <h3>Invisible sur Google</h3>
+        <p>Aucun SEO local. Quand on cherche « rugby enfant [ville] », les clubs voisins ou les salles de sport remontent en premier.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">📱</div>
+        <h3>Infos éclatées sur 5 canaux</h3>
+        <p>Horaires entraînements sur WhatsApp, convocations sur Facebook, résultats sur papier au clubhouse. Les parents perdent le fil.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🔧</div>
+        <h3>Impossible à maintenir</h3>
+        <p>Le bénévole webmaster a changé, le mot de passe est perdu, le site n'a pas bougé depuis 18 mois. Situation classique.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3 — SOLUTION -->
+  <div class="slide" id="s3">
+    <div class="badge">La solution</div>
+    <div class="big">🏉</div>
+    <h2>Un site pro en 7 étapes, sans coder</h2>
+    <p>Le sport, l'identité, les couleurs, les modules. Le club se concentre sur le rugby et la troisième mi-temps, pas sur la technique.</p>
+    <div class="flow">
+      <div class="flow-step">🏉 Choix du sport</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">🎨 Couleurs du club</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">⚙️ Modules activés</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">🔗 Domaine configuré</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">✅ En ligne !</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4 — FONCTIONNALITÉS -->
+  <div class="slide" id="s4">
+    <div class="slide-title">
+      <div class="badge">Fonctionnalités</div>
+      <h2>Tout ce dont un club de rugby a besoin</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="icon">🏉</div>
+        <h3>Catégories U6 → seniors</h3>
+        <p>Page par catégorie (école de rugby, cadets, juniors, seniors M/F, loisir, rugby à 7). Présentation des créneaux et des encadrants.</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon">📅</div>
+        <h3>Entraînements & stages</h3>
+        <p>Planning entraînements, stages de pré-saison, tournois loisir. Inscription via lien HelloAsso.</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon">🤖</div>
+        <h3>Assistant IA Claude</h3>
+        <p>Chatbot basé sur Claude Haiku qui répond aux parents 24/7 : âge mini, certificat médical, équipement, horaires. Base de connaissances enrichie par l'admin.</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon">📸</div>
+        <h3>Actualités & galerie</h3>
+        <p>Comptes-rendus de match, portraits de joueurs, vie du club. Éditeur riche Lexical, publication programmée.</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon">👤</div>
+        <h3>Espace joueur</h3>
+        <p>Connexion privée, profil, licence FFR, certificat médical, cotisation visible. Conforme RGPD.</p>
+      </div>
+      <div class="feat-card">
+        <div class="icon">📊</div>
+        <h3>Page partenaires</h3>
+        <p>Vitrine sponsors avec logos, lien et valorisation. Base d'un dossier partenariat concret pour prospecter.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5 — ONBOARDING / BÉNÉVOLES -->
+  <div class="slide" id="s5">
+    <div class="badge">Pensé pour les bénévoles</div>
+    <h2>Aussi simple qu'un réseau social</h2>
+    <div class="ai-list">
+      <div class="ai-item">
+        <div class="dot"></div>
+        <div>
+          <h4>Wizard de démarrage en 7 étapes</h4>
+          <p>Sport, forfait, domaine, identité, couleurs, modules, admin. Configuration guidée en moins de 30 minutes.</p>
+        </div>
+      </div>
+      <div class="ai-item">
+        <div class="dot"></div>
+        <div>
+          <h4>Éditeur riche Lexical</h4>
+          <p>Interface WYSIWYG utilisable sur smartphone. Publiez un compte-rendu de match depuis le car du retour en 2 minutes.</p>
+        </div>
+      </div>
+      <div class="ai-item">
+        <div class="dot"></div>
+        <div>
+          <h4>Base de connaissances alimentée par l'IA</h4>
+          <p>Quand le chatbot ne sait pas répondre, il crée une alerte. Le président ou le webmaster répond depuis le CMS, la réponse enrichit la base. Le chatbot s'améliore tout seul au fil de la saison.</p>
+        </div>
+      </div>
+      <div class="ai-item">
+        <div class="dot"></div>
+        <div>
+          <h4>Support Kodiak Consulting</h4>
+          <p>Email sous 24h sur forfait Pulse, 48h sur Essentiel. Accompagnement humain, pas un ticket perdu dans une file d'attente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6 — INTÉGRATIONS -->
+  <div class="slide" id="s6">
+    <div class="badge">Intégrations</div>
+    <h2>Connecté à votre écosystème</h2>
+    <div class="networks">
+      <div class="net-card">
+        <span class="icon">🤖</span>
+        <span>Claude (Anthropic)</span>
+      </div>
+      <div class="net-card">
+        <span class="icon">💚</span>
+        <span>HelloAsso</span>
+      </div>
+      <div class="net-card">
+        <span class="icon">🗺️</span>
+        <span>Google Maps</span>
+      </div>
+      <div class="net-card">
+        <span class="icon">📧</span>
+        <span>Brevo (newsletter)</span>
+      </div>
+      <div class="net-card">
+        <span class="icon">📸</span>
+        <span>Instagram</span>
+      </div>
+      <div class="net-card">
+        <span class="icon">📘</span>
+        <span>Facebook</span>
+      </div>
+      <div class="net-card">
+        <span class="icon">𝕏</span>
+        <span>X / Twitter</span>
+      </div>
+    </div>
+    <p class="note">Chatbot propulsé par Claude Haiku 4.5 (Anthropic). Licences FFR et cotisations via HelloAsso. Stade localisé via Google Maps. Newsletter via Brevo. Flux réseaux sociaux intégrés sur la page d'accueil. Calendrier matchs, feuilles de match, convocations et classement de poule en roadmap.</p>
+  </div>
+
+  <!-- SLIDE 7 — POUR QUI -->
+  <div class="slide" id="s7">
+    <div class="slide-title">
+      <div class="badge">Pour qui ?</div>
+      <h2>Pour tous les clubs affiliés FFR</h2>
+    </div>
+    <div class="who-grid">
+      <div class="who-card">
+        <div class="icon">🏫</div>
+        <h3>Écoles de rugby (U6 → U14)</h3>
+        <ul>
+          <li>Page dédiée avec créneaux, encadrants, niveaux</li>
+          <li>Portes ouvertes et essai gratuit mis en avant</li>
+          <li>SEO local pour capter les familles du secteur</li>
+          <li>FAQ parents automatisée via le chatbot IA</li>
+        </ul>
+      </div>
+      <div class="who-card">
+        <div class="icon">🏆</div>
+        <h3>Clubs de compétition</h3>
+        <ul>
+          <li>Page catégories seniors M / F, cadets, juniors</li>
+          <li>Comptes-rendus de match et palmarès du club</li>
+          <li>Portraits joueurs et encadrement valorisés</li>
+          <li>Annonce des matchs à venir en page d'accueil</li>
+        </ul>
+      </div>
+      <div class="who-card">
+        <div class="icon">🎉</div>
+        <h3>Clubs conviviaux & loisir</h3>
+        <ul>
+          <li>Rugby à 7, rugby loisir, section vétérans</li>
+          <li>Page événements (tournois, repas, soirées)</li>
+          <li>Galerie photos troisième mi-temps</li>
+          <li>Billetterie via lien HelloAsso</li>
+        </ul>
+      </div>
+      <div class="who-card">
+        <div class="icon">🏢</div>
+        <h3>Clubs multi-sections</h3>
+        <ul>
+          <li>Section féminine, école, seniors, loisir sur un site</li>
+          <li>Espace adhérent commun à toutes les sections</li>
+          <li>Isolation des données par club (multi-tenant)</li>
+          <li>Identité visuelle du club unifiée</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8 — HÉBERGEMENT & SÉCURITÉ -->
+  <div class="slide" id="s8">
+    <div class="slide-title">
+      <div class="badge">Hébergement & sécurité</div>
+      <h2>Vous jouez. On gère la technique.</h2>
+    </div>
+    <div class="sec-grid">
+      <div class="sec-item">
+        <div class="icon">🔒</div>
+        <div>
+          <h4>SSL & HTTPS inclus</h4>
+          <p>Certificat Let's Encrypt automatique, redirection HTTP → HTTPS, headers de sécurité (CSP, HSTS, X-Frame-Options).</p>
+        </div>
+      </div>
+      <div class="sec-item">
+        <div class="icon">💾</div>
+        <div>
+          <h4>Sauvegardes quotidiennes</h4>
+          <p>Backup chiffré de la base de données et des médias, rétention 30 jours. Restauration sur demande.</p>
+        </div>
+      </div>
+      <div class="sec-item">
+        <div class="icon">⚡</div>
+        <div>
+          <h4>Performance Lighthouse &gt; 90</h4>
+          <p>Rendu SSR Next.js 15, images WebP, cache Redis. Score &gt; 90 mobile et desktop.</p>
+        </div>
+      </div>
+      <div class="sec-item">
+        <div class="icon">🛡️</div>
+        <div>
+          <h4>Conformité RGPD</h4>
+          <p>Bandeau de consentement cookies, politique de confidentialité, droit à l'effacement, isolation des données par club.</p>
+        </div>
+      </div>
+      <div class="sec-item">
+        <div class="icon">🌐</div>
+        <div>
+          <h4>Votre nom de domaine</h4>
+          <p>Domaine propre au club ou rattachement d'un domaine existant. Disponibilité vérifiée lors de l'onboarding.</p>
+        </div>
+      </div>
+      <div class="sec-item">
+        <div class="icon">📈</div>
+        <div>
+          <h4>Disponibilité 99,9 %</h4>
+          <p>Infrastructure Railway, monitoring, mises à jour de sécurité automatiques. Critique avant un match à domicile.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9 — TARIF -->
+  <div class="slide" id="s9">
+    <div class="badge">Tarification</div>
+    <h2>Deux forfaits clairs, un sur-mesure pour les intégrations</h2>
+    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin: 24px 0;">
+      <div class="price-card" style="padding: 36px 44px;">
+        <div style="font-size: .8rem; color: #9ca3af; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">Essentiel</div>
+        <div class="amount" style="background: linear-gradient(90deg, #9ca3af, #d1d5db); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">49€</div>
+        <div class="cycle">HT/mois — sans IA</div>
+        <ul class="includes" style="font-size: .82rem;">
+          <li>Site complet + page builder</li>
+          <li>Espace joueur, galerie, newsletter</li>
+          <li>Lien HelloAsso (licences FFR)</li>
+        </ul>
+      </div>
+      <div class="price-card" style="padding: 36px 44px; border-color: rgba(212,160,23,.55); box-shadow: 0 8px 32px rgba(212,160,23,.18);">
+        <div style="font-size: .8rem; color: #fde68a; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">★ Pulse</div>
+        <div class="amount">99€</div>
+        <div class="cycle">HT/mois — toutes les fonctionnalités IA</div>
+        <ul class="includes" style="font-size: .82rem;">
+          <li>Tout Essentiel +</li>
+          <li>Chatbot IA Claude (FAQ parents 24/7)</li>
+          <li>SEO automatique + assistant IA webmaster</li>
+          <li>Multilingue FR/EN/ES</li>
+        </ul>
+      </div>
+      <div class="price-card" style="padding: 36px 44px;">
+        <div style="font-size: .8rem; color: #9ca3af; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;">Sur mesure</div>
+        <div class="amount" style="background: linear-gradient(90deg, #9ca3af, #d1d5db); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Sur devis</div>
+        <div class="cycle">Intégrations spécifiques</div>
+        <ul class="includes" style="font-size: .82rem;">
+          <li>Tout Pulse +</li>
+          <li>Calendrier matchs, feuilles de match</li>
+          <li>Multi-sections, billetterie, custom code</li>
+        </ul>
+      </div>
+    </div>
+    <p class="cta">Sans engagement. Hébergement, SSL, sauvegardes, support et mises à jour inclus dans tous les forfaits.</p>
+  </div>
+
+  <!-- SLIDE 10 — CTA -->
+  <div class="slide" id="s10">
+    <img src="https://www.kodiak-consulting.fr/wp-content/uploads/2025/07/thumbnail_logo-KODIAK@blanc.png" alt="Kodiak Consulting" style="height:80px;margin-bottom:24px;opacity:.95;" onerror="this.style.display='none'">
+    <h2>Prêt à mettre votre club<br>en mêlée numérique ?</h2>
+    <p>Rejoignez les clubs qui attirent plus de licenciés, communiquent mieux avec leurs parents, et laissent leur site travailler pour eux.</p>
+    <div class="contact">
+      <a class="btn btn-primary" href="mailto:cgaudiard@kodiak-consulting.fr?subject=RugbyPulse%20-%20Demande%20de%20d%C3%A9mo">Demander une démo</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="nav-btn" id="prevBtn">←</button>
+  <div class="dots" id="dots"></div>
+  <span class="slide-count" id="count">1 / 10</span>
+  <button class="nav-btn" id="nextBtn">→</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsEl = document.getElementById('dots');
+  const countEl = document.getElementById('count');
+  let current = 0;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    setTimeout(() => slides[current].classList.remove('exit'), 450);
+    current = (n + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    countEl.textContent = `${current + 1} / ${slides.length}`;
+  }
+
+  document.getElementById('nextBtn').onclick = () => goTo(current + 1);
+  document.getElementById('prevBtn').onclick = () => goTo(current - 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goTo(current - 1);
+  });
+
+  let startX = 0;
+  document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 50) goTo(current + (dx < 0 ? 1 : -1));
+  });
+</script>
+</body>
+</html>

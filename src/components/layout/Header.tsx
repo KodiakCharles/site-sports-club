@@ -1,7 +1,8 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import DarkModeToggle from '@/components/ui/DarkModeToggle'
 
 const locales = ['fr', 'en', 'es']
 
@@ -11,15 +12,28 @@ const t: Record<string, Record<string, string>> = {
   es: { club: 'El Club', activities: 'Actividades', stages: 'Cursos', competition: 'Competición', prices: 'Precios', news: 'Noticias', contact: 'Contacto', register: 'Inscribirse', members: 'Mi espacio' },
 }
 
-export default function Header({ locale }: { locale: string }) {
+export default function Header({ locale, logoUrl, logoText }: { locale: string; logoUrl?: string | null; logoText?: string }) {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [headerHidden, setHeaderHidden] = useState(false)
+  const lastScrollY = useRef(0)
   const nav = t[locale] ?? t.fr
   const base = locale === 'fr' ? '' : `/${locale}`
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
+    const onScroll = () => {
+      const y = window.scrollY
+      setScrolled(y > 20)
+      if (y < 20) {
+        setHeaderHidden(false)
+      } else if (y > lastScrollY.current && y > 200) {
+        setHeaderHidden(true)
+      } else if (y < lastScrollY.current) {
+        setHeaderHidden(false)
+      }
+      lastScrollY.current = y
+    }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -42,18 +56,21 @@ export default function Header({ locale }: { locale: string }) {
 
   const langHref = (l: string) => {
     const withoutLocale = pathname.replace(/^\/(fr|en|es)(\/|$)/, '/')
-    return l === 'fr' ? withoutLocale || '/' : `/${l}${withoutLocale}`
+    const path = withoutLocale === '/' ? '' : withoutLocale
+    return l === 'fr' ? withoutLocale || '/' : `/${l}${path}`
   }
 
   return (
     <>
-      <header className={`site-header${scrolled ? ' scrolled' : ''}`}>
+      <header className={`site-header${scrolled ? ' scrolled' : ''}${headerHidden ? ' hidden' : ''}`}>
         <div className="header-inner container">
 
           {/* LOGO */}
           <Link href={base || '/'} className="header-logo" onClick={() => setMenuOpen(false)}>
-            <span className="logo-icon">⚓</span>
-            <span className="logo-text">Club<strong>Voile</strong></span>
+            {logoUrl
+              ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={logoUrl} alt={logoText ?? 'Logo'} className="logo-img" />
+              : <><span className="logo-icon">⚓</span><span className="logo-text">{logoText ?? 'ClubVoile'}</span></>
+            }
           </Link>
 
           {/* NAV DESKTOP */}
@@ -78,6 +95,7 @@ export default function Header({ locale }: { locale: string }) {
                 </Link>
               ))}
             </div>
+            <DarkModeToggle />
             <Link href={`${base}/espace-adherent`} className="btn-icon" aria-label={nav.members} title={nav.members}>
               👤
             </Link>

@@ -8,6 +8,36 @@ export default async function Footer({ locale }: { locale: string }) {
 
   return (
     <footer className="site-footer">
+      {/* Widget météo marine — données configurables via module Windguru */}
+      <div className="footer-weather">
+        <div className="container footer-weather-inner">
+          <div className="footer-weather-label">
+            🌬️ Météo marine
+          </div>
+          <div className="footer-weather-data">
+            <div className="footer-weather-item">
+              <span>💨 Vent</span>
+              <strong>— kt</strong>
+            </div>
+            <div className="footer-weather-item">
+              <span>🌊 Vagues</span>
+              <strong>— m</strong>
+            </div>
+            <div className="footer-weather-item">
+              <span>🌡️ Mer</span>
+              <strong>— °C</strong>
+            </div>
+            <div className="footer-weather-item">
+              <span>👁️ Visibilité</span>
+              <strong>—</strong>
+            </div>
+          </div>
+          <a href={`${base}/nous-trouver`} className="footer-weather-link">
+            Prévisions complètes →
+          </a>
+        </div>
+      </div>
+
       <div className="footer-top container">
         <div className="footer-brand">
           <div className="footer-logo">
@@ -71,7 +101,7 @@ export default async function Footer({ locale }: { locale: string }) {
             <Link href={`${base}/mentions-legales`}>{t('legal_notice')}</Link>
             <Link href={`${base}/confidentialite`}>{t('privacy')}</Link>
           </div>
-          <span className="footer-powered">{t('powered_by')} <strong>VoileWeb</strong></span>
+          <span className="footer-powered">{t('powered_by')} <strong>VoilePulse</strong></span>
         </div>
       </div>
     </footer>

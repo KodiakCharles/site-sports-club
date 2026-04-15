@@ -40,33 +40,6 @@ export type BookingProvider = 'yoplanning' | 'axyomes' | 'helloasso' | 'internal
 
 export type UserRole = 'super_admin' | 'club_admin' | 'editor' | 'contributor'
 
-// ---- API FFVoile ----
-export interface FFVoileRace {
-  id: string
-  name: string
-  startDate: string
-  endDate: string
-  location: string
-  category: string
-  url: string
-}
-
-export interface FFVoileResult {
-  raceId: string
-  raceName: string
-  date: string
-  rankings: FFVoileRanking[]
-}
-
-export interface FFVoileRanking {
-  rank: number
-  sailNumber: string
-  helmName: string
-  crewName?: string
-  clubName: string
-  points: number
-}
-
 // ---- Météo Windguru ----
 export interface WindguruData {
   windSpeed: number[]      // m/s

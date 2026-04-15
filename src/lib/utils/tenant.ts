@@ -47,7 +47,7 @@ async function resolveClubByDomain(domain: string): Promise<string | null> {
 
   const result = await payload.find({
     collection: 'clubs',
-    where: { domain: { equals: domain }, 'subscription.active': { equals: true } },
+    where: { and: [{ domain: { equals: domain } }, { status: { equals: 'active' } }] },
     limit: 1,
   })
 

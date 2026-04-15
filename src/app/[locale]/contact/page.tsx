@@ -1,13 +1,63 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
+import { getPayload } from 'payload'
+import config from '@payload-config'
+import JsonLd from '@/components/seo/JsonLd'
+import { generatePageMetadata } from '@/lib/seo/metadata'
+import { generateLocalBusinessSchema } from '@/lib/seo/structured-data'
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.club-voile.fr'
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params
+  return generatePageMetadata({
+    title: 'Contact',
+    description: 'Contactez notre club de voile. T\u00e9l\u00e9phone, email, formulaire de contact et horaires d\'ouverture.',
+    path: '/contact',
+    locale,
+  })
+}
+
+const SOCIAL_CONFIG = [
+  { key: 'facebookUrl',   label: 'Facebook',   icon: '📘' },
+  { key: 'instagramUrl',  label: 'Instagram',  icon: '📸' },
+  { key: 'twitterUrl',    label: 'X / Twitter',icon: '🐦' },
+  { key: 'youtubeUrl',    label: 'YouTube',    icon: '▶️' },
+  { key: 'tiktokUrl',     label: 'TikTok',     icon: '🎵' },
+]
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   const t = await getTranslations('contact')
   const base = locale === 'fr' ? '' : `/${locale}`
 
+  const payload = await getPayload({ config })
+  const settings = await payload.findGlobal({ slug: 'club-settings' }).catch(() => null)
+  const s = settings as Record<string, unknown> | null
+
+  const address = (s?.address as string) || 'Port de plaisance, quai des voiliers'
+  const phone   = (s?.phone as string) || '06 00 00 00 00'
+  const email   = (s?.email as string) || 'contact@votreclub.fr'
+  const monday  = (s?.mondayFriday as string) || '9h – 18h'
+  const saturday = (s?.saturday as string) || '9h – 13h'
+  const sunday   = (s?.sunday as string) || 'Fermé'
+
+  const socials = SOCIAL_CONFIG.filter(({ key }) => s?.[key])
+
+  const localBusinessSchema = generateLocalBusinessSchema(
+    (s?.clubName as string) || 'Club de Voile',
+    address,
+    phone,
+    email,
+    0,
+    0,
+    `${BASE_URL}/${locale}/contact`,
+  )
+
   return (
     <div>
+      <JsonLd data={localBusinessSchema} />
       <section className="page-hero" style={{ background: 'linear-gradient(135deg,#0a2030,#1d6fa4)' }}>
         <div className="container page-hero-content">
           <div className="breadcrumb"><Link href={base || '/'}>Accueil</Link> › {t('hero_title')}</div>
@@ -60,29 +110,47 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           </div>
 
           <div className="content-aside">
+            {/* Coordonnées depuis le CMS */}
             <div className="info-card">
               <h3>{t('coordinates')}</h3>
               <ul className="contact-list">
-                <li><strong>{t('address_label')}</strong><br />Port de plaisance, quai des voiliers<br />00000 Votre-Ville</li>
-                <li><strong>Téléphone</strong><br /><a href="tel:+33600000000">06 00 00 00 00</a></li>
-                <li><strong>Email</strong><br /><a href="mailto:contact@votreclub.fr">contact@votreclub.fr</a></li>
+                <li><strong>{t('address_label')}</strong><br />{address}</li>
+                <li><strong>Téléphone</strong><br /><a href={`tel:${phone.replace(/\s/g, '')}`}>{phone}</a></li>
+                <li><strong>Email</strong><br /><a href={`mailto:${email}`}>{email}</a></li>
               </ul>
             </div>
+
+            {/* Horaires depuis le CMS */}
             <div className="info-card" style={{ marginTop: '20px' }}>
               <h3>{t('hours_title')}</h3>
               <ul className="contact-list">
-                <li><strong>{t('hours_weekday')}</strong><br />{t('hours_weekday_val')}</li>
-                <li><strong>{t('hours_saturday')}</strong><br />{t('hours_saturday_val')}</li>
-                <li><strong>{t('hours_sunday')}</strong><br />{t('hours_sunday_val')}</li>
+                <li><strong>{t('hours_weekday')}</strong><br />{monday}</li>
+                <li><strong>{t('hours_saturday')}</strong><br />{saturday}</li>
+                <li><strong>{t('hours_sunday')}</strong><br />{sunday}</li>
               </ul>
             </div>
-            <div className="info-card" style={{ marginTop: '20px' }}>
-              <h3>{t('social_title')}</h3>
-              <div className="social-links-inline">
-                <a href="#" className="social-btn">Facebook</a>
-                <a href="#" className="social-btn">Instagram</a>
+
+            {/* Réseaux sociaux — seulement ceux remplis dans le CMS */}
+            {socials.length > 0 && (
+              <div className="info-card" style={{ marginTop: '20px' }}>
+                <h3>{t('social_title')}</h3>
+                <div className="social-links-stack">
+                  {socials.map(({ key, label, icon }) => (
+                    <a
+                      key={key}
+                      href={s![key] as string}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-link-row"
+                    >
+                      <span className="social-link-icon">{icon}</span>
+                      <span className="social-link-label">{label}</span>
+                      <span className="social-link-arrow">→</span>
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>

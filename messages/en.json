@@ -45,9 +45,6 @@
     "hero_title": "Racing & Regattas", "hero_subtitle": "Calendar, results and notices of race",
     "calendar_title": "2026 Racing calendar", "calendar_subtitle": "Full calendar on",
     "nor_btn": "Notice of Race", "done_badge": "Finished",
-    "ffvoile_title": "FFVoile API integration available",
-    "ffvoile_text": "The official calendar and race results will be automatically synchronised via the FFVoile API (Executive Board agreement required).",
-    "ffvoile_btn": "View on FFVoile",
     "palmares_title": "Club honours"
   },
   "prices": {

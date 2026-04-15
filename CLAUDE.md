@@ -4,7 +4,17 @@ Ce fichier fournit les instructions à Claude Code lors du travail sur ce dépô
 
 ## Vue d'ensemble du projet
 
-**VoileWeb** — Solution SaaS multi-tenant de sites internet pour les clubs affiliés à la Fédération Française de Voile (FFVoile). Stack : Next.js 14 (App Router) + Payload CMS 2 + PostgreSQL + Redis.
+**SportsPulse** — Solution SaaS multi-tenant **multi-sport** de sites internet pour clubs sportifs. Trois déclinaisons livrées en v0.2 :
+
+| Déclinaison | Sport | Fédération | Champ `club.sport` |
+|-------------|-------|-----------|--------------------|
+| **VoilePulse** | Voile | FFVoile | `voile` |
+| **RugbyPulse** | Rugby | FFR | `rugby` |
+| **PelotePulse** | Pelote basque | FFPB | `pelote-basque` |
+
+Le sport est fixé par le `super_admin` à l'onboarding du club. Il pilote : la marque affichée, le vocabulaire (« stages » vs « entraînements » vs « parties »), la liste des supports/disciplines, la fédération de référence, les catégories d'actualités, le system prompt du chatbot, et les modules disponibles (ex. météo marine uniquement pour voile).
+
+Stack : Next.js 15 (App Router) + Payload CMS v3 + SQLite (→ PostgreSQL en prod) + Redis.
 
 ### Architecture multi-tenant
 
@@ -37,17 +47,16 @@ Décorateurs/middleware à utiliser :
 
 Chaque club active/désactive ses modules dans `club.modules.*`. Avant d'afficher un module, toujours vérifier `club.modules.{module} === true`.
 
-| Module | Champ |
-|--------|-------|
-| Météo marine | `modules.weatherWidget` |
-| Location de bateaux | `modules.boatRental` |
-| Espace adhérent | `modules.memberSpace` |
-| Multilingue EN+ES | `modules.multilingual` |
-| API FFVoile | `modules.ffvoileIntegration` |
+| Module | Champ | Sports applicables |
+|--------|-------|--------------------|
+| Météo marine (Windguru) | `modules.weatherWidget` | voile |
+| Location de bateaux | `modules.boatRental` | voile |
+| Location matériel | `modules.equipmentRental` | rugby, pelote-basque |
+| Espace adhérent | `modules.memberSpace` | tous |
+| Multilingue EN+ES | `modules.multilingual` | tous |
+| Billetterie / réservation frontons | `modules.booking` | pelote-basque |
 
-### API FFVoile
-
-L'accès à `api.ffvoile.fr` requiert un accord du Bureau Exécutif FFVoile et un token Bearer. Toutes les réponses sont mises en cache Redis (TTL 1h). En cas d'indisponibilité de l'API, afficher un lien vers `regates.ffvoile.fr` (fallback).
+Les modules non applicables au sport choisi sont masqués dans l'UI d'onboarding.
 
 ### Intégrations tierces
 
@@ -64,10 +73,15 @@ L'accès à `api.ffvoile.fr` requiert un accord du Bureau Exécutif FFVoile et u
 
 ## Commandes courantes
 
+> **Pas de BDD locale.** L'app utilise uniquement le Postgres Railway (prod), même en dev.
+> Le workflow recommandé : `railway run npm run dev` qui injecte `DATABASE_URL` automatiquement.
+> Schéma figé : `PUSH_SCHEMA=true` uniquement au 1er déploiement, puis `false` pour ne jamais
+> wiper la BDD prod sur les commits suivants.
+
 ```bash
-# Développement local (avec Docker)
-docker-compose up -d        # Lance PostgreSQL + Redis
-npm run dev                 # Lance Next.js en mode développement
+# Développement local — connecté à la BDD Railway prod
+railway run npm run dev     # Postgres prod + Redis prod injectés via Railway CLI
+# OU sans Railway CLI : copier DATABASE_URL + REDIS_URL depuis dashboard dans .env.local
 
 # Base de données
 npm run db:migrate          # Applique les migrations Payload
@@ -211,8 +225,9 @@ chmod +x .git/hooks/pre-commit
 /api/social/instagram       Flux Instagram (GET)
 /api/newsletter             Inscription newsletter (POST)
 /api/contact                Formulaire de contact (POST)
-/api/ffvoile/races          Calendrier régates FFVoile (GET, cache 1h)
 /api/weather                Données Windguru (GET, cache 30min)
+/api/chatbot                Chatbot LLM (POST, Claude Haiku + knowledge base)
+/api/admin/chatbot-alerts   Gestion alertes chatbot (admin)
 /sitemap.xml                Sitemap SEO dynamique
 /robots.txt                 Robots SEO
 ```
