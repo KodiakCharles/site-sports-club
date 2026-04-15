@@ -22,11 +22,19 @@ const dirname = path.dirname(filename)
 
 // Postgres uniquement — Railway prod en dev ET en prod (workflow : `railway run npm run dev`).
 // Pas de fallback SQLite, pas de BDD locale.
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL manquante. Cette app utilise uniquement Postgres (Railway). " +
-    "Pour le dev local : `railway run npm run dev` (injecte la DATABASE_URL prod) " +
-    "ou copier la valeur depuis le dashboard Railway dans .env.local."
+//
+// Note : au build time (Next.js pre-render, collecte de page data), DATABASE_URL peut
+// ne pas être injectée côté Railway. On utilise une URL placeholder pour que
+// l'adapter soit construit, mais les pages sont force-dynamic et ne se connectent
+// réellement qu'au runtime (où DATABASE_URL est bien présente).
+const connectionString =
+  process.env.DATABASE_URL ||
+  'postgresql://build-placeholder:build-placeholder@localhost:5432/build-placeholder'
+
+if (!process.env.DATABASE_URL && process.env.NODE_ENV !== 'production') {
+  // eslint-disable-next-line no-console
+  console.warn(
+    "[payload] DATABASE_URL manquante. Utiliser `railway run npm run dev` ou définir la variable dans .env.local"
   )
 }
 
@@ -38,7 +46,7 @@ if (!process.env.DATABASE_URL) {
 const shouldPush = process.env.PUSH_SCHEMA === 'true'
 
 const dbAdapter = postgresAdapter({
-  pool: { connectionString: process.env.DATABASE_URL },
+  pool: { connectionString },
   push: shouldPush,
 })
 

@@ -11,6 +11,11 @@ import '../../styles/globals.css'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
+// Multi-tenant : le club est résolu depuis le hostname à chaque request.
+// Pas de pré-rendering au build time (DATABASE_URL pas requise au build).
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 const inter = Inter({ subsets: ['latin'] })
 
 const locales = ['fr', 'en', 'es']
