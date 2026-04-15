@@ -55,10 +55,15 @@ export async function GET() {
       ? { status: 'degraded', detail: JSON.stringify(envChecks) }
       : { status: 'ok' }
 
-  const hasFailed = Object.values(checks).some((c) => c.status === 'failed')
-  const hasDegraded = Object.values(checks).some((c) => c.status === 'degraded')
-  const overall: CheckStatus = hasFailed ? 'failed' : hasDegraded ? 'degraded' : 'ok'
-  const httpStatus = hasFailed ? 503 : 200
+  const overall: CheckStatus = Object.values(checks).some((c) => c.status === 'failed')
+    ? 'failed'
+    : Object.values(checks).some((c) => c.status === 'degraded')
+      ? 'degraded'
+      : 'ok'
+  // Healthcheck Railway : on renvoie toujours 200 pour confirmer que le serveur écoute.
+  // Les détails de failure/degradation sont dans le body JSON et surveillables via Sentry.
+  // Sans ça, un fail DB au 1er boot empêcherait Railway de considérer le service up.
+  const httpStatus = 200
 
   return NextResponse.json(
     {

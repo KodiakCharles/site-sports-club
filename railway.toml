@@ -2,8 +2,11 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "npm start"
+# Force l'écoute sur 0.0.0.0 et le port Railway — sans quoi Next.js bind sur localhost
+# et Railway ne peut pas joindre l'app depuis l'extérieur (healthcheck échoue).
+startCommand = "next start -H 0.0.0.0 -p ${PORT:-3000}"
 healthcheckPath = "/api/health"
-healthcheckTimeout = 30
+# 120s car Payload init + Redis connect peut prendre ~30s au cold start
+healthcheckTimeout = 120
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
