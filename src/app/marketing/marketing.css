@@ -1,9 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --wp-bg: #0f172a;
+  --wp-bg-elevated: #1e293b;
   --wp-fg: #f8fafc;
   --wp-muted: #94a3b8;
+  --wp-border: #334155;
   --wp-accent: #fbbf24;
   --wp-accent-hover: #f59e0b;
+  --wp-voile: #1d6fa4;
+  --wp-rugby: #c23b22;
+  --wp-pelote: #c8102e;
 }
 
 html,
@@ -12,14 +21,9 @@ body {
   padding: 0;
   background: var(--wp-bg);
   color: var(--wp-fg);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-a {
-  color: var(--wp-accent);
-  text-decoration: none;
-}
-a:hover {
-  color: var(--wp-accent-hover);
+* {
+  box-sizing: border-box;
 }
