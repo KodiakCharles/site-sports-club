@@ -23,8 +23,8 @@ export default function middleware(req: NextRequest) {
   if (isMarketingHost(host)) {
     const url = req.nextUrl.clone()
     // Évite la double-préfixation si la requête arrive déjà préfixée
-    if (!url.pathname.startsWith('/__marketing')) {
-      url.pathname = url.pathname === '/' ? '/__marketing' : `/__marketing${url.pathname}`
+    if (!url.pathname.startsWith('/marketing')) {
+      url.pathname = url.pathname === '/' ? '/marketing' : `/marketing${url.pathname}`
     }
     return NextResponse.rewrite(url)
   }
@@ -33,7 +33,7 @@ export default function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // Exclut: assets Next, _vercel, /api, /admin, le dossier interne /__marketing,
+  // Exclut: assets Next, _vercel, /api, /admin, le dossier interne /marketing,
   // et tout chemin contenant un point (fichiers statiques).
-  matcher: ['/((?!_next|_vercel|api|admin|__marketing|.*\\..*).*)'],
+  matcher: ['/((?!_next|_vercel|api|admin|marketing|.*\\..*).*)'],
 }
