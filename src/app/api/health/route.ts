@@ -45,7 +45,10 @@ export async function GET() {
     ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY
       ? { status: 'ok' }
       : { status: 'degraded', detail: 'missing — chatbot will return 503' },
-    RESEND_API_KEY: process.env.RESEND_API_KEY
+    MAILJET_API_KEY: process.env.MAILJET_API_KEY
+      ? { status: 'ok' }
+      : { status: 'degraded', detail: 'missing — contact form + newsletters will fail' },
+    MAILJET_SECRET_KEY: process.env.MAILJET_SECRET_KEY
       ? { status: 'ok' }
       : { status: 'degraded', detail: 'missing — contact form + newsletters will fail' },
   }

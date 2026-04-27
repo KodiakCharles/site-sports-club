@@ -3,9 +3,7 @@ import { z } from 'zod'
 import { resolveClub } from '@/lib/utils/tenant'
 import { isValidOrigin } from '@/lib/utils/csrf'
 import { rateLimit, getClientIp } from '@/lib/utils/rateLimit'
-import { Resend } from 'resend'
-
-const getResend = () => new Resend(process.env.RESEND_API_KEY)
+import { sendMail } from '@/lib/utils/mailer'
 
 const schema = z.object({
   name: z.string().min(2).max(100),
@@ -75,10 +73,9 @@ export async function POST(req: NextRequest) {
 
   const { name, email, phone, subject, message } = parsed.data
 
-  await getResend().emails.send({
-    from: process.env.EMAIL_FROM ?? 'noreply@voileweb.fr',
+  await sendMail({
     to: clubEmail,
-    reply_to: email,
+    replyTo: email,
     subject: `[Contact] ${subject}`,
     html: `
       <h2>Nouveau message de contact</h2>
@@ -91,8 +88,7 @@ export async function POST(req: NextRequest) {
     `,
   })
 
-  await getResend().emails.send({
-    from: process.env.EMAIL_FROM ?? 'noreply@voileweb.fr',
+  await sendMail({
     to: email,
     subject: `Votre message a bien été reçu`,
     html: `<p>Bonjour ${name},</p><p>Nous avons bien reçu votre message et vous répondrons dans les meilleurs délais.</p>`,

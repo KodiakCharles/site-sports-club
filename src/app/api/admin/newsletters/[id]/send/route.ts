@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { Resend } from 'resend'
+import { sendMailBatch, type MailMessage } from '@/lib/utils/mailer'
 
 export async function POST(
   req: NextRequest,
@@ -65,34 +65,23 @@ export async function POST(
   const club = await payload.findByID({ collection: 'clubs', id: clubId })
   const clubData = club as Record<string, unknown>
 
-  const resendApiKey = process.env.RESEND_API_KEY
-  if (!resendApiKey) {
+  if (!process.env.MAILJET_API_KEY || !process.env.MAILJET_SECRET_KEY) {
     return NextResponse.json({ error: 'Configuration email manquante' }, { status: 500 })
   }
 
-  const resend = new Resend(resendApiKey)
-
   const clubName = (clubData.name as string) ?? 'Club de voile'
-  const fromEmail = process.env.NEWSLETTER_FROM_EMAIL ?? 'newsletter@voileweb.fr'
+  const fromEmail = process.env.NEWSLETTER_FROM_EMAIL ?? 'newsletter@web-pulse.fr'
 
   const emails = (members as any[]).map((m) => m.email as string).filter(Boolean)
 
-  // Envoi par batch de 50 (limite Resend)
-  const BATCH_SIZE = 50
-  let sent = 0
+  const messages: MailMessage[] = emails.map((email) => ({
+    from: { email: fromEmail, name: clubName },
+    to: email,
+    subject: newsletter.subject as string,
+    html: buildEmailHtml(newsletter.subject as string, clubName),
+  }))
 
-  for (let i = 0; i < emails.length; i += BATCH_SIZE) {
-    const batch = emails.slice(i, i + BATCH_SIZE)
-    await resend.batch.send(
-      batch.map((email) => ({
-        from: `${clubName} <${fromEmail}>`,
-        to: email,
-        subject: newsletter.subject as string,
-        html: buildEmailHtml(newsletter.subject as string, clubName),
-      }))
-    )
-    sent += batch.length
-  }
+  const sent = await sendMailBatch(messages)
 
   // Mise à jour du statut
   await payload.update({
