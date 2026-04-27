@@ -23,7 +23,7 @@ export default function CGV() {
         </li>
         <li>Siège social : 37B rue du Docteur Gronich – 40220 Tarnos</li>
         <li>RCS Dax : 983&nbsp;956&nbsp;525</li>
-        <li>N°&nbsp;TVA intracommunautaire : [À&nbsp;COMPLÉTER]</li>
+        <li>N°&nbsp;TVA intracommunautaire : FR&nbsp;22&nbsp;983&nbsp;956&nbsp;525</li>
         <li>
           Représentée par sa Présidente, la société <strong>KODIAK</strong> (RCS Dax 982&nbsp;748&nbsp;675),
           elle-même représentée par son représentant légal en exercice

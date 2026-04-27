@@ -24,7 +24,7 @@ export default function MentionsLegales() {
         <br />
         RCS Dax : 983&nbsp;956&nbsp;525
         <br />
-        N°&nbsp;TVA intracommunautaire : [À&nbsp;COMPLÉTER]
+        N°&nbsp;TVA intracommunautaire : FR&nbsp;22&nbsp;983&nbsp;956&nbsp;525
         <br />
         Présidente : société <strong>KODIAK</strong>, SAS, RCS Dax 982&nbsp;748&nbsp;675
         <br />
