@@ -26,8 +26,9 @@ const FEATURES: Feature[] = [
     icon: '◆',
   },
   {
-    title: 'Chatbot IA',
-    desc: 'Assistant conversationnel branché sur votre base de connaissances. Disponible 24/7.',
+    title: 'Chatbot IA pour vos visiteurs',
+    desc:
+      "Vos adhérents et visiteurs interagissent en langage naturel. L'IA répond grâce à vos Q/R officielles, et vous alerte si elle bute sur une question inconnue — pour que vous l'enrichissiez en un clic.",
     icon: '◆',
   },
   {
