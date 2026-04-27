@@ -39,7 +39,7 @@ export async function GET() {
         name: 'Club de Voile du Lac',
         sport: 'voile',
         domain: 'localhost',
-        status: 'active',
+        lifecycle: 'active',
         tagline: 'Naviguez avec passion sur le lac de Pau',
         address: '1 Promenade du Lac, 64000 Pau',
         phone: '05 59 27 43 10',

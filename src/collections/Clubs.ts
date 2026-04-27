@@ -8,7 +8,7 @@ const Clubs: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     group: 'Super Admin',
-    defaultColumns: ['name', 'sport', 'domain', 'status', 'createdAt'],
+    defaultColumns: ['name', 'sport', 'domain', 'lifecycle', 'createdAt'],
     description: 'Gestion des clubs multi-sport (voile, rugby, pelote basque)',
     components: {
       edit: {
@@ -111,7 +111,7 @@ const Clubs: CollectionConfig = {
       admin: { description: 'Ex: club-rugby-biarritz.fr (sans https://)' },
     },
     {
-      name: 'status',
+      name: 'lifecycle',
       type: 'select',
       label: 'Statut',
       required: true,
@@ -121,6 +121,9 @@ const Clubs: CollectionConfig = {
         { label: 'Suspendu', value: 'suspended' },
         { label: 'En attente', value: 'pending' },
       ],
+      admin: {
+        description: "Cycle de vie du club (renommé depuis 'status' pour éviter une collision avec le _status de versioning Payload).",
+      },
     },
     {
       name: 'plan',

@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
         name: data.clubName,
         sport: data.sport,
         domain: data.domain,
-        status: 'active',
+        lifecycle: 'active',
         plan: data.plan,
         tagline: data.tagline,
         address: data.address,

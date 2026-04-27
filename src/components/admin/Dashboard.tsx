@@ -10,7 +10,7 @@ import { CrossClubMembers } from './CrossClubMembers'
 import { AnalyticsWidget } from './AnalyticsWidget'
 
 type UserInfo = { role: string | null; firstName?: string; plan?: string }
-type Club = { id: string; name: string; domain: string; status: string; plan?: string }
+type Club = { id: string; name: string; domain: string; lifecycle: string; plan?: string }
 
 const PLAN_LABELS: Record<string, string> = {
   essentiel: 'Essentiel',
@@ -135,9 +135,9 @@ export function Dashboard() {
                       <span style={{
                         display: 'inline-block', padding: '2px 8px', borderRadius: '10px',
                         fontSize: '0.7rem', fontWeight: 700,
-                        background: club.status === 'active' ? '#dcfce7' : club.status === 'suspended' ? '#fee2e2' : '#fef3c7',
-                        color: club.status === 'active' ? '#16a34a' : club.status === 'suspended' ? '#dc2626' : '#d97706',
-                      }}>{club.status === 'active' ? 'Actif' : club.status === 'suspended' ? 'Suspendu' : 'En attente'}</span>
+                        background: club.lifecycle === 'active' ? '#dcfce7' : club.lifecycle === 'suspended' ? '#fee2e2' : '#fef3c7',
+                        color: club.lifecycle === 'active' ? '#16a34a' : club.lifecycle === 'suspended' ? '#dc2626' : '#d97706',
+                      }}>{club.lifecycle === 'active' ? 'Actif' : club.lifecycle === 'suspended' ? 'Suspendu' : 'En attente'}</span>
                     </td>
                     <td style={{ padding: '10px 8px', textAlign: 'right' }}>
                       <a href={`/admin/collections/clubs/${club.id}`} style={{ color: '#1d6fa4', fontWeight: 600, fontSize: '0.8rem', textDecoration: 'none' }}>Gerer &rarr;</a>

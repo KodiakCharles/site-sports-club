@@ -391,7 +391,7 @@ async function seedClub(
         name: seed.name,
         sport: seed.sport,
         domain: seed.domain,
-        status: 'active',
+        lifecycle: 'active',
         plan: 'pulse',
         tagline: seed.tagline,
         address: seed.address,
