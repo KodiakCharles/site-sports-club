@@ -47,6 +47,29 @@ function escapeHtml(str: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+// Whitelist de schémas autorisés pour les liens. Tout le reste (notamment
+// `javascript:`, `data:`, `vbscript:`) est neutralisé en `#`.
+// Les URLs relatives ("/page", "page.html") sont acceptées (pas de schéma).
+// Why: un editor/contributor qui insère `<a href="javascript:...">` dans un
+// article exécuterait du JS au clic d'un visiteur ou d'un admin (XSS stocké).
+const ALLOWED_LINK_SCHEMES = new Set(['http:', 'https:', 'mailto:', 'tel:'])
+
+function safeUrl(url?: string): string {
+  if (!url) return '#'
+  const trimmed = url.trim()
+  if (!trimmed) return '#'
+  // URL relative : pas de schéma, on accepte
+  if (trimmed.startsWith('/') || trimmed.startsWith('#') || trimmed.startsWith('?')) return trimmed
+  try {
+    const u = new URL(trimmed)
+    return ALLOWED_LINK_SCHEMES.has(u.protocol.toLowerCase()) ? trimmed : '#'
+  } catch {
+    // Pas une URL valide — neutraliser
+    return '#'
+  }
 }
 
 function convertText(node: LexicalNode): string {
@@ -103,13 +126,13 @@ function convertNode(node: LexicalNode): string {
     }
 
     case 'link': {
-      const href = escapeHtml(node.url ?? '#')
+      const href = escapeHtml(safeUrl(node.url))
       const target = node.newTab ? ' target="_blank" rel="noopener noreferrer"' : ''
       return `<a href="${href}"${target}>${convertChildren(node.children ?? [])}</a>`
     }
 
     case 'autolink': {
-      const href = escapeHtml(node.url ?? '#')
+      const href = escapeHtml(safeUrl(node.url))
       return `<a href="${href}" target="_blank" rel="noopener noreferrer">${convertChildren(node.children ?? [])}</a>`
     }
 

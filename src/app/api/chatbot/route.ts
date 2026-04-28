@@ -7,6 +7,7 @@ import { resolveClub } from '@/lib/utils/tenant'
 import { isValidOrigin } from '@/lib/utils/csrf'
 import { rateLimit, getClientIp } from '@/lib/utils/rateLimit'
 import { getSportConfig, type Sport } from '@/lib/utils/sportConfig'
+import { getBudgetStatus, incrementBudget } from '@/lib/utils/aiBudget'
 
 const schema = z.object({
   message: z.string().min(1).max(1000),
@@ -232,6 +233,19 @@ export async function POST(req: NextRequest) {
     )
   }
 
+  // Cap mensuel coût LLM par club. Évite l'amplification via rotation IP
+  // qui contournerait le rate-limit IP (20 req / 10 min).
+  const budget = await getBudgetStatus(clubId)
+  if (!budget.ok) {
+    return NextResponse.json(
+      {
+        error:
+          'Le quota mensuel du chatbot pour ce club est atteint. Le service reprendra le 1er du mois prochain.',
+      },
+      { status: 503, headers: { 'X-RateLimit-Reason': 'monthly-budget-exceeded' } },
+    )
+  }
+
   const { context, sport } = await buildClubContext(payload, clubId)
   const systemPrompt = buildSystemPrompt(sport, context)
 
@@ -288,6 +302,12 @@ export async function POST(req: NextRequest) {
       reply =
         "Je n'ai pas la réponse précise à votre question, mais je l'ai transmise à l'équipe du club qui vous reviendra rapidement."
     }
+
+    // Best-effort : on ajoute au compteur mensuel après l'appel LLM réussi.
+    await incrementBudget(
+      clubId,
+      response.usage.input_tokens + response.usage.output_tokens,
+    )
 
     return NextResponse.json({
       reply: reply.trim(),

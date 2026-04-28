@@ -1,4 +1,6 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { getPayload } from 'payload'
+import config from '@payload-config'
 
 const PAGES = [
   { path: '/', name: 'Accueil' },
@@ -12,7 +14,18 @@ const PAGES = [
   { path: '/nous-trouver', name: 'Nous trouver' },
 ]
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const payload = await getPayload({ config })
+  const { user } = await payload.auth({ headers: req.headers })
+
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+  const role = (user as { role?: string }).role ?? ''
+  if (role !== 'super_admin' && role !== 'club_admin') {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
   const results = await Promise.all(

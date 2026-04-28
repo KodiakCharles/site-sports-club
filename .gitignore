@@ -46,3 +46,4 @@ payload-types.ts
 # Local notes — pas pour le repo
 AMELIORATIONS.txt
 *.xlsx
+.gstack/
