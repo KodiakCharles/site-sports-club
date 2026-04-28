@@ -11,12 +11,14 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
   },
   icons: {
-    apple: '/icons/icon-192.png',
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
   },
 }
 
 export const viewport: Viewport = {
-  themeColor: '#1d6fa4',
+  themeColor: '#1a1a2e',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,

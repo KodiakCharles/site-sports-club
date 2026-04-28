@@ -4,8 +4,8 @@
   "description": "Site officiel du club de voile — stages, compétition, actualités",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a1628",
-  "theme_color": "#1d6fa4",
+  "background_color": "#ffffff",
+  "theme_color": "#1a1a2e",
   "orientation": "portrait-primary",
   "icons": [
     {
