@@ -7,6 +7,7 @@ import './marketing.css'
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.web-pulse.fr'),
   title: { template: '%s | Web Pulse', default: 'Web Pulse — Sites web SaaS pour clubs de sport' },
   description:
     'Le site web de votre club, prêt en 24h. Multi-sport, multi-tenant, conçu pour les fédérations. Voile, rugby, pelote — un seul SaaS.',
