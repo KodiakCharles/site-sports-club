@@ -212,8 +212,8 @@ export function OnboardingWizard() {
             <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: 20 }}>Choisir le forfait</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {[
-                { value: 'essentiel', name: 'Essentiel', price: '49€ HT/mois', target: 'Site complet, sans IA', features: ['Pages illimitées + Page builder', 'CMS éditorial', `Espace ${sportCfg.vocabulary.member}`, 'Galerie photos', 'Newsletter Brevo'], color: '#64748b' },
-                { value: 'pulse', name: 'Pulse', price: '99€ HT/mois', target: 'Toutes les fonctionnalités IA', features: ['Tout Essentiel +', 'Chatbot IA Claude', 'Base de connaissances auto-enrichie', 'Multilingue FR/EN/ES', 'SEO automatique IA', 'Assistant IA webmaster'], color: sportCfg.defaultPrimaryColor, popular: true },
+                { value: 'essentiel', name: 'Essentiel', price: '29€ HT/mois', target: 'Site complet, sans IA', features: ['Pages illimitées + Page builder', 'CMS éditorial', `Espace ${sportCfg.vocabulary.member}`, 'Galerie photos', 'Newsletter Brevo'], color: '#64748b' },
+                { value: 'pulse', name: 'Pulse', price: '49€ HT/mois', target: 'Toutes les fonctionnalités IA', features: ['Tout Essentiel +', 'Chatbot IA Claude', 'Base de connaissances auto-enrichie', 'Multilingue FR/EN/ES', 'SEO automatique IA', 'Assistant IA webmaster'], color: sportCfg.defaultPrimaryColor, popular: true },
                 { value: 'surmesure', name: 'Sur mesure', price: 'Sur devis', target: 'Intégrations spécifiques', features: ['Tout Pulse +', 'Yoplanning / Axyomes', 'Calendrier fédération', 'Réservation fronton', 'Billetterie', 'Custom code possible'], color: '#0a1628' },
               ].map(plan => (
                 <label key={plan.value} style={{

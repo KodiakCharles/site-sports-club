@@ -132,8 +132,8 @@ const Clubs: CollectionConfig = {
       required: true,
       defaultValue: 'essentiel',
       options: [
-        { label: 'Essentiel (49€ HT/mois — sans IA)', value: 'essentiel' },
-        { label: 'Pulse (99€ HT/mois — toutes fonctionnalités IA)', value: 'pulse' },
+        { label: 'Essentiel (29€ HT/mois — sans IA)', value: 'essentiel' },
+        { label: 'Pulse (49€ HT/mois — toutes fonctionnalités IA)', value: 'pulse' },
         { label: 'Sur mesure (intégrations spécifiques — sur devis)', value: 'surmesure' },
       ],
       admin: {

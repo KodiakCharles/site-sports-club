@@ -74,11 +74,11 @@ export default function CGV() {
       <p>Trois formules d'abonnement sont proposées, hors taxes :</p>
       <ul>
         <li>
-          <strong>Formule Essentiel</strong> — 49&nbsp;€&nbsp;HT/mois — site complet multi-pages, CMS,
+          <strong>Formule Essentiel</strong> — 29&nbsp;€&nbsp;HT/mois — site complet multi-pages, CMS,
           newsletter, monolingue FR. Pas de fonctionnalités IA.
         </li>
         <li>
-          <strong>Formule Pulse</strong> — 99&nbsp;€&nbsp;HT/mois — toutes les fonctionnalités
+          <strong>Formule Pulse</strong> — 49&nbsp;€&nbsp;HT/mois — toutes les fonctionnalités
           Essentiel + chatbot IA, espace adhérent complet, multilingue FR/EN/ES, modules
           sport-spécifiques.
         </li>

@@ -18,7 +18,7 @@ export type PlanFeatures = {
 
 const PLAN_FEATURES: Record<Plan, PlanFeatures> = {
   essentiel: {
-    // 49€ HT/mois — sans IA
+    // 29€ HT/mois — sans IA
     maxPages: -1,
     pageBuilder: true,
     seoAuto: false,
@@ -34,7 +34,7 @@ const PLAN_FEATURES: Record<Plan, PlanFeatures> = {
     apiExternal: false,
   },
   pulse: {
-    // 99€ HT/mois — toutes les fonctionnalités IA
+    // 49€ HT/mois — toutes les fonctionnalités IA
     maxPages: -1,
     pageBuilder: true,
     seoAuto: true,
@@ -83,8 +83,8 @@ export function getPlanLabel(plan: string): string {
 
 export function getPlanPrice(plan: string): string {
   const prices: Record<string, string> = {
-    essentiel: '49€ HT/mois',
-    pulse: '99€ HT/mois',
+    essentiel: '29€ HT/mois',
+    pulse: '49€ HT/mois',
     surmesure: 'Sur devis',
   }
   return prices[plan] || '—'

@@ -3,13 +3,18 @@
 @tailwind utilities;
 
 :root {
-  --wp-bg: #0f172a;
-  --wp-bg-elevated: #1e293b;
-  --wp-fg: #f8fafc;
-  --wp-muted: #94a3b8;
-  --wp-border: #334155;
-  --wp-accent: #fbbf24;
-  --wp-accent-hover: #f59e0b;
+  /* Palette adoucie — light mode + accents Kodiak/sport */
+  --wp-bg: #ffffff;
+  --wp-bg-alt: #f8fafc;
+  --wp-bg-deep: #0f172a;
+  --wp-fg: #0f172a;
+  --wp-fg-muted: #475569;
+  --wp-fg-soft: #64748b;
+  --wp-fg-faint: #94a3b8;
+  --wp-border: #e5e7eb;
+  --wp-border-strong: #cbd5e1;
+  --wp-accent: #f59e0b;
+  --wp-accent-hot: #ef4444;
   --wp-voile: #1d6fa4;
   --wp-rugby: #c23b22;
   --wp-pelote: #c8102e;
