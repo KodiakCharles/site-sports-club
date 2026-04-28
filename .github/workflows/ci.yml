@@ -32,7 +32,10 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run test:unit
-      - run: npm audit --audit-level=high
+      # Audit prod-only : ignore les vulns dev tools (vitest, esbuild, glob CLI...)
+      # qui ne sont pas dans le bundle final. Couvre toujours postcss, uuid,
+      # next, payload-cms et leurs transitives prod.
+      - run: npm audit --audit-level=high --omit=dev
 
   e2e-tests:
     name: Tests end-to-end (Playwright)
