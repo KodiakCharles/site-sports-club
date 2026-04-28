@@ -1,13 +1,14 @@
 import type { Metadata, Viewport } from 'next'
 
 export const metadata: Metadata = {
-  title: { template: '%s | VoilePulse', default: 'VoilePulse — Sites pour clubs de voile' },
-  description: 'Solution digitale pour les clubs affiliés à la Fédération Française de Voile.',
+  // Pas de template/default ici : chaque sous-layout (marketing, [locale])
+  // définit son propre titrage, sport-aware côté tenant et marque-mère
+  // côté vitrine. Sinon le template traverse jusqu'aux pages enfants et
+  // produit des titres incohérents (« Web Pulse … | VoilePulse »).
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Club de Voile',
   },
   icons: {
     apple: '/icons/icon-192.png',
