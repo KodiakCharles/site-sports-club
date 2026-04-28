@@ -33,11 +33,11 @@ type ClubData = Record<string, unknown> & {
 
 async function buildClubContext(
   payload: Awaited<ReturnType<typeof getPayload>>,
-  clubId: string | number
+  clubId: string | number,
+  preloadedSettings: Record<string, unknown> | null
 ): Promise<{ context: string; sport: Sport }> {
-  const [club, settings, stages, posts, kbEntries] = await Promise.all([
+  const [club, stages, posts, kbEntries] = await Promise.all([
     payload.findByID({ collection: 'clubs', id: clubId }).catch(() => null),
-    payload.findGlobal({ slug: 'club-settings' }).catch(() => null),
     payload
       .find({
         collection: 'stages',
@@ -74,7 +74,7 @@ async function buildClubContext(
   ])
 
   const c = club as ClubData | null
-  const s = settings as Record<string, unknown> | null
+  const s = preloadedSettings
   const sport: Sport = (c?.sport as Sport) ?? 'voile'
   const sc = getSportConfig(sport)
 
@@ -219,7 +219,13 @@ export async function POST(req: NextRequest) {
   }
 
   const payload = await getPayload({ config })
-  const settings = await payload.findGlobal({ slug: 'club-settings' }).catch(() => null)
+
+  // settings + budget sont indépendants : on les fetch en parallèle pour
+  // économiser une round-trip avant le check d'activation et de quota.
+  const [settings, budget] = await Promise.all([
+    payload.findGlobal({ slug: 'club-settings' }).catch(() => null),
+    getBudgetStatus(clubId),
+  ])
   const s = settings as Record<string, unknown> | null
   if (!s?.chatbotEnabled) {
     return NextResponse.json({ reply: "Le chatbot n'est pas activé pour ce club." })
@@ -233,9 +239,8 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  // Cap mensuel coût LLM par club. Évite l'amplification via rotation IP
+  // Cap mensuel coût LLM par club — évite l'amplification via rotation IP
   // qui contournerait le rate-limit IP (20 req / 10 min).
-  const budget = await getBudgetStatus(clubId)
   if (!budget.ok) {
     return NextResponse.json(
       {
@@ -246,7 +251,7 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const { context, sport } = await buildClubContext(payload, clubId)
+  const { context, sport } = await buildClubContext(payload, clubId, s)
   const systemPrompt = buildSystemPrompt(sport, context)
 
   const client = new Anthropic({ apiKey })
@@ -303,8 +308,9 @@ export async function POST(req: NextRequest) {
         "Je n'ai pas la réponse précise à votre question, mais je l'ai transmise à l'équipe du club qui vous reviendra rapidement."
     }
 
-    // Best-effort : on ajoute au compteur mensuel après l'appel LLM réussi.
-    await incrementBudget(
+    // Best-effort : on ajoute au compteur mensuel sans bloquer la réponse.
+    // incrementBudget swallow les erreurs en interne, donc void est sûr.
+    void incrementBudget(
       clubId,
       response.usage.input_tokens + response.usage.output_tokens,
     )

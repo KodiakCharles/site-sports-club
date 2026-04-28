@@ -1,13 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getPayload } from 'payload'
+import { getPayload, type Where } from 'payload'
 import config from '@payload-config'
-
-type AuthUser = { role?: string; club?: string | { id?: string } }
-
-function getClubId(user: AuthUser | null | undefined): string | null {
-  if (!user?.club) return null
-  return typeof user.club === 'object' ? (user.club.id ?? null) : user.club
-}
+import { clubId } from '@/lib/utils/accessControl'
 
 export async function GET(req: NextRequest) {
   const payload = await getPayload({ config })
@@ -16,30 +10,25 @@ export async function GET(req: NextRequest) {
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-
-  const u = user as AuthUser
-  const role = u.role ?? ''
+  const role = (user as { role?: string }).role ?? ''
   if (role !== 'super_admin' && role !== 'club_admin') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  // Pour un club_admin, scoper aux ressources de SON club uniquement.
-  // Pour un super_admin, retourner les compteurs globaux (vue plateforme).
-  const clubId = role === 'super_admin' ? null : getClubId(u)
+  // Pour un club_admin, scoper aux ressources de SON club. Pour un super_admin,
+  // retourner les compteurs globaux (vue plateforme).
+  const scopeId = role === 'super_admin' ? null : clubId((user as { club?: unknown }).club)
+  const clubScope: Where | undefined = scopeId ? { club: { equals: scopeId } } : undefined
+  const postsWhere: Where = scopeId
+    ? { and: [{ club: { equals: scopeId } }, { status: { equals: 'published' } }] }
+    : { status: { equals: 'published' } }
 
   try {
-    const countArgs = (collection: 'members' | 'stages' | 'newsletters') =>
-      clubId
-        ? { collection, where: { club: { equals: clubId } } }
-        : { collection }
-    const postsWhere = clubId
-      ? { and: [{ club: { equals: clubId } }, { status: { equals: 'published' } }] }
-      : { status: { equals: 'published' } }
     const [members, stages, posts, newsletters] = await Promise.all([
-      payload.count(countArgs('members')),
-      payload.count(countArgs('stages')),
-      payload.count({ collection: 'posts', where: postsWhere as never }),
-      payload.count(countArgs('newsletters')),
+      payload.count({ collection: 'members', where: clubScope }),
+      payload.count({ collection: 'stages', where: clubScope }),
+      payload.count({ collection: 'posts', where: postsWhere }),
+      payload.count({ collection: 'newsletters', where: clubScope }),
     ])
 
     return NextResponse.json({
@@ -47,9 +36,10 @@ export async function GET(req: NextRequest) {
       stages: stages.totalDocs,
       posts: posts.totalDocs,
       newsletters: newsletters.totalDocs,
-      scope: clubId ? 'club' : 'global',
+      scope: scopeId ? 'club' : 'global',
     })
-  } catch {
-    return NextResponse.json({ members: 0, stages: 0, posts: 0, newsletters: 0 })
+  } catch (err) {
+    payload.logger.error(`[/api/admin/stats] count failed: ${err}`)
+    return NextResponse.json({ error: 'Stats unavailable' }, { status: 500 })
   }
 }

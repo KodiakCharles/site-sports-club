@@ -61,13 +61,14 @@ function safeUrl(url?: string): string {
   if (!url) return '#'
   const trimmed = url.trim()
   if (!trimmed) return '#'
-  // URL relative : pas de schéma, on accepte
+  // Protocol-relative `//evil.com` doit être bloqué : sans cette garde, le
+  // browser résout vers `https://evil.com` et le filtre de schéma est contourné.
+  if (trimmed.startsWith('//')) return '#'
   if (trimmed.startsWith('/') || trimmed.startsWith('#') || trimmed.startsWith('?')) return trimmed
   try {
     const u = new URL(trimmed)
     return ALLOWED_LINK_SCHEMES.has(u.protocol.toLowerCase()) ? trimmed : '#'
   } catch {
-    // Pas une URL valide — neutraliser
     return '#'
   }
 }
