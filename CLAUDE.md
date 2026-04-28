@@ -4,17 +4,32 @@ Ce fichier fournit les instructions à Claude Code lors du travail sur ce dépô
 
 ## Vue d'ensemble du projet
 
-**SportsPulse** — Solution SaaS multi-tenant **multi-sport** de sites internet pour clubs sportifs. Trois déclinaisons livrées en v0.2 :
+**Web Pulse** — Marque mère SaaS multi-tenant **multi-sport** de sites internet pour clubs sportifs.
+Trois déclinaisons produit en v0.2, partageant le même cluster :
 
 | Déclinaison | Sport | Fédération | Champ `club.sport` |
 |-------------|-------|-----------|--------------------|
-| **VoilePulse** | Voile | FFVoile | `voile` |
-| **RugbyPulse** | Rugby | FFR | `rugby` |
-| **PelotePulse** | Pelote basque | FFPB | `pelote-basque` |
+| **Voile Pulse** | Voile | FFVoile | `voile` |
+| **Rugby Pulse** | Rugby | FFR | `rugby` |
+| **Pelote Pulse** | Pelote basque | FFPB | `pelote-basque` |
 
-Le sport est fixé par le `super_admin` à l'onboarding du club. Il pilote : la marque affichée, le vocabulaire (« stages » vs « entraînements » vs « parties »), la liste des supports/disciplines, la fédération de référence, les catégories d'actualités, le system prompt du chatbot, et les modules disponibles (ex. météo marine uniquement pour voile).
+Le sport est fixé par le `super_admin` à la création du club. Il pilote : la marque affichée, le vocabulaire (« stages » vs « entraînements » vs « parties »), la liste des supports/disciplines, la fédération de référence, les catégories d'actualités, le system prompt du chatbot, et les modules disponibles (ex. météo marine uniquement pour voile).
 
-Stack : Next.js 15 (App Router) + Payload CMS v3 + SQLite (→ PostgreSQL en prod) + Redis.
+Édité par **CGC SAS** (RCS Dax 983 956 525, TVA FR 22 983 956 525), Tarnos. Présidente : KODIAK SAS.
+
+Stack : Next.js 15 (App Router) + Payload CMS v3 + PostgreSQL + Redis + Mailjet (emails) + Anthropic (chatbot).
+Aucune BDD locale : tout passe par Postgres Railway prod.
+
+### Vitrine vs tenants — routing par hostname
+
+L'app sert deux types de contenus selon le `Host` HTTP, distingués par le middleware `src/middleware.ts` :
+
+- **Vitrine commerciale (`web-pulse.fr`, `www.web-pulse.fr`)** : marque mère Web Pulse, landing, `/login`, `/cgv`, `/mentions-legales`, `/confidentialite`. Le middleware fait un rewrite `/X → /marketing/X` pour ces hostnames.
+- **Tenants (tout autre hostname)** : site d'un club sportif, résolu via `resolveClubByDomain(host)` puis rendu par les routes `[locale]/*` (FR/EN/ES). Une entrée `clubs.domain` doit exister en BDD pour que le tenant soit reconnu.
+
+La liste des hostnames vitrine est pilotée par la variable d'env **`MARKETING_DOMAINS`** (CSV). En dev local, on peut y ajouter `localhost` ou le hostname Railway pour tester la vitrine sans DNS prod.
+
+Le dossier `src/app/marketing/` ne doit **jamais** être préfixé par `_` (sinon Next.js le considère comme un dossier privé et renvoie 404).
 
 ### Architecture multi-tenant
 
@@ -60,16 +75,17 @@ Les modules non applicables au sport choisi sont masqués dans l'UI d'onboarding
 
 ### Intégrations tierces
 
-| Service | Clé de config dans le CMS | Usage |
-|---------|--------------------------|-------|
-| Yoplanning | `integrations.yoplanningKey` | Réservations stages |
-| Axyomes | `integrations.axyomesKey` | Alternative Yoplanning |
-| HelloAsso | `integrations.helloassoUrl` | Licences FFVoile |
-| Windguru | `integrations.windguruStationId` | Météo marine |
-| GA4 | `integrations.ga4MeasurementId` | Analytics |
-| Google Maps | `integrations.googleMapsApiKey` | Carte interactive |
-| Instagram | `social.instagramToken` | Flux photos live |
-| Newsletter | `integrations.newsletterApiKey` + `newsletterListId` | Brevo/Mailchimp |
+| Service | Clé de config | Usage |
+|---------|---------------|-------|
+| Mailjet | env `MAILJET_API_KEY` + `MAILJET_SECRET_KEY` | Emails transactionnels (contact, newsletters internes). Helper unique : `src/lib/utils/mailer.ts` (`sendMail`, `sendMailBatch`). |
+| Anthropic Claude | env `ANTHROPIC_API_KEY` | Chatbot LLM (Haiku 4.5) avec contexte club + KB |
+| Yoplanning | `integrations.yoplanningKey` (CMS) | Réservations stages |
+| Axyomes | `integrations.axyomesKey` (CMS) | Alternative Yoplanning |
+| HelloAsso | `integrations.helloassoUrl` (CMS) | Licences fédérales |
+| Windguru | `integrations.windguruStationId` (CMS) | Météo marine (voile only) |
+| GA4 | `integrations.ga4MeasurementId` (CMS) | Analytics |
+| Google Maps | `integrations.googleMapsApiKey` (CMS) | Carte interactive |
+| Instagram | `social.instagramToken` (CMS) | Flux photos live |
 
 ## Commandes courantes
 
@@ -103,25 +119,32 @@ npm run type-check          # TypeScript strict
 ```
 src/
 ├── app/
-│   ├── [locale]/           # Routes publiques (SSR/SSG, multilingue)
-│   ├── admin/              # Back-office Payload CMS
-│   └── api/                # Route handlers (contact, newsletter, social, etc.)
-├── components/
-│   ├── layout/             # Header, Footer (data-fetching côté serveur)
-│   ├── sections/           # Blocs de page (Hero, SocialWall, etc.)
-│   ├── forms/              # Formulaires (contact, newsletter, inscription)
-│   └── ui/                 # Composants atomiques (Button, Card, etc.)
+│   ├── marketing/          # Vitrine Web Pulse (FR uniquement, hostname-based)
+│   │   ├── components/     # Header, Footer, Hero, ThreeSports, Pricing, CTA, LegalLayout
+│   │   ├── login/          # /login super_admin (server + client component)
+│   │   ├── cgv/            # CGV (page statique)
+│   │   ├── mentions-legales/
+│   │   ├── confidentialite/
+│   │   ├── opengraph-image.tsx  # OG image dynamique 1200×630 (next/og)
+│   │   ├── marketing.css
+│   │   └── layout.tsx      # metadataBase=https://www.web-pulse.fr
+│   ├── [locale]/           # Sites tenants (SSR multilingue FR/EN/ES)
+│   ├── (payload)/admin/    # Back-office Payload CMS
+│   └── api/
+│       ├── marketing/      # Routes vitrine (login)
+│       ├── admin/          # Routes super_admin (onboarding, switch-club, …)
+│       └── …               # Routes publiques (contact, weather, chatbot, social)
+├── components/             # Tenant-only (Header, Footer, sections, etc.)
 ├── lib/
-│   ├── api/                # Clients API externes (FFVoile, Windguru, Instagram)
-│   └── utils/              # Utilitaires (tenant, redis, slug, etc.)
-├── types/                  # Types TypeScript globaux
-└── styles/                 # CSS global (variables, layout, composants)
-payload/
-└── collections/            # Schémas de données Payload CMS
-tests/
-├── unit/                   # Tests unitaires (Vitest)
-├── e2e/                    # Tests end-to-end (Playwright)
-└── security/               # Tests de sécurité
+│   ├── api/                # Clients API externes (Windguru, Instagram, Anthropic)
+│   └── utils/              # tenant, redis, mailer, csrf, rateLimit, sportConfig
+├── middleware.ts           # Routing hostname-aware (MARKETING_DOMAINS)
+├── instrumentation.ts      # Sentry init
+└── styles/                 # CSS global tenant
+payload.config.ts           # À la racine — schéma Payload (Postgres adapter)
+src/collections/            # Clubs, Users, Members, Posts, Stages, KB, ChatbotAlerts
+src/globals/                # ClubSettings, HomePage, ClubPage, …, PageBuilder
+scripts/                    # Outils ponctuels prod (inspect-db, clean-enums, etc.)
 ```
 
 ## Sécurité — règles obligatoires
@@ -134,16 +157,17 @@ tests/
 
 ### CSRF
 
-- Tous les formulaires POST incluent un token CSRF (géré par Next.js via `next-auth`)
-- Les route handlers vérifient l'origine avec `req.headers.get('origin')`
+- Vérification de l'`Origin` HTTP via `isValidOrigin(req)` dans tous les route handlers POST/PATCH/DELETE (`src/lib/utils/csrf.ts`)
+- En dev (sans `Origin`), on laisse passer ; en prod, on bloque
 
 ### Authentification
 
-- Sessions JWT signées avec `NEXTAUTH_SECRET` (minimum 32 caractères)
-- Mots de passe hashés avec bcrypt (cost factor 12)
-- Pas de données sensibles dans les tokens JWT (pas de mot de passe, pas de token tiers)
+- Auth Payload : cookie HttpOnly `payload-token` signé avec `PAYLOAD_SECRET` (≥ 32 chars)
+- Mots de passe hashés par Payload (bcrypt)
+- `/login` (vitrine) appelle `payload.login()` puis vérifie `role === 'super_admin'` avant de redirect vers `/admin`
+- Rate limit : `rateLimit()` mémoire (5 req / 10 min / IP) sur `/api/contact`, `/api/marketing/login`
 
-### Headers de sécurité (configurés dans `next.config.ts`)
+### Headers de sécurité (configurés dans `next.config.mjs`)
 
 ```
 X-Frame-Options: SAMEORIGIN
@@ -212,6 +236,21 @@ chmod +x .git/hooks/pre-commit
 
 ## URLs importantes
 
+### Sur le hostname vitrine (`www.web-pulse.fr`)
+
+```
+/                           Landing Web Pulse (hero, 3 sports, pricing, CTA)
+/login                      Connexion super_admin (form + server check)
+/cgv                        Conditions Générales de Vente
+/mentions-legales           Mentions légales (éditeur CGC)
+/confidentialite            Politique de confidentialité (RGPD)
+/api/marketing/login        POST {email, password} → cookie session + redirect /admin
+/marketing/opengraph-image  Image OG 1200×630 dynamique
+/admin                      Back-office Payload CMS (auth requise)
+```
+
+### Sur un hostname de tenant (`<club-domain>`)
+
 ```
 /                           Page d'accueil du club (locale par défaut : fr)
 /[locale]/stages            Liste des stages
@@ -221,13 +260,50 @@ chmod +x .git/hooks/pre-commit
 /[locale]/espace-adherent   Espace privé membre
 /[locale]/contact           Formulaire de contact
 /[locale]/nous-trouver      Carte Google Maps
-/admin                      Back-office Payload CMS
 /api/social/instagram       Flux Instagram (GET)
 /api/newsletter             Inscription newsletter (POST)
-/api/contact                Formulaire de contact (POST)
+/api/contact                Formulaire de contact (POST → Mailjet)
 /api/weather                Données Windguru (GET, cache 30min)
-/api/chatbot                Chatbot LLM (POST, Claude Haiku + knowledge base)
-/api/admin/chatbot-alerts   Gestion alertes chatbot (admin)
+/api/chatbot                Chatbot LLM (POST, Claude Haiku + KB)
+/api/admin/chatbot-alerts   Gestion alertes chatbot (super_admin/club_admin)
+/api/admin/onboarding       POST création de club (super_admin only)
+/api/admin/switch-club      Cookie contexte club (super_admin)
+/api/health                 Healthcheck Railway (renvoie 200 même en degraded)
 /sitemap.xml                Sitemap SEO dynamique
 /robots.txt                 Robots SEO
 ```
+
+## Production — Railway
+
+Service déployé sur Railway (`projet web-pulse`, env `production`) :
+- Service web `site-sports-club` (Next.js + Payload, healthcheck `/api/health`)
+- Service `Postgres` (BDD prod, référencé via `${{Postgres.DATABASE_URL}}`)
+- Service `Redis` (cache + rate limit, référencé via `${{Redis.REDIS_URL}}`)
+
+Domaines actifs :
+- `www.web-pulse.fr` → CNAME → cluster Railway (cert Railway auto)
+- `web-pulse.fr` (apex) → A `51.91.236.255` (hébergement OVH Start gratuit) avec un `.htaccess` qui redirige 301 vers `https://www.web-pulse.fr/$1` + cert Let's Encrypt OVH
+- `site-sports-club-production.up.railway.app` → URL technique Railway (n'est PAS dans `MARKETING_DOMAINS`, sert le flow tenant fallback)
+
+Variables d'env Railway minimales :
+```
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+REDIS_URL=${{Redis.REDIS_URL}}
+PAYLOAD_SECRET=<64 chars hex>
+MAILJET_API_KEY=<…>
+MAILJET_SECRET_KEY=<…>
+ANTHROPIC_API_KEY=sk-ant-<…>
+EMAIL_FROM=contact@web-pulse.fr
+NEWSLETTER_FROM_EMAIL=contact@web-pulse.fr
+MARKETING_DOMAINS=web-pulse.fr,www.web-pulse.fr
+PUSH_SCHEMA=false           # ne JAMAIS remettre à true sur deploy normal
+# NE PAS définir NODE_ENV=production manuellement — ça fait skip les
+# devDependencies au build (next, tailwind, etc.) et casse le build.
+```
+
+DNS chez OVH (zone DNS) :
+- `www` CNAME → `<id>.up.railway.app.` + TXT `_railway-verify.www`
+- `@` (apex) A `51.91.236.255`
+- MX OVH (`mx0..mx3.mail.ovh.net`) pour la boîte mail `contact@web-pulse.fr`
+- SPF unique : `v=spf1 include:spf.mailjet.com include:mx.ovh.com ~all`
+- DKIM Mailjet (`mailjet._domainkey`) + DKIM OVH (`ovhmo-selector-1/2._domainkey`)
