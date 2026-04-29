@@ -20,6 +20,50 @@ Le sport est fixé par le `super_admin` à la création du club. Il pilote : la 
 Stack : Next.js 15 (App Router) + Payload CMS v3 + PostgreSQL + Redis + Mailjet (emails) + Anthropic (chatbot).
 Aucune BDD locale : tout passe par Postgres Railway prod.
 
+### Self-onboarding & contrats de souscription
+
+Workflow public sur la vitrine pour qu'un club souscrive en ligne sans intervention manuelle préalable.
+
+#### Collection `OnboardingRequests` (`src/collections/OnboardingRequests.ts`)
+Workflow `pending → validated → sent → signed` (ou `rejected`). Champs :
+- Identité : `organizationName`, `legalForm` (`association_1901` / `club_sportif` / `sas` / `sarl` / `autre`), `siren`, `address`, `sport` (`voile` / `rugby` / `pelote-basque` / `autre`)
+- Représentant : `representativeName`, `representativeRole`, `email`, `phone`
+- Souscription : `plan` (`essentiel` 29€ / `pulse` 49€), `paymentMode` (`monthly` / `annual`), `discountPercent`, `discountNote`
+- Workflow : `status`, `notesAdmin`, `rejectionReason`, `club` (relation FK renseignée à la signature)
+- Métadonnées : `token` (UUID public), `ipAddress`, `cgvAccepted`, `validatedAt`, `sentAt`
+
+Access : super_admin uniquement en lecture/édition/suppression. La création est ouverte (`create: () => true`) mais filtrée en pratique par la route API publique seule (l'admin UI ne propose pas de bouton "Créer" pour cette collection à l'utilisateur final puisqu'il n'a pas accès).
+
+#### Page publique `/onboarding`
+- `src/app/marketing/onboarding/page.tsx` — server component, lit `?plan=essentiel|pulse` pour pré-cocher
+- `src/app/marketing/onboarding/OnboardingForm.tsx` — client, fetch POST `/api/marketing/onboarding`
+- `src/app/marketing/onboarding/merci/[token]/page.tsx` — confirmation après soumission
+
+Branchée sur les CTA "Choisir Essentiel" et "Choisir Pulse" du composant `Pricing.tsx` (`?plan=essentiel|pulse`). Le forfait "Sur mesure" reste sur `mailto:contact@web-pulse.fr` (devis manuel).
+
+#### Route API `POST /api/marketing/onboarding`
+- Honeypot `website`, `isValidOrigin(req)`, `rateLimit` 5 req / 10 min / IP
+- Validation Zod stricte (côté serveur)
+- Crée `OnboardingRequest` (status `pending`, `token` UUID)
+- Envoie 2 emails Mailjet : notification super admin → `contact@web-pulse.fr` + accusé client à l'email saisi
+- Renvoie `{ success: true, token }` ; le client redirige vers `/onboarding/merci/<token>`
+
+#### Génération PDF du contrat (`src/lib/utils/contractPdf.ts`)
+Utilise **pdfkit** (pure JS, pas de deps système). `renderContractPdf(req)` retourne un `Buffer` PDF :
+- 12 articles, format A4, titres en orange Web Pulse (#F59E0B)
+- Identité Éditeur : **CGC SAS** (RCS Dax 983 956 525, Tarnos), Présidente **KODIAK SAS** (RCS Dax 982 748 675), "représentée par son représentant légal en exercice"
+- Identité Client : remplie depuis `OnboardingRequest`
+- Cases formule (Essentiel/Pulse) et paiement (mensuel/annuel) cochées automatiquement
+- Encadré tarif si `discountPercent > 0` ou `paymentMode === 'annual'`
+- Coordonnées bancaires lues depuis le global Payload `platform-settings` (éditable via `/admin/globals/platform-settings`, super_admin only). Defaults pré-remplis avec le RIB Qonto de CGC. Placeholder `[À renseigner via /admin/globals/platform-settings]` si vide.
+- Tableau de signatures à 2 colonnes (en-tête plein orange)
+- Engagement annuel ferme dans tous les cas (Article 3) ; remise -10% si paiement annuel d'avance
+- Article 4.5 (tokens IA) inclus uniquement pour la formule Pulse
+- Juridiction : Tribunal de commerce de **Dax**
+
+#### Route `GET /api/admin/onboarding/[id]/contract-pdf`
+Super_admin uniquement (`payload.auth({ headers })` + check `role === 'super_admin'`). Retourne le PDF inline (`Content-Disposition: inline`).
+
 ### Vitrine vs tenants — routing par hostname
 
 L'app sert deux types de contenus selon le `Host` HTTP, distingués par le middleware `src/middleware.ts` :
@@ -142,8 +186,8 @@ src/
 ├── instrumentation.ts      # Sentry init
 └── styles/                 # CSS global tenant
 payload.config.ts           # À la racine — schéma Payload (Postgres adapter)
-src/collections/            # Clubs, Users, Members, Posts, Stages, KB, ChatbotAlerts
-src/globals/                # ClubSettings, HomePage, ClubPage, …, PageBuilder
+src/collections/            # Clubs, Users, Members, Posts, Stages, KB, ChatbotAlerts, OnboardingRequests
+src/globals/                # ClubSettings, PlatformSettings (banque CGC, super_admin), HomePage, ClubPage, …, PageBuilder
 scripts/                    # Outils ponctuels prod (inspect-db, clean-enums, etc.)
 ```
 
@@ -239,14 +283,18 @@ chmod +x .git/hooks/pre-commit
 ### Sur le hostname vitrine (`www.web-pulse.fr`)
 
 ```
-/                           Landing Web Pulse (hero, 3 sports, pricing, CTA)
-/login                      Connexion super_admin (form + server check)
-/cgv                        Conditions Générales de Vente
-/mentions-legales           Mentions légales (éditeur CGC)
-/confidentialite            Politique de confidentialité (RGPD)
-/api/marketing/login        POST {email, password} → cookie session + redirect /admin
-/marketing/opengraph-image  Image OG 1200×630 dynamique
-/admin                      Back-office Payload CMS (auth requise)
+/                                       Landing Web Pulse (hero, 3 sports, pricing, CTA)
+/login                                  Connexion super_admin (form + server check)
+/onboarding                             Formulaire public de souscription (Essentiel / Pulse, ?plan=…)
+/onboarding/merci/<token>               Confirmation après soumission
+/cgv                                    Conditions Générales de Vente
+/mentions-legales                       Mentions légales (éditeur CGC)
+/confidentialite                        Politique de confidentialité (RGPD)
+/api/marketing/login                    POST {email, password} → cookie session + redirect /admin
+/api/marketing/onboarding               POST formulaire souscription → email notif + redirect /merci
+/api/admin/onboarding/[id]/contract-pdf GET PDF du contrat (super_admin uniquement)
+/marketing/opengraph-image              Image OG 1200×630 dynamique
+/admin                                  Back-office Payload CMS (auth requise)
 ```
 
 ### Sur un hostname de tenant (`<club-domain>`)

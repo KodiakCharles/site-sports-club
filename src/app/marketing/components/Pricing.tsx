@@ -23,7 +23,7 @@ const PLANS: Plan[] = [
       'Support email',
     ],
     cta: 'Choisir Essentiel',
-    ctaHref: 'mailto:contact@web-pulse.fr?subject=Forfait%20Essentiel',
+    ctaHref: '/onboarding?plan=essentiel',
   },
   {
     name: 'Pulse',
@@ -40,7 +40,7 @@ const PLANS: Plan[] = [
       'Support prioritaire',
     ],
     cta: 'Choisir Pulse',
-    ctaHref: 'mailto:contact@web-pulse.fr?subject=Forfait%20Pulse',
+    ctaHref: '/onboarding?plan=pulse',
   },
   {
     name: 'Sur mesure',
@@ -71,10 +71,10 @@ export default function Pricing() {
             TARIFS
           </p>
           <h2 className="text-3xl md:text-5xl font-extrabold tracking-[-0.03em] text-slate-900 leading-[1.1]">
-            Trois forfaits, zéro engagement.
+            Trois forfaits, engagement annuel.
           </h2>
           <p className="mt-5 text-slate-600 text-[1.1rem] leading-[1.55]">
-            Vous payez au mois. Vous résiliez quand vous voulez. Vos données vous appartiennent.
+            Engagement 12 mois. Paiement mensuel ou annuel d'avance (-10%). Vos données vous appartiennent.
           </p>
         </div>
         <div className="grid gap-6 md:grid-cols-3 items-stretch">

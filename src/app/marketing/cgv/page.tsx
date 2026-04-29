@@ -118,16 +118,18 @@ export default function CGV() {
       <h2>Article 6 — Modalités de paiement</h2>
       <p>
         Le règlement s'effectue exclusivement par <strong>virement bancaire</strong>, selon l'une des
-        deux modalités au choix du Client :
+        deux modalités au choix du Client. <strong>Les deux modalités impliquent l'Engagement Annuel
+        ferme de douze (12) mois</strong> défini à l'Article 5 :
       </p>
       <ul>
         <li>
           <strong>Paiement mensuel</strong> — à terme à échoir, à réception de la facture émise en
-          début de chaque mois ;
+          début de chaque mois pendant toute la durée de l'Engagement Annuel ;
         </li>
         <li>
-          <strong>Paiement annuel d'avance</strong> — en une seule fois pour la totalité de
-          l'Engagement Annuel (12 × prix mensuel), à réception de la facture émise à la souscription.
+          <strong>Paiement annuel d'avance — remise de 10&nbsp;%</strong> — en une seule fois pour la
+          totalité de l'Engagement Annuel, après application d'une remise commerciale de dix pour
+          cent (10&nbsp;%) sur le total annuel. La facture est émise à la souscription.
         </li>
       </ul>
       <p>

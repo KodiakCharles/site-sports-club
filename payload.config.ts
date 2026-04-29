@@ -13,7 +13,9 @@ import Media from './src/collections/Media'
 import Newsletters from './src/collections/Newsletters'
 import KnowledgeBase from './src/collections/KnowledgeBase'
 import ChatbotAlerts from './src/collections/ChatbotAlerts'
+import OnboardingRequests from './src/collections/OnboardingRequests'
 import ClubSettings from './src/globals/ClubSettings'
+import PlatformSettings from './src/globals/PlatformSettings'
 import { HomePage, ClubPage, ContactPage, TarifsPage, ActivitesPage, CompetitionPage, NousTrouverPage, MentionsLegalesPage, ConfidentialitePage } from './src/globals/Pages'
 import PageBuilder from './src/globals/PageBuilder'
 
@@ -68,8 +70,8 @@ export default buildConfig({
       // ColorPickerField est auto-détecté via les champs des collections (admin.components.Field)
     },
   },
-  collections: [Clubs, Users, Members, Posts, Stages, Media, Newsletters, KnowledgeBase, ChatbotAlerts],
-  globals: [ClubSettings, HomePage, ClubPage, ActivitesPage, TarifsPage, ContactPage, CompetitionPage, NousTrouverPage, MentionsLegalesPage, ConfidentialitePage, PageBuilder],
+  collections: [Clubs, Users, Members, Posts, Stages, Media, Newsletters, KnowledgeBase, ChatbotAlerts, OnboardingRequests],
+  globals: [ClubSettings, PlatformSettings, HomePage, ClubPage, ActivitesPage, TarifsPage, ContactPage, CompetitionPage, NousTrouverPage, MentionsLegalesPage, ConfidentialitePage, PageBuilder],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET ?? 'voileweb-dev-secret-change-in-production',
   typescript: {
