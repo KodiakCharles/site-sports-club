@@ -14,7 +14,11 @@ const OnboardingRequests: CollectionConfig = {
   },
   access: {
     read: ({ req: { user } }) => (user as any)?.role === 'super_admin',
-    create: () => true, // création publique via l'API /api/marketing/onboarding (pas via l'admin UI)
+    // Toujours bloquer la création via l'API REST native Payload (/api/onboarding-requests).
+    // La seule voie de création légitime est la route custom POST /api/marketing/onboarding,
+    // qui fait CSRF + rate-limit + honeypot + Zod + CGV + email, puis appelle
+    // payload.create({ ..., overrideAccess: true }) pour passer ce gate.
+    create: () => false,
     update: ({ req: { user } }) => (user as any)?.role === 'super_admin',
     delete: ({ req: { user } }) => (user as any)?.role === 'super_admin',
   },

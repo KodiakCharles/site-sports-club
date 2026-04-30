@@ -96,6 +96,9 @@ export async function POST(req: NextRequest) {
   try {
     const created = await payload.create({
       collection: 'onboarding-requests',
+      // La collection a access.create:()=>false pour bloquer l'API REST native Payload.
+      // Cette route est l'unique voie légitime — overrideAccess passe outre le gate.
+      overrideAccess: true,
       data: {
         organizationName: data.organizationName,
         legalForm: data.legalForm,

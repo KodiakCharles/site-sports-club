@@ -1,7 +1,19 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, TextField } from 'payload'
 import { clubId } from '@/lib/utils/accessControl'
 import { getDefaultKnowledgeBase } from '@/lib/utils/defaultKnowledgeBase'
+import { encryptField, decryptField } from '@/lib/utils/fieldEncryption'
 import type { Sport } from '@/lib/utils/sportConfig'
+
+/**
+ * Hooks pour chiffrer un champ texte sensible en BDD (AES-GCM, FIELD_ENCRYPTION_KEY).
+ * À utiliser sur les tokens API tiers server-only (FB Page token, Twitter bearer,
+ * Instagram, newsletter API). Ne pas appliquer à des valeurs exposées côté client
+ * (Google Maps API key, GA4 ID, etc.) — elles ont besoin d'être lisibles en clair.
+ */
+const encryptedTokenHooks: NonNullable<TextField['hooks']> = {
+  beforeChange: [(args) => (typeof args.value === 'string' ? encryptField(args.value) : args.value)],
+  afterRead: [(args) => (typeof args.value === 'string' ? decryptField(args.value) : args.value)],
+}
 
 const Clubs: CollectionConfig = {
   slug: 'clubs',
@@ -225,8 +237,8 @@ const Clubs: CollectionConfig = {
             { name: 'ga4MeasurementId', type: 'text', label: 'ID Google Analytics 4' },
             { name: 'helloassoUrl', type: 'text', label: 'URL HelloAsso' },
             { name: 'yoplanningKey', type: 'text', label: 'Clé Yoplanning' },
-            { name: 'instagramToken', type: 'text', label: 'Token Instagram' },
-            { name: 'newsletterApiKey', type: 'text', label: 'Clé API newsletter (Brevo/Mailchimp)' },
+            { name: 'instagramToken', type: 'text', label: 'Token Instagram', hooks: encryptedTokenHooks },
+            { name: 'newsletterApiKey', type: 'text', label: 'Clé API newsletter (Brevo/Mailchimp)', hooks: encryptedTokenHooks },
             { name: 'newsletterListId', type: 'text', label: 'ID liste newsletter' },
           ],
         },
@@ -239,8 +251,8 @@ const Clubs: CollectionConfig = {
             { name: 'youtubeUrl', type: 'text', label: 'YouTube (URL)' },
             { name: 'twitterHandle', type: 'text', label: 'Identifiant X/Twitter', admin: { description: 'Ex: ClubVoilePau (sans @)' } },
             { name: 'facebookPageId', type: 'text', label: 'Facebook Page ID', admin: { description: 'Identifiant numérique de la page Facebook' } },
-            { name: 'facebookAccessToken', type: 'text', label: 'Facebook Access Token', admin: { description: 'Token d\'accès page (long-lived) — gardez-le secret' } },
-            { name: 'twitterBearerToken', type: 'text', label: 'Twitter Bearer Token', admin: { description: 'Depuis developer.twitter.com — accès API v2' } },
+            { name: 'facebookAccessToken', type: 'text', label: 'Facebook Access Token', admin: { description: 'Token d\'accès page (long-lived) — gardez-le secret. Chiffré en BDD (AES-GCM via FIELD_ENCRYPTION_KEY).' }, hooks: encryptedTokenHooks },
+            { name: 'twitterBearerToken', type: 'text', label: 'Twitter Bearer Token', admin: { description: 'Depuis developer.twitter.com — accès API v2. Chiffré en BDD.' }, hooks: encryptedTokenHooks },
           ],
         },
       ],
