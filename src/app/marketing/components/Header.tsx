@@ -56,17 +56,18 @@ export default function Header() {
           <a href="#sports" className="text-slate-600 hover:text-slate-900 transition">Sports</a>
           <a href="#features" className="text-slate-600 hover:text-slate-900 transition">Fonctionnalités</a>
           <a href="#pricing" className="text-slate-600 hover:text-slate-900 transition">Tarifs</a>
+          <Link href="/contact" className="text-slate-600 hover:text-slate-900 transition">Contact</Link>
           <Link href="/login" className="text-slate-600 hover:text-slate-900 transition">Espace admin</Link>
         </nav>
 
         <div className="flex items-center gap-2">
-          <a
-            href="mailto:contact@web-pulse.fr?subject=Demande%20de%20d%C3%A9mo%20Web%20Pulse"
+          <Link
+            href="/contact?subject=demo"
             className="hidden sm:inline-flex items-center px-5 py-2.5 rounded-[10px] bg-slate-900 hover:bg-slate-800 text-white font-bold text-[0.88rem] transition shadow-sm hover:shadow-md hover:-translate-y-px"
             onClick={() => setOpen(false)}
           >
             Demander une démo
-          </a>
+          </Link>
           <button
             type="button"
             aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
@@ -98,14 +99,15 @@ export default function Header() {
             <a href="#sports" onClick={() => setOpen(false)} className="px-3 py-3 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition font-semibold">Sports</a>
             <a href="#features" onClick={() => setOpen(false)} className="px-3 py-3 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition font-semibold">Fonctionnalités</a>
             <a href="#pricing" onClick={() => setOpen(false)} className="px-3 py-3 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition font-semibold">Tarifs</a>
+            <Link href="/contact" onClick={() => setOpen(false)} className="px-3 py-3 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition font-semibold">Contact</Link>
             <Link href="/login" onClick={() => setOpen(false)} className="px-3 py-3 rounded-lg text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition font-semibold">Espace admin</Link>
-            <a
-              href="mailto:contact@web-pulse.fr?subject=Demande%20de%20d%C3%A9mo%20Web%20Pulse"
+            <Link
+              href="/contact?subject=demo"
               onClick={() => setOpen(false)}
               className="mt-2 px-3 py-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-center transition"
             >
               Demander une démo
-            </a>
+            </Link>
           </nav>
         </div>
       )}

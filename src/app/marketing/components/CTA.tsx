@@ -23,7 +23,7 @@ export default function CTA() {
         </p>
         <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
           <a
-            href="mailto:contact@web-pulse.fr?subject=Demande%20de%20d%C3%A9mo%20Web%20Pulse"
+            href="/contact?subject=demo"
             className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-[10px] bg-slate-900 hover:bg-slate-800 text-white font-bold text-[0.95rem] transition shadow-md hover:shadow-xl hover:-translate-y-0.5"
           >
             Demander une démo →

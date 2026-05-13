@@ -23,7 +23,7 @@ export default function Footer() {
           <h3 className="font-bold text-slate-100 mb-3 text-[0.82rem] tracking-[0.12em] uppercase">Ressources</h3>
           <ul className="space-y-2.5 text-slate-400">
             <li><a href="#pricing" className="hover:text-white transition">Tarifs</a></li>
-            <li><a href="mailto:contact@web-pulse.fr" className="hover:text-white transition">Contact commercial</a></li>
+            <li><Link href="/contact" className="hover:text-white transition">Contact commercial</Link></li>
           </ul>
         </div>
         <div>

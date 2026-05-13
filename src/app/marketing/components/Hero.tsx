@@ -36,7 +36,7 @@ export default function Hero() {
               Voir les forfaits →
             </a>
             <a
-              href="mailto:contact@web-pulse.fr?subject=Demande%20de%20d%C3%A9mo%20Web%20Pulse"
+              href="/contact?subject=demo"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-[10px] bg-white text-slate-900 font-semibold text-[0.95rem] border-[1.5px] border-slate-300 hover:border-slate-900 transition"
             >
               Demander une démo

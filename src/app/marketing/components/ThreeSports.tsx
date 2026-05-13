@@ -92,7 +92,7 @@ export default function ThreeSports() {
         <p className="mt-10 text-center text-slate-500 text-[0.95rem]">
           Vous pratiquez un autre sport ?{' '}
           <a
-            href="mailto:contact@web-pulse.fr?subject=Nouveau%20sport%20Web%20Pulse"
+            href="/contact?subject=Nouveau%20sport%20Web%20Pulse"
             className="font-semibold text-slate-900 underline-offset-4 hover:underline"
           >
             Contactez-nous

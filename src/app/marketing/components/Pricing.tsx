@@ -55,7 +55,7 @@ const PLANS: Plan[] = [
       'SLA garanti',
     ],
     cta: 'Demander un devis',
-    ctaHref: 'mailto:contact@web-pulse.fr?subject=Forfait%20Sur%20mesure',
+    ctaHref: '/contact?subject=devis',
   },
 ]
 
